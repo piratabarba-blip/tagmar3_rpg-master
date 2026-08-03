@@ -566,6 +566,7 @@ Hooks.once("ready", async function () {
     }
   }); 
   $("#chat-controls > label").click(async () => rollDialog()); // Rolagem avulsa no dadinho do chat
+  document.addEventListener('click', aplicarDanoPeloChat);
 });
 
 Hooks.on('renderPlayerList', function () {
@@ -901,18 +902,6 @@ Hooks.on('renderChatMessageHTML', function (message, html) {
       this.innerHTML = 'Descrição: <i class="far fa-eye-slash"></i>';
     }
   });
-  for (const button of html.querySelectorAll('.aplicarDano')) {
-    button.addEventListener('click', function (event) {
-      const tokens = canvas.tokens.controlled;
-      if (tokens.length === 0) return ui.notifications.warn('Nenhum token selecionado.');
-      for (const token of tokens) {
-        const dano = Number(event.currentTarget.dataset.dano);
-        const cura = event.currentTarget.dataset.cura === 'true';
-        const critico = event.currentTarget.dataset.critico === 'true';
-      token.actor._aplicarDano({"valor": dano, "isCura": cura, "isCritico": critico}, token);
-      }
-    });
-  }
   // Imagem do personagem no chat
   const actorId = message.speaker.actor;
   if (!actorId) return;
@@ -921,6 +910,25 @@ Hooks.on('renderChatMessageHTML', function (message, html) {
   if (sender && senderElement) senderElement.innerHTML = `
     <h4><img src="${sender.img}" width="40" height="40" style="border-radius:8px;vertical-align:middle;margin-right:10px;"/>${sender.name}</h4>`;
 });
+
+async function aplicarDanoPeloChat(event) {
+  const button = event.target.closest?.('.aplicarDano');
+  if (!button) return;
+  event.preventDefault();
+  const tokens = canvas.tokens.controlled;
+  if (tokens.length === 0) return ui.notifications.warn('Nenhum token selecionado.');
+  const dano = Number(button.dataset.dano);
+  const cura = button.dataset.cura === 'true';
+  const critico = button.dataset.critico === 'true';
+  try {
+    for (const token of tokens) {
+      await token.actor._aplicarDano({valor: dano, isCura: cura, isCritico: critico}, token);
+    }
+  } catch (error) {
+    console.error('Tagmar | Falha ao aplicar dano pelo chat', error);
+    ui.notifications.error('Não foi possível aplicar o dano. Consulte o Console.');
+  }
+}
 
 Hooks.on('tagmar_Critico', async function (coluna, tabela_resol, user, actor, tipo, falha) {
   if (game.user !== user) return;
