@@ -610,7 +610,7 @@ function boasVindas () {
 
 Hooks.on("preCreateToken", function (document, data) {
   if (!game.user.isGM) return;
-  if (!game.modules.get('barbrawl') && !game.modules.get('barbrawl').active) return;
+  if (!game.modules.get('barbrawl')?.active) return;
   const settingBars = game.settings.get("tagmar_rpg", "autoBars");
   if (settingBars == "no") return;
   let resources = createBrawrs(document, settingBars);
