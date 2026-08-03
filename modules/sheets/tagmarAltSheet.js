@@ -1,4 +1,4 @@
-export default class tagmarAltSheet extends ActorSheet {
+export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
 
     static get defaultOptions() {
         this.lastUpdate = {};
