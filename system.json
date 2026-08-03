@@ -121,7 +121,7 @@
     "distance": 1.0,
     "units": "m"
   },
-  "url": "https://github.com/marcoswalker/tagmar_rpg",
-  "manifest": "https://raw.githubusercontent.com/marcoswalker/tagmar_rpg/master/system.json",
-  "download": "https://codeload.github.com/marcoswalker/tagmar_rpg/zip/master"
+  "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
+  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/codex/migracao-v13/system.json",
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/heads/codex/migracao-v13"
 }
