@@ -160,6 +160,24 @@
 
 /* Foundry V13: impede que a classe .col do Bootstrap desloque a coluna
    direita do HUD para baixo do token. */
+#token-hud .col.left {
+    position: absolute;
+    top: -50px;
+    left: calc(-1 * var(--column-width) - 8px);
+    right: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 8px;
+    width: var(--column-width);
+    height: calc(100% + 100px);
+    max-width: none;
+    padding: 0;
+    margin: 0;
+    flex: 0 0 auto;
+}
+
 #token-hud .col.right {
     position: absolute;
     top: -50px;
