@@ -2,9 +2,9 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.5.0-v13.1",
+  "version": "2.5.0-v13.2",
   "relationships": {
-    "requires": [
+    "recommends": [
       {
         "id": "barbrawl",
         "manifest": "https://raw.githubusercontent.com/marcoswalker/modulos_foundry/main/barbrawl/module.json"
