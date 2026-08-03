@@ -1,0 +1,126 @@
+{
+  "id": "tagmar_rpg",
+  "title": "Tagmar XXX",
+  "description": "Sistema simples para Tagmar 3.0.",
+  "version": "2.4.1",
+  "relationships": {
+    "requires": [
+      {
+        "id": "barbrawl",
+        "manifest": "https://raw.githubusercontent.com/marcoswalker/modulos_foundry/main/barbrawl/module.json"
+      },
+      {
+        "id": "lib-wrapper",
+        "manifest": "https://raw.githubusercontent.com/marcoswalker/modulos_foundry/main/lib-wrapper/module.json"
+      },
+      {
+        "id": "dice-so-nice",
+        "manifest": "https://raw.githubusercontent.com/marcoswalker/modulos_foundry/main/dice-so-nice/module.json"
+      },
+      {
+        "id": "socketlib",
+        "manifest": "https://raw.githubusercontent.com/marcoswalker/modulos_foundry/main/socketlib/module.json"
+      },
+      {
+        "id": "drag-ruler",
+        "manifest": "https://raw.githubusercontent.com/marcoswalker/modulos_foundry/main/drag-ruler/module.json"
+      },
+      {
+        "id": "polyglot",
+        "manifest": "https://raw.githubusercontent.com/marcoswalker/modulos_foundry/main/polyglot/module.json"
+      },
+      {
+        "id": "tagmar-ammu-nation",
+        "manifest": "https://raw.githubusercontent.com/marcoswalker/modulos_foundry/main/tagmar-ammu-nation/module.json"
+      },
+      {
+        "id": "tagmartrade",
+        "manifest": "https://raw.githubusercontent.com/marcoswalker/modulos_foundry/main/tagmartrade/module.json"
+      }
+    ]
+  },
+  "authors": [
+    {
+      "name": "Marcos Walker",
+      "url": "https://github.com/marcoswalker"
+    },
+    {
+      "name": "Vinicius Fernandez",
+      "url": "https://www.youtube.com/channel/UCDyR_0eg3TjV5r5cOUqQaSQ"
+    }
+  ],
+  "media": [
+    {
+      "type": "video",
+      "url": "https://youtu.be/N2yr3L2m2ac?list=PLrRhUsW5zVjALqHoqfyaDXoRv2ku6Wxei"
+    }
+  ],
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12"
+  },
+  "scripts": [
+  ],
+  "esmodules": [
+    "modules/tagmar.js"
+  ],
+  "styles": [
+    "css/bootstrap-grid.css",
+    "css/sheet.css"
+  ],
+  "packs": [
+    {
+      "name": "terras-selvagens",
+      "label": "Terras Selvagens",
+      "system": "tagmar_rpg",
+      "path": "packs/terras-selvagens",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "criando-fichas",
+      "label": "Criando Fichas",
+      "system": "tagmar_rpg",
+      "path": "packs/criando-fichas",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "registro-de-datas",
+      "label": "Registro de Datas",
+      "system": "tagmar_rpg",
+      "path": "packs/registro-de-datas",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "NONE",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "criaturas-e-arquetipos-sem-tecnicas",
+      "label": "Criaturas e Arquetipos Sem Tecnicas",
+      "system": "tagmar_rpg",
+      "path": "packs/criaturas-e-arquetipos-sem-tecnicas",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "NONE",
+        "GAMEMASTER": "OWNER"
+      }
+    }
+  ],
+  "languages": [
+  ],
+  "grid": {
+    "distance": 1.0,
+    "units": "m"
+  },
+  "url": "https://github.com/marcoswalker/tagmar_rpg",
+  "manifest": "https://raw.githubusercontent.com/marcoswalker/tagmar_rpg/master/system.json",
+  "download": "https://codeload.github.com/marcoswalker/tagmar_rpg/zip/master"
+}

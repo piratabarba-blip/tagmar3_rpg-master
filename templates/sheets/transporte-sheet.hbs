@@ -1,0 +1,55 @@
+<form class="{{cssClass}} form_tagmar" autocomplete="off">
+    <header class="sheet-header">
+        <div class='container'>
+            <div class="row container_dados">
+                <div class="col-md-4">
+                    <img class="tagmarLogo" src="systems/tagmar_rpg/templates/sheets/img/logo.png"/>  
+                </div>
+                <div class="col-md-8">
+                    <h1 class="fairyDust" style="text-align: center; padding-top:20px;">{{item.type}}</h1>
+                </div>
+            </div>
+            <div class="row container_dados">
+                <img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
+                <h1 class="fairyDust"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            </div>
+            <div class="row container_dados">
+                <div class="container">
+                    <div class="row dados">
+                        <div class="col-md-2">
+                            <label><h4 class="mediaeval">Carga(Kg):</h4></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input name="system.capacidade.carga" type="number" value="{{data.system.capacidade.carga}}" height="30"/> 
+                        </div>
+                        <div class="col-md-2">
+                            <label><h4 class="mediaeval">Pessoas:</h4></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input name="system.capacidade.pessoas" type="number" value="{{data.system.capacidade.pessoas}}" height="30"/>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label><h4 class="mediaeval">Preço:</h4></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input name="system.preco" type="text" value="{{data.system.preco}}" height="30"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row dados">
+                        <div class="col-md-12" style="height: 345px;">
+                            {{editor data.system.descricao target="system.descricao" button=true owner=options.owner editable=options.editable}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>   
+    </header>
+</form>

@@ -1,0 +1,119 @@
+<form class="{{cssClass}} form_tagmar" autocomplete="off">
+    <header class="sheet-header">
+        <div class='container'>
+            <div class="row container_dados">
+                <div class="col-md-4">
+                    <img class="tagmarLogo" src="systems/tagmar_rpg/templates/sheets/img/logo.png"/>  
+                </div>
+                <div class="col-md-8">
+                    <h1 class="fairyDust" style="text-align: center; padding-top:20px;">Técnica de Combate</h1>
+                </div>
+            </div>
+            <div class="row container_dados">
+                <img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
+                <h1 class="fairyDust"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            </div>
+            <div class="row container_dados">
+                <div class="container">
+                    <div class="row dados">
+                        <div class="col-md-2">
+                            <label><h4 class="mediaeval">Custo:</h4></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input name="system.custo" type="number" value="{{data.system.custo}}" height="30" class="custoInput"/>
+                        </div>
+                        <div class="col-md-2">
+                            <label><h4 class="mediaeval">Nível:</h4></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input name="system.nivel" type="number" value="{{data.system.nivel}}" height="30" class="nivelInput"/>
+                        </div>
+                        <div class="col-md-2">
+                            <label><h4 class="mediaeval">Total:</h4></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input name="system.total" type="number" value="{{data.system.total}}" height="30" class="totalInput" readonly/>
+                        </div>
+                    </div>
+
+                    <div class="row dados">
+                        <div class="col-md-2">
+                            <label><h4 class="mediaeval">Categoria:</h4></label>
+                        </div>
+                        <div class="col-md-4">
+                            <input name="system.categoria" type="text" list="categorias" value="{{data.system.categoria}}" height="30"/>
+                            <datalist id="categorias">
+                                <option value="Perícia"></option>
+                                <option value="Postura"></option>
+                                <option value="Ataque"></option>
+                                <option value="Precisão"></option>
+                                <option value="Agressão"></option>
+                                <option value="Proteção"></option>
+                                <option value="Suporte"></option>
+                            </datalist>
+                        </div>
+                        <div class="col-md-2">
+                            {{#ifeq data.system.categoria "Postura"}}
+                                <i class="far fa-hand-paper"></i>
+                            {{/ifeq}}
+                            {{#ifeq data.system.categoria "Ataque"}}
+                                <i class="fas fa-gavel"></i>
+                            {{/ifeq}}
+                            {{#ifeq data.system.categoria "Precisão"}}
+                                <i class="fas fa-bullseye"></i>
+                            {{/ifeq}}
+                            {{#ifeq data.system.categoria "Agressão"}}
+                                <i class="fas fa-skull-crossbones"></i>
+                            {{/ifeq}}
+                            {{#ifeq data.system.categoria "Proteção"}}
+                                <i class="fas fa-shield-alt"></i>
+                            {{/ifeq}}
+                            {{#ifeq data.system.categoria "Suporte"}}
+                                <i class="fas fa-chess-rook"></i>
+                            {{/ifeq}}
+                        </div>
+                        <div class="col-md-2">
+                            <label><h4 class="mediaeval">Ajuste:</h4></label>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="mediaeval" style="font-size: 90%;" name="system.ajuste.atributo" type="text" value="{{data.system.ajuste.atributo}}" data-dtype="String" height="30">
+                                {{#select data.system.ajuste.atributo}}
+                                <option value=""></option>
+                                <option value="INT">INT</option>
+                                <option value="CAR">CAR</option>
+                                <option value="AUR">AUR</option>
+                                <option value="FOR">FOR</option>
+                                <option value="FIS">FIS</option>
+                                <option value="AGI">AGI</option>
+                                <option value="PER">PER</option>
+                                {{/select}}
+                            </select>         
+                        </div>
+                    </div>
+
+                    <div class="row dados">
+                        <div class="col-md-4"><label><h4 class="mediaeval">Bônus/Penalidade:</h4></label></div>
+                        <div class="col-md-2">
+                            <input name="system.ajuste.valor" type="number" value="{{data.system.ajuste.valor}}" height="30"/>
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-2"><h4 class="mediaeval">Favorito:</h4></div>
+                        <div class="col-md-2">
+                            {{#if data.system.favorito}}
+                                <input type="checkbox" checked name="system.favorito" data-dtype="Boolean" value="{{data.system.favorito}}"/>
+                            {{else}}
+                                <input type="checkbox" name="system.favorito" data-dtype="Boolean" value="{{data.system.favorito}}"/>
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    <div class="row dados">
+                        <div class="col-md-12" style="height: 290px;">
+                            {{editor data.system.descricao target="system.descricao" button=true owner=options.owner editable=options.editable}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </header>
+</form>

@@ -1,0 +1,91 @@
+<form class="{{cssClass}} form_tagmar" autocomplete="off" id="form_persona">
+    <header class="sheet-header">
+        <div class='container'>
+            <div class="row container_dados">
+                <div class="col-md-4">
+                    <a href="https://www.tagmar.com.br/wiki/search.aspx" class="tagmarlink"><img class="tagmarLogo" src="systems/tagmar_rpg/templates/sheets/img/logo.png"/> </a> 
+                </div>
+                <div class="col-md-8">
+                    <h1 class="fairyDust" style="text-align: center; padding-top:20px;">Inventário</h1>
+                </div>
+            </div>
+            <div class="row container_dados">
+                <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="64" width="64"/>
+                <h1 class="fairyDust"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>   
+            </div>
+        </div>
+    </header>
+    <section class="sheet-primary">
+        <div class="container container_dados">
+            <div class='row dados'>
+                <div class="col-md-1"></div>
+                <div class="col-md-1">
+                    <label><h4 class="mediaeval">Procurar:</h4></label>
+                </div>
+                <div class="col-md-10">
+                    <input class="searchPertence mediaeval" type="text" placeholder="Digite para realçar o item."/>
+                </div>
+            </div>
+            <div class="row dados">
+                <div class="col-md-6">
+                    <table>
+                        <caption class="mediaeval"><h1 class='mediaeval'>Pertences</h1></caption>
+                        <tr style='text-align:left;'>
+                            <th width="50px"></th>
+                            <th class="mediaeval">Pertence</th>
+                            <th class="mediaeval">Quant.</th>
+                            <th class="mediaeval">Preço</th>
+                            <th class="mediaeval">Ações</th>
+                        </tr>
+                        {{#each actor.pertences as |pertence|}}
+                            <tr class="item" data-item-id="{{pertence._id}}">
+                                <td class="mediaeval">
+                                    <img class="imgItem" src="{{pertence.img}}"/>
+                                </td>
+                                <td class="mediaeval pertenceName">{{pertence.name}}</td>
+                                <td class="mediaeval">{{pertence.system.quant}}</td>
+                                <td class="mediaeval">{{pertence.system.preco}}</td>
+                                <td>
+                                    <div class="item-controls">
+                                        <a class="item-control item-cesto" title="Pegar"><i class="fas fa-shopping-basket"></i></a>
+                                        <a class="item-control item-edit" title="Editar"><i class="fas fa-edit"></i></a> <!-- fa-edit  -->
+                                        <a class="item-control item-delete" title="Deletar"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table>
+                        <caption class="mediaeval"><h1 class='mediaeval'>Transportes</h1></caption>
+                        <tr style='text-align:left;'>
+                            <th width="50px"></th>
+                            <th class="mediaeval">Transporte</th>
+                            <th class="mediaeval">Carga(Kg)</th>
+                            <th class="mediaeval">Preço</th>
+                            <th class="mediaeval">Ações</th>
+                        </tr>
+                        {{#each actor.transportes as |transporte|}}
+                            <tr class="item" data-item-id="{{transporte._id}}">
+                                <td class="mediaeval">
+                                    <img class="imgItem" src="{{transporte.img}}"/>
+                                </td>
+                                <td class="mediaeval pertenceName">{{transporte.name}}</td>
+                                <td class="mediaeval">{{transporte.system.capacidade.carga}}</td>
+                                <td class="mediaeval">{{transporte.system.preco}}</td>
+                                <td>
+                                    <div class="item-controls">
+                                        <a class="item-control item-cesto" title="Pegar"><i class="fas fa-shopping-basket"></i></a>
+                                        <a class="item-control item-edit" title="Editar"><i class="fas fa-edit"></i></a> <!-- fa-edit  -->
+                                        <a class="item-control item-delete" title="Deletar"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
