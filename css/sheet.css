@@ -162,9 +162,16 @@
    direita do HUD para baixo do token. */
 #token-hud .col.right {
     position: absolute;
-    top: 0;
-    left: 100%;
-    width: auto;
+    top: -50px;
+    right: calc(-1 * var(--column-width) - 8px);
+    left: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+    width: var(--column-width);
+    height: calc(100% + 100px);
     max-width: none;
     padding: 0;
     margin: 0;
