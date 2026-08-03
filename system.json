@@ -122,6 +122,6 @@
     "units": "m"
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
-  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v13/system.json",
-  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/heads/v13"
+  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.5.0-v13.2/system.json",
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.5.0-v13.2"
 }
