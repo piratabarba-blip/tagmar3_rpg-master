@@ -1,0 +1,69 @@
+{
+  "baseUrl": "https://tagmar.com.br/wiki/Default.aspx?PageName=",
+  "requestDelayMs": 1000,
+  "categories": [
+    {
+      "id": "habilidades",
+      "label": "Habilidades",
+      "indexPages": [
+        "Manual de Regras - Habilidades"
+      ],
+      "pagePrefixes": [
+        "Habilidades - "
+      ]
+    },
+    {
+      "id": "tecnicas-combate",
+      "label": "Técnicas de Combate",
+      "indexPages": [
+        "Livro de Regras - Combate"
+      ],
+      "pagePrefixes": [
+        "Técnicas de combate - ",
+        "Técnica de combate - ",
+        "Livro de Regras - Técnicas de combate - "
+      ]
+    },
+    {
+      "id": "combate",
+      "label": "Combate",
+      "indexPages": [
+        "Livro de Regras - Combate"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "magias",
+      "label": "Magias",
+      "indexPages": [
+        "Descrição das Magias",
+        "Magias dos Magos",
+        "Magias dos Sacerdotes",
+        "Magias dos Rastreadores",
+        "Magias dos Bardos",
+        "Colégios de Magia",
+        "Colégio das Ilusões",
+        "Colégio Elemental",
+        "Colégio Necromântico",
+        "Colégio Naturalista",
+        "Colégio Alquímico",
+        "Colégio do Conhecimento",
+        "Ordens Sacerdotais",
+        "As Trilhas",
+        "As Confrarias"
+      ],
+      "pagePrefixes": [
+        "Magia - "
+      ]
+    },
+    {
+      "id": "pertences",
+      "label": "Pertences e Afins",
+      "indexPages": [
+        "Manual de Regras - Pertences e Afins",
+        "Livro de Regras - Pertences e Afins"
+      ],
+      "pagePrefixes": []
+    }
+  ]
+}

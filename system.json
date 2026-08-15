@@ -96,6 +96,17 @@
       }
     },
     {
+      "name": "criando-fichas-t3er",
+      "label": "Criando Fichas — Edição Revisada (Prévia)",
+      "system": "tagmar_rpg",
+      "path": "packs/criando-fichas-t3er",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
       "name": "registro-de-datas",
       "label": "Registro de Datas",
       "system": "tagmar_rpg",

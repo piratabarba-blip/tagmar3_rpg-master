@@ -160,7 +160,9 @@ export class tagmarItem extends Item {
         if (this.system.nivel > 0){
             h_total = this.system.total + bonus_hab;
         } else {
-            h_total = -7 + this.system.ajuste.valor + this.system.bonus + this.system.penalidade + bonus_hab;
+            // Uma Habilidade ainda não comprada é sempre testada na coluna -7.
+            // Atributo, bônus e penalidades só passam a compor o total após o nível 1.
+            h_total = -7;
         }
         if (h_total < -7) h_total = -7;
         if (h_total <= 20) {
@@ -392,6 +394,10 @@ export class tagmarItem extends Item {
     }
 
     async rollTecnica_Combate() {
+        if (Number(this.system.nivel) <= 0) {
+            ui.notifications.warn(`É necessário possuir nível em ${this.name} para usar esta Técnica de Combate.`);
+            return;
+        }
         const tabela_resol = game.tagmar.tabela_resol;
         let mecanica = this.system.mecanica;
         if (mecanica == 2) { // Rolar dados
@@ -465,7 +471,7 @@ export class tagmarItem extends Item {
         let PrintResult = "";
         let dano_total = 0;
         let punicaoText = "";
-        let conteudo = "<h4 class='mediaeval rola rola_desc'>Descrição: " + this.system.descricao + "</h4>";
+        let conteudo = "<h4 class='mediaeval rola rola_desc rola_desc_combate'>Descrição: " + this.system.descricao + "</h4>";
         if (resultado == "verde") {
             PrintResult = "<h1 class='mediaeval rola' style='color: white; text-align:center;background-color:#91cf50;'>Verde - Falha Crítica</h1>";
             critico = true;
@@ -606,7 +612,7 @@ export class tagmarItem extends Item {
         let PrintResult = "";
         let dano_total = 0;
         let punicaoText = "";
-        let conteudo = "<h4 class='mediaeval rola rola_desc'>Descrição: " + this.system.descricao + "</h4>";
+        let conteudo = "<h4 class='mediaeval rola rola_desc rola_desc_combate'>Descrição: " + this.system.descricao + "</h4>";
         if (resultado == "verde") {
             PrintResult = "<h1 class='mediaeval rola' style='color: white; text-align:center;background-color:#91cf50;'>Verde - Falha Crítica</h1>";
             critico = true;

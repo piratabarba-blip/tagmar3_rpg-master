@@ -133,6 +133,10 @@
 .rola_desc {
     font-size: 100%;
 }
+.rola_desc_combate,
+.rola_desc_combate p {
+    font-size: 115% !important;
+}
 .rola_desc b {
     color:rgb(94, 8, 8);
     font-size: 105%;

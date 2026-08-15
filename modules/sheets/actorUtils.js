@@ -362,7 +362,7 @@ export function _attProfissao(sheetData, updatePers, items_toUpdate) {
             if (hab_nivel > 0) {
                 total = parseInt(valor_atrib) + parseInt(hab_nivel) + parseInt(hab_penal) + parseInt(hab_bonus);
             } else {
-                total = parseInt(valor_atrib) - 7 + parseInt(hab_penal) + parseInt(hab_bonus);
+                total = -7;
             }
             if (hab.system.ajuste.valor != valor_atrib || hab.system.total != total) {
                 if (hab_nataD) {
@@ -695,7 +695,7 @@ export function _updateHabilItems(sheetData, updateItemsNpc) {
         if (hab_nivel > 0) {
             total = parseInt(valor_atrib) + parseInt(hab_nivel) + parseInt(hab_penal) + parseInt(hab_bonus);
         } else {
-            total = parseInt(valor_atrib) - 7 + parseInt(hab_penal) + parseInt(hab_bonus);
+            total = -7;
         }
         if (hab.system.ajuste.valor != valor_atrib || hab.system.total != total) {
             updateItemsNpc.push({
