@@ -2,43 +2,43 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.5.0-v13.9",
+  "version": "2.6.0-v14.1",
   "relationships": {
     "requires": [
       {
         "id": "barbrawl",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v13/barbrawl/module.json"
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/barbrawl/module.json"
       },
       {
         "id": "lib-wrapper",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v13/lib-wrapper/module.json"
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/lib-wrapper/module.json"
       },
       {
         "id": "dice-so-nice",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v13/dice-so-nice/module.json"
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/dice-so-nice/module.json"
       },
       {
         "id": "socketlib",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v13/socketlib/module.json"
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/socketlib/module.json"
       },
       {
         "id": "polyglot",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v13/polyglot/module.json"
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/polyglot/module.json"
       },
       {
         "id": "tagmar-ammu-nation",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v13/tagmar-ammu-nation/module.json"
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-ammu-nation/module.json"
       },
       {
         "id": "tagmartrade",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v13/tagmartrade/module.json"
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmartrade/module.json"
       }
     ]
   },
@@ -59,9 +59,9 @@
     }
   ],
   "compatibility": {
-    "minimum": "13",
-    "verified": "13",
-    "maximum": "13"
+    "minimum": "14",
+    "verified": "14.366",
+    "maximum": "14"
   },
   "scripts": [
   ],
@@ -125,6 +125,6 @@
     "units": "m"
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
-  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.5.0-v13.9/system.json",
-  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.5.0-v13.9"
+  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.6.0-v14.1/system.json",
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.6.0-v14.1"
 }
