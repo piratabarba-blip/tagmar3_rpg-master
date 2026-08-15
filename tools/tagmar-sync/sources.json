@@ -33,6 +33,15 @@
       "pagePrefixes": []
     },
     {
+      "id": "defesa",
+      "label": "Defesa",
+      "indexPages": [
+        "Livro de Regras - Combate",
+        "Livro de Regras - Pertences e Afins"
+      ],
+      "pagePrefixes": []
+    },
+    {
       "id": "magias",
       "label": "Magias",
       "indexPages": [

@@ -85,6 +85,16 @@ node tools/tagmar-sync/write-preview-pack.mjs
 
 As duas tabelas gerais de armas do capítulo oficial são a autoridade para grupo, custo do grupo, alcance, Força mínima, atributo, ajustes L/M/P e danos. A progressão acima de 100% preserva a progressão linear usada pelo sistema clássico. Ícones e o atributo de bônus de dano são reaproveitados do compêndio clássico, sem importar as pastas de armas naturais ou de técnicas para o núcleo revisado.
 
+Para gerar os equipamentos de Defesa revisados:
+
+```powershell
+node tools/tagmar-sync/sync.mjs --category=defesa --write
+node tools/tagmar-sync/build-preview-defesa.mjs
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+A tabela de Defesa do capítulo oficial de Combate define Defesa Base, Absorção, Físico mínimo, Força mínima e restrições raciais. A página oficial de Pertences e Afins define os preços. A organização e os ícones vêm do compêndio clássico, sem alterar seus documentos.
+
 Para gerar as Magias revisadas depois da sincronização completa:
 
 ```powershell
