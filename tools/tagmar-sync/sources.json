@@ -13,6 +13,24 @@
       ]
     },
     {
+      "id": "racas",
+      "label": "Raças",
+      "indexPages": [
+        "Livro de Regras - Características Básicas"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "profissoes",
+      "label": "Profissões",
+      "indexPages": [
+        "Livro de Regras - Características Básicas",
+        "Livro de Regras - Habilidades",
+        "Livro de Regras - Combate"
+      ],
+      "pagePrefixes": []
+    },
+    {
       "id": "tecnicas-combate",
       "label": "Técnicas de Combate",
       "indexPages": [

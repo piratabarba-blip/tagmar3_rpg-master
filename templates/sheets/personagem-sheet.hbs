@@ -497,6 +497,7 @@
                     </div>
                     <div class="col-md-4 col-6">
                         <select class="mediaeval" name="system.hab_nata" type="text" data-dtype="String" value="{{data.system.hab_nata}}" height="30" title="Selecione sua Habilidade Nata."/>
+                            <option value=""></option>
                             {{#selectOptions actor.habilidades selected=data.system.hab_nata valueAttr="name"}}
                             {{/selectOptions}}
                         </select>

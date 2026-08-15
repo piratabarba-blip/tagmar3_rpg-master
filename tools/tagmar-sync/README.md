@@ -66,6 +66,17 @@ node tools/tagmar-sync/write-preview-pack.mjs
 
 O único destino permitido é `packs/criando-fichas-t3er`. O pack clássico `packs/criando-fichas` nunca é aberto para escrita por esse comando.
 
+Para gerar as Raças e Profissões do núcleo revisado:
+
+```powershell
+node tools/tagmar-sync/sync.mjs --category=racas --write
+node tools/tagmar-sync/sync.mjs --category=profissoes --write
+node tools/tagmar-sync/build-preview-personagens.mjs
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+O núcleo contém somente as seis raças e seis profissões básicas da edição revisada. Raças e profissões de Terras Selvagens ou de outros suplementos permanecem em packs separados. Os modificadores raciais, EF, VB, EH, pontos de Habilidades, Técnicas e Grupos de Armas são extraídos das tabelas oficiais; a estrutura dos campos e os ícones seguem o sistema clássico.
+
 Para gerar as Técnicas de Combate revisadas depois da sincronização completa:
 
 ```powershell
