@@ -286,7 +286,7 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
       },
       linguasbarbaras: {
         label: "Línguas bárbaras",
-        font: "Dovah",
+        font: "Dragon Alphabet",
         rng: "default"
       },
       aktar: {
@@ -296,12 +296,12 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
       },
       dictio: {
         label: "Díctio",
-        font: "Nordic",
+        font: "Elder Futhark",
         rng: "default"
       },
       birso: {
         label: "Birso",
-        font: "Nordic",
+        font: "Elder Futhark",
         rng: "default"
       },
       povosdodeserto: {
@@ -331,7 +331,7 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
       },
       kurng: {
         label: "Kurng",
-        font: "Dovah",
+        font: "Dragon Alphabet",
         rng: "default"
       },
       linguadasfadas: {
@@ -444,7 +444,7 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
         },
         linguasbarbaras: {
           label: "Línguas bárbaras",
-          font: "Dovah",
+          font: "Dragon Alphabet",
           rng: "default"
         },
         aktar: {
@@ -454,12 +454,12 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
         },
         dictio: {
           label: "Díctio",
-          font: "Nordic",
+          font: "Elder Futhark",
           rng: "default"
         },
         birso: {
           label: "Birso",
-          font: "Nordic",
+          font: "Elder Futhark",
           rng: "default"
         },
         povosdodeserto: {
@@ -489,7 +489,7 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
         },
         kurng: {
           label: "Kurng",
-          font: "Dovah",
+          font: "Dragon Alphabet",
           rng: "default"
         },
         linguadasfadas: {

@@ -1,0 +1,4 @@
+packs/**/CURRENT text eol=lf
+packs/**/*.ldb binary
+packs/**/*.log binary
+packs/**/MANIFEST-* binary
