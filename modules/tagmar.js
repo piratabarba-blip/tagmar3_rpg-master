@@ -89,12 +89,12 @@ Hooks.once("init", function(){
   CONFIG.time.roundTime = 15;
   // Register System Settings
   SystemSettings();
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("tagmar", tagmarItemSheet, {makeDefault: true});
-
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("tagmar", tagmarActorSheet, {makeDefault: true});
-  Actors.registerSheet("tagmar", tagmarAltSheet, {makeDefault: false});
+  // Foundry V13 centraliza o registro de fichas em DocumentSheetConfig.
+  // As fichas V1 continuam temporariamente em uso nesta etapa de migração.
+  const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig;
+  DocumentSheetConfig.registerSheet(Item, "tagmar", tagmarItemSheet, {makeDefault: true});
+  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarActorSheet, {makeDefault: true});
+  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarAltSheet, {makeDefault: false});
   
   Handlebars.registerHelper('ifeq', function (a, b, options) {
     if (a == b) { return options.fn(this); }
@@ -286,7 +286,7 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
       },
       linguasbarbaras: {
         label: "Línguas bárbaras",
-        font: "Dovah",
+        font: "Dragon Alphabet",
         rng: "default"
       },
       aktar: {
@@ -296,12 +296,12 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
       },
       dictio: {
         label: "Díctio",
-        font: "Nordic",
+        font: "Elder Futhark",
         rng: "default"
       },
       birso: {
         label: "Birso",
-        font: "Nordic",
+        font: "Elder Futhark",
         rng: "default"
       },
       povosdodeserto: {
@@ -331,7 +331,7 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
       },
       kurng: {
         label: "Kurng",
-        font: "Dovah",
+        font: "Dragon Alphabet",
         rng: "default"
       },
       linguadasfadas: {
@@ -444,7 +444,7 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
         },
         linguasbarbaras: {
           label: "Línguas bárbaras",
-          font: "Dovah",
+          font: "Dragon Alphabet",
           rng: "default"
         },
         aktar: {
@@ -454,12 +454,12 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
         },
         dictio: {
           label: "Díctio",
-          font: "Nordic",
+          font: "Elder Futhark",
           rng: "default"
         },
         birso: {
           label: "Birso",
-          font: "Nordic",
+          font: "Elder Futhark",
           rng: "default"
         },
         povosdodeserto: {
@@ -489,7 +489,7 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
         },
         kurng: {
           label: "Kurng",
-          font: "Dovah",
+          font: "Dragon Alphabet",
           rng: "default"
         },
         linguadasfadas: {
@@ -541,7 +541,9 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
 
 Hooks.once("ready", async function () {
   game.settings.set('core', 'combatTheme', 'tagmar'); // Exclusivo Tagmar XXX
-  if (game.user.isGM) game.settings.set('polyglot', 'allowOOC', 'a');
+  if (game.user.isGM && game.modules.get('polyglot')?.active) {
+    game.settings.set('polyglot', 'allowOOC', 'a');
+  }
   Hooks.on("hotbarDrop", (bar, data, slot) => {
     createTagmarMacro(data, slot);
     return false;
@@ -564,6 +566,7 @@ Hooks.once("ready", async function () {
     }
   }); 
   $("#chat-controls > label").click(async () => rollDialog()); // Rolagem avulsa no dadinho do chat
+  document.addEventListener('click', aplicarDanoPeloChat);
 });
 
 Hooks.on('renderPlayerList', function () {
@@ -608,7 +611,7 @@ function boasVindas () {
 
 Hooks.on("preCreateToken", function (document, data) {
   if (!game.user.isGM) return;
-  if (!game.modules.get('barbrawl') && !game.modules.get('barbrawl').active) return;
+  if (!game.modules.get('barbrawl')?.active) return;
   const settingBars = game.settings.get("tagmar_rpg", "autoBars");
   if (settingBars == "no") return;
   let resources = createBrawrs(document, settingBars);
@@ -884,38 +887,48 @@ Hooks.once('diceSoNiceReady', function (dice) {
   game.user.setFlag('dice-so-nice', 'appearance', { "global": {"system": "tagmar_rpg"}});
 });
 
-Hooks.on('renderChatMessage', function (message, jq, messageData) {
+Hooks.on('renderChatMessageHTML', function (message, html) {
   const fonte_size = game.settings.get('tagmar_rpg', 'fonteMsg');
-  const rola_desc = jq.find('.rola_desc');
-  if (fonte_size > 0) $(rola_desc).css('font-size', fonte_size.toString()+'%');
-  else $(rola_desc).css('font-size', '100%');
-  jq.find('.showDesc').on('click', function () {
-    if (jq.find('.rola_desc').css('display') == 'none') {
-      jq.find('.rola_desc').css('display','block');
-      jq.find('.showDesc').html('Descrição: <i class="far fa-eye"></i>');
+  const rolaDesc = html.querySelector('.rola_desc');
+  if (rolaDesc) rolaDesc.style.fontSize = fonte_size > 0 ? `${fonte_size}%` : '100%';
+  html.querySelector('.showDesc')?.addEventListener('click', function () {
+    if (!rolaDesc) return;
+    if (getComputedStyle(rolaDesc).display === 'none') {
+      rolaDesc.style.display = 'block';
+      this.innerHTML = 'Descrição: <i class="far fa-eye"></i>';
     }
     else {
-      jq.find('.rola_desc').css('display','none');
-      jq.find('.showDesc').html('Descrição: <i class="far fa-eye-slash"></i>');
-    }
-  });
-  jq.find('.aplicarDano').click(function (event) {
-    let tokens = canvas.tokens.controlled;
-    if (tokens.length == 0) return ui.notifications.warn('Nenhum token selecionado.');
-    for (let token of tokens) {
-      let dano = $(event.currentTarget).data('dano');
-      let cura = $(event.currentTarget).data('cura');
-      let critico = $(event.currentTarget).data('critico');
-      token.actor._aplicarDano({"valor": dano, "isCura": cura, "isCritico": critico}, token);
+      rolaDesc.style.display = 'none';
+      this.innerHTML = 'Descrição: <i class="far fa-eye-slash"></i>';
     }
   });
   // Imagem do personagem no chat
-  if (!messageData.message.speaker.actor) return;
-  let sender = game.actors.get(messageData.message.speaker.actor);
-  jq.find('.message-sender').html(`
-  <h4><img src="${sender.img}" width=40px height=40px style="border-radius:8px;vertical-align: middle;margin-right:10px;"/>${sender.name}</h4>
-  `);
+  const actorId = message.speaker.actor;
+  if (!actorId) return;
+  const sender = game.actors.get(actorId);
+  const senderElement = html.querySelector('.message-sender');
+  if (sender && senderElement) senderElement.innerHTML = `
+    <h4><img src="${sender.img}" width="40" height="40" style="border-radius:8px;vertical-align:middle;margin-right:10px;"/>${sender.name}</h4>`;
 });
+
+async function aplicarDanoPeloChat(event) {
+  const button = event.target.closest?.('.aplicarDano');
+  if (!button) return;
+  event.preventDefault();
+  const tokens = canvas.tokens.controlled;
+  if (tokens.length === 0) return ui.notifications.warn('Nenhum token selecionado.');
+  const dano = Number(button.dataset.dano);
+  const cura = button.dataset.cura === 'true';
+  const critico = button.dataset.critico === 'true';
+  try {
+    for (const token of tokens) {
+      await token.actor._aplicarDano({valor: dano, isCura: cura, isCritico: critico}, token);
+    }
+  } catch (error) {
+    console.error('Tagmar | Falha ao aplicar dano pelo chat', error);
+    ui.notifications.error('Não foi possível aplicar o dano. Consulte o Console.');
+  }
+}
 
 Hooks.on('tagmar_Critico', async function (coluna, tabela_resol, user, actor, tipo, falha) {
   if (game.user !== user) return;
@@ -1149,57 +1162,67 @@ function setInf_ataque(target_token, user) {
   }
 }
 
-Hooks.on('renderUserConfig', function (UserConfig, html , User) {
-  let actors = User.actors;
-  let lista = html.find('.actor');
+Hooks.on('renderUserConfig', function (userConfig, html) {
+  html = $(html);
+  const actors = game.actors;
+  const lista = html.find('.actor');
   lista.each(function (index, li) {
-    let actor_id = $(li).data('actorId');
-    let actor = actors.find(a => a.id == actor_id);
-    if (actor.type != "Personagem") $(li).addClass('esconde');
+    const actorId = li.dataset.actorId ?? li.dataset.entryId;
+    const actor = actors.get(actorId);
+    if (actor && actor.type !== "Personagem") $(li).addClass('esconde');
   });
 });
 
-Hooks.on('renderActorDirectory', function (actordirectory, html, user) {
-  if (user.user.isGM) return;
-  let list = html.find('.actor');
+Hooks.on('renderActorDirectory', function (actorDirectory, html) {
+  if (game.user.isGM) return;
+  html = $(html);
+  const list = html.find('.actor, [data-entry-id]');
   list.each(function (index, li) {
-    let actor = actordirectory.documents.find(a => a._id == $(li).data('documentId'));
-    if (actor.type == "Inventario") $(li).addClass('esconde');
+    const actorId = li.dataset.documentId ?? li.dataset.entryId;
+    const actor = game.actors.get(actorId);
+    if (actor?.type === "Inventario") $(li).addClass('esconde');
   });
 });
 
 Hooks.on("getSceneControlButtons", (controls) => {
-  const bar = controls.find(c => c.name === "token");
-  if (!game.user.isGM && typeof(game.user.character) != 'undefined') {
-    bar.tools.push({
-      name: "Centralizar Canvas no Token",
+  const tokenControls = controls.tokens;
+  if (!tokenControls) return;
+  const tools = tokenControls.tools;
+  let order = Object.keys(tools).length;
+  if (!game.user.isGM && game.user.character) {
+    tools.tagmarCentralizar = {
+      name: "tagmarCentralizar",
       icon: "fas fa-anchor",
       title: "Centralizar Canvas no Token",
-      onClick: async () => centralizaToken(),
+      order: order++,
+      onChange: () => centralizaToken(),
       button: true
-    });
+    };
   } 
-  bar.tools.push({
-    name: "Rolar direto na tabela ou Teste de Resistência",
+  tools.tagmarRolagem = {
+    name: "tagmarRolagem",
     icon: "fas fa-dice-d20",
     title: "Rolagem na Tabela",
-    onClick: async () => rollDialog(),
+    order: order++,
+    onChange: () => rollDialog(),
     button: true
-  });
-  bar.tools.push({
-    name: "Tabela de Resolução de Ações",
+  };
+  tools.tagmarTabelaAcoes = {
+    name: "tagmarTabelaAcoes",
     icon: "fas fa-border-all",
     title: "Tabela de Resolução de Ações",
-    onClick: () => tabelaAcoes(),
+    order: order++,
+    onChange: () => tabelaAcoes(),
     button: true
-  });
-  bar.tools.push({
-    name: "Tabela de Teste de Resistência Física / Resistência à Magia",
+  };
+  tools.tagmarTabelaResistencia = {
+    name: "tagmarTabelaResistencia",
     icon: "fas fa-table",
     title: "Tabela de Teste de Resistência Física / Resistência à Magia",
-    onClick: () => tabelaResistencia(),
+    order,
+    onChange: () => tabelaResistencia(),
     button: true
-  });
+  };
 });
 
 function tabelaResistencia () {
@@ -1435,8 +1458,10 @@ async function rollResistencia(resist, f_ataque) {
 }
 
 Hooks.on("renderSidebarTab", async (object, html) => {
-  if (object instanceof Settings) {
+  if (object === ui.settings || object.constructor.name === "Settings") {
+    html = $(html);
     const details = html.find("#game-details");
+    if (!details.length || details.find('.donation-sistema').length) return;
     const tgDetails = document.createElement("li");
     tgDetails.classList.add("donation-sistema");
     tgDetails.innerHTML = "Tagmar RPG no Foundry Vtt <span><a title='Acesse nosso Youtube.' href='https://www.youtube.com/channel/UCDyR_0eg3TjV5r5cOUqQaSQ'><i class='fab fa-youtube-square'></i></a></span>";
@@ -1445,8 +1470,9 @@ Hooks.on("renderSidebarTab", async (object, html) => {
 });
 
 Hooks.on("renderCombatTracker",async function (combatTracker, html) {
+  html = $(html);
   if (combatTracker.combats.length > 0) {
-    if (!combatTracker.options.popOut && game.settings.get('tagmar_rpg', 'popOutCombat')) combatTracker.renderPopout();
+    if (!combatTracker.isPopout && game.settings.get('tagmar_rpg', 'popOutCombat')) combatTracker.renderPopout();
   }
   if (!game.user.isGM) return;
   const combats = combatTracker.combats;
@@ -1457,7 +1483,7 @@ Hooks.on("renderCombatTracker",async function (combatTracker, html) {
       </a>`);
     let currentCombat = combatTracker.viewed;
     let combatants = currentCombat.combatants;
-    $('.setarIniciativa').on('click', function (event) {
+    html.find('.setarIniciativa').on('click', function (event) {
       let dialogContent = `<div class="mediaeval">
         <ul class="combatates" style="list-style-type:none;"></ul>
         <label for="valor">Somar na Iniciativa:</label>

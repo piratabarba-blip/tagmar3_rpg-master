@@ -1,4 +1,4 @@
-export default class tagmarActorSheet extends ActorSheet {
+export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
     
     static get defaultOptions() {
         this.lastUpdate = {};

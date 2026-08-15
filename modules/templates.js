@@ -4,7 +4,7 @@
 * @return {Promise}
 */
 export const preloadHandlebarsTemplates = async function() {
-	return loadTemplates([
+	return foundry.applications.handlebars.loadTemplates([
 
         "systems/tagmar_rpg/templates/sheets/personagem-sheet.hbs",
         "systems/tagmar_rpg/templates/sheets/npc-sheet.hbs",

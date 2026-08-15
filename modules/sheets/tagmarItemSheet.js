@@ -1,4 +1,4 @@
-export default class tagmarItemSheet extends ItemSheet {
+export default class tagmarItemSheet extends foundry.appv1.sheets.ItemSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
         classes: ["tagmar", "sheet", "item"],
