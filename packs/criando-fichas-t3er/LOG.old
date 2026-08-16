@@ -1,5 +1,5 @@
-2026/08/15-19:53:33.408 c04 Recovering log #32
-2026/08/15-19:53:33.416 c04 Level-0 table #34: started
-2026/08/15-19:53:33.441 c04 Level-0 table #34: 1202304 bytes OK
-2026/08/15-19:53:33.448 c04 Delete type=0 #32
-2026/08/15-19:53:33.449 c04 Delete type=3 #30
+2026/08/15-20:25:37.272 c6c Recovering log #35
+2026/08/15-20:25:37.272 c6c Level-0 table #37: started
+2026/08/15-20:25:37.305 c6c Level-0 table #37: 1215866 bytes OK
+2026/08/15-20:25:37.305 c6c Delete type=0 #35
+2026/08/15-20:25:37.305 c6c Delete type=3 #33

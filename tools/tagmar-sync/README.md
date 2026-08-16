@@ -106,6 +106,16 @@ node tools/tagmar-sync/write-preview-pack.mjs
 
 A tabela de Defesa do capítulo oficial de Combate define Defesa Base, Absorção, Físico mínimo, Força mínima e restrições raciais. A página oficial de Pertences e Afins define os preços. A organização e os ícones vêm do compêndio clássico, sem alterar seus documentos.
 
+Para gerar os Pertences e Afins comuns revisados:
+
+```powershell
+node tools/tagmar-sync/sync.mjs --category=pertences --write
+node tools/tagmar-sync/build-preview-pertences.mjs
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+O capítulo oficial define os itens, preços, capacidades e textos. Pesos e capacidades mecânicas que não foram republicados na tabela são preservados do compêndio clássico. Tesouros mágicos, poções, elixires, venenos e outros itens de livros próprios serão tratados separadamente, sem serem confundidos com equipamentos comuns.
+
 Para gerar as Magias revisadas depois da sincronização completa:
 
 ```powershell
