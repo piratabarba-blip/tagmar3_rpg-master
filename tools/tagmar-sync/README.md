@@ -116,6 +116,16 @@ node tools/tagmar-sync/write-preview-pack.mjs
 
 O capítulo oficial define os itens, preços, capacidades e textos. Pesos e capacidades mecânicas que não foram republicados na tabela são preservados do compêndio clássico. Tesouros mágicos, poções, elixires, venenos e outros itens de livros próprios serão tratados separadamente, sem serem confundidos com equipamentos comuns.
 
+Para gerar os consumíveis do Livro dos Objetos Mágicos:
+
+```powershell
+node tools/tagmar-sync/sync.mjs --category=tesouros-magicos --write
+node tools/tagmar-sync/build-preview-tesouros.mjs
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+Poções, elixires, essências, infusões, óleos, pastilhas e ungüentos preservam a organização clássica, mas usam integralmente as descrições, origens, raridades, fórmulas, histórias e efeitos da publicação oficial atual.
+
 Para gerar as Magias revisadas depois da sincronização completa:
 
 ```powershell

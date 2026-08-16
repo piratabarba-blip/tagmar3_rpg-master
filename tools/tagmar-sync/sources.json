@@ -90,6 +90,16 @@
         "Livro de Regras - Pertences e Afins"
       ],
       "pagePrefixes": []
+    },
+    {
+      "id": "tesouros-magicos",
+      "label": "Tesouros Mágicos",
+      "indexPages": [
+        "Livro de Regras - Tesouros",
+        "Manual de regras - Tesouros",
+        "Livro dos Objetos Mágicos - Poções e Elixires"
+      ],
+      "pagePrefixes": []
     }
   ]
 }

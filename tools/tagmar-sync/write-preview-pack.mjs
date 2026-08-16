@@ -17,6 +17,7 @@ if (packPath !== expectedPath) throw new Error("Destino do pack fora do caminho 
 const previewParts = [
   ["preview-personagens.json", "preview-personagens-folders.json"],
   ["preview-pertences.json", "preview-pertences-folders.json"],
+  ["preview-tesouros.json", "preview-tesouros-folders.json"],
   ["preview-habilidades.json", "preview-habilidades-folders.json"],
   ["preview-combate.json", "preview-combate-folders.json"],
   ["preview-defesa.json", "preview-defesa-folders.json"],
