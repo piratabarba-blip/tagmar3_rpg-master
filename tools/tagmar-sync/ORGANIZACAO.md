@@ -66,6 +66,7 @@ Nesta primeira conversão, as magias preservam a apresentação e a mecânica cl
 
 - Cada nível descrito na página oficial deve ser tratado individualmente.
 - Magias ofensivas, como **Raio Elétrico**, devem informar e aplicar o dano correto do nível usado.
+- Todo dano fracionário calculado pela tabela de resolução deve ser arredondado para cima.
 - Magias de cura devem informar e aplicar a recuperação correta do nível usado.
 - Proteções, resistências, durações e demais efeitos não devem ser inferidos apenas pelo nome da magia.
 - A implementação deve usar as regras oficiais e o comportamento clássico como especificação, sem inventar automações ausentes.

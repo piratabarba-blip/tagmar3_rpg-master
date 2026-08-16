@@ -161,14 +161,20 @@ O compêndio revisado não cria uma lista automática de efeitos gerais. O próp
 
 ## Magias de dano
 
-Os níveis ofensivos são gerados como itens de Combate dentro de `07 - MAGIAS / MAGIAS DE ATAQUE`, preservando o funcionamento clássico da ficha. A descrição oficial atual define o nível do efeito, o dano máximo, o alcance e a área. As frações de 25%, 50%, 75% e 100% são calculadas a partir desse dano e continuam usando a rolagem e os botões de aplicação de dano já existentes no sistema.
+Os níveis ofensivos são gerados como itens de Combate dentro de `07 - MAGIAS / MAGIAS DE ATAQUE`, preservando o funcionamento clássico da ficha. A descrição oficial atual define o nível do efeito, o dano máximo, o alcance e a área. As frações de 25%, 50%, 75% e 100% são calculadas a partir desse dano e continuam usando a rolagem e os botões de aplicação de dano já existentes no sistema. Todo resultado fracionário é arredondado para cima; por exemplo, dano máximo 18 produz 5, 9, 14 e 18 nas quatro faixas básicas.
 
 ```powershell
 node tools/tagmar-sync/build-preview-magias-dano.mjs
 node tools/tagmar-sync/write-preview-pack.mjs
 ```
 
-O primeiro lote validado contém **Bola de Fogo** e **Raio Elétrico**. Outras magias ofensivas só serão acrescentadas depois de validar individualmente suas exceções, alvos, áreas, danos contínuos e efeitos especiais.
+O lote ofensivo validado contém 90 efeitos distribuídos em 17 famílias: **Aeromanipulação**, **Armadilha Natural**, **Bola de Fogo**, **Cataclisma**, **Dardos de Gelo**, **Explosão Mística**, **Feixes Incandescentes**, **Fogo Divino**, **Garras**, **Lâmina de Luz**, **Meteoros**, **Onda Destrutiva**, **Putrefação**, **Raio Elétrico**, **Relâmpagos**, **Ruído** e **Toque Gélido**.
+
+O gerador preserva as exceções oficiais em texto e nos atributos usados pela ficha. Entre elas: Garras usa Agilidade no ataque e Força no dano; Lâmina de Luz soma Força apenas ao dano; Explosão Mística reduz Karma; Onda Destrutiva danifica equipamentos; Ruído causa dano por rodada; Cataclisma pode receber dano adicional pelo Karma roubado; e magias com vários projéteis ou alvos exigem rolagens separadas.
+
+Nem toda magia que menciona dano vira um item de Combate. **Ataque Térmico** causa dano direto na EF após Resistência à Magia, **Chuva Ácida** causa dano ambiental fixo por rodada e **Auxílio Natural** resolve primeiro a Resistência à Magia. Esses efeitos continuam sob controle manual do jogador, pois inseri-los na tabela de ataque produziria uma regra diferente da oficial. Magias defensivas, curativas, invocações e melhorias de armas também não são classificadas como ataques independentes.
+
+As antigas famílias **Energia Infernal** e **Esferas do Primórdio** não aparecem no núcleo oficial revisado sincronizado e, por isso, não são copiadas artificialmente para o novo compêndio. Elas permanecem preservadas somente no compêndio clássico.
 
 Para gerar as Magias revisadas depois da sincronização completa:
 
