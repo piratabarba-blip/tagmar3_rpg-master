@@ -48,6 +48,16 @@ Após criar o snapshot de habilidades, gere documentos de prévia com IDs estáv
 node tools/tagmar-sync/build-preview.mjs
 ```
 
+## Auditoria do compêndio
+
+Depois de gerar todas as prévias, execute a auditoria antes de escrever o pack:
+
+```powershell
+node tools/tagmar-sync/audit-preview.mjs --write
+```
+
+O relatório fica em `.cache/tagmar-sync/audit-report.json`. A auditoria confere IDs, pastas órfãs, documentos na raiz, origem oficial, cabeçalhos das magias, vínculos entre efeitos e Magias-pai, valores de dano e dados de cura. Avisos `needsReview` representam dados que a fonte oficial não publicou de forma objetiva e não devem ser preenchidos por suposição.
+
 O resultado `preview-habilidades.json` ainda não é um pack. Campos mecânicos desconhecidos são mantidos neutros e marcados com `needsMechanicalMapping`, impedindo que conteúdo textual seja confundido com uma implementação aprovada.
 
 Para ler a organização e os ícones do compêndio clássico sem alterá-lo:
