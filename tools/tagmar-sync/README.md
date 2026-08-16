@@ -126,6 +126,16 @@ node tools/tagmar-sync/write-preview-pack.mjs
 
 Poções, elixires, essências, infusões, óleos, pastilhas e ungüentos preservam a organização clássica, mas usam integralmente as descrições, origens, raridades, fórmulas, histórias e efeitos da publicação oficial atual.
 
+Para gerar os Venenos e Drogas revisados:
+
+```powershell
+node tools/tagmar-sync/sync.mjs --category=venenos-drogas --write
+node tools/tagmar-sync/build-preview-venenos.mjs
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+Os exemplos vêm do capítulo oficial de Regras Complementares. Venenos preservam Força de Ataque, método de aplicação, efeitos e duração; drogas preservam também ciclo e uso viciante. Os ícones, pesos e preços disponíveis são reaproveitados dos documentos correspondentes do compêndio clássico, que permanece inalterado.
+
 Para gerar as Magias revisadas depois da sincronização completa:
 
 ```powershell
