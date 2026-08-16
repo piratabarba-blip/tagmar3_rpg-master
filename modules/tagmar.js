@@ -919,10 +919,11 @@ async function aplicarDanoPeloChat(event) {
   if (tokens.length === 0) return ui.notifications.warn('Nenhum token selecionado.');
   const dano = Number(button.dataset.dano);
   const cura = button.dataset.cura === 'true';
+  const curaTipo = button.dataset.curaTipo || (cura ? 'EH' : null);
   const critico = button.dataset.critico === 'true';
   try {
     for (const token of tokens) {
-      await token.actor._aplicarDano({valor: dano, isCura: cura, isCritico: critico}, token);
+      await token.actor._aplicarDano({valor: dano, isCura: cura, curaTipo, isCritico: critico}, token);
     }
   } catch (error) {
     console.error('Tagmar | Falha ao aplicar dano pelo chat', error);

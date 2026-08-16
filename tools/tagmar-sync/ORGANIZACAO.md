@@ -60,14 +60,17 @@ Documentos com nomes iguais não serão mesclados apenas pelo nome. O ID estáve
 - Uma categoria só é publicada depois de validar dados, organização e comportamento na ficha.
 - A página oficial de origem e o suplemento devem ficar registrados em todos os documentos sincronizados.
 
-## Automação futura das magias
+## Automação das magias
 
 Nesta primeira conversão, as magias preservam a apresentação e a mecânica clássica de custo, nível, Karma e total. A automação dos efeitos será feita junto da implementação de Combate.
 
 - Cada nível descrito na página oficial deve ser tratado individualmente.
 - Magias ofensivas, como **Raio Elétrico**, devem informar e aplicar o dano correto do nível usado.
 - Todo dano fracionário calculado pela tabela de resolução deve ser arredondado para cima.
-- Magias de cura devem informar e aplicar a recuperação correta do nível usado.
+- Curas Heroicas usam a tabela de resolução e arredondam para cima qualquer recuperação fracionária.
+- Curas Espirituais aplicam diretamente a recuperação fixa de EH, sem rolagem de ataque.
+- Curas Físicas aplicam diretamente a recuperação fixa de EF, sem rolagem de ataque.
+- Nenhuma cura pode elevar EH ou EF acima do máximo do Personagem ou NPC.
 - Proteções, resistências, durações e demais efeitos não devem ser inferidos apenas pelo nome da magia.
 - A implementação deve usar as regras oficiais e o comportamento clássico como especificação, sem inventar automações ausentes.
 - A automação só será publicada depois de testes separados de dano, cura, Karma, resistência e escolha de nível.

@@ -176,6 +176,19 @@ Nem toda magia que menciona dano vira um item de Combate. **Ataque Térmico** ca
 
 As antigas famílias **Energia Infernal** e **Esferas do Primórdio** não aparecem no núcleo oficial revisado sincronizado e, por isso, não são copiadas artificialmente para o novo compêndio. Elas permanecem preservadas somente no compêndio clássico.
 
+## Magias de cura
+
+As curas objetivas ficam organizadas em `07 - MAGIAS / MAGIAS DE CURA`, separadas em **Curas Heroicas**, **Curas Espirituais** e **Curas Físicas**. O gerador lê os níveis e valores das descrições oficiais atuais, sem alterar o compêndio clássico.
+
+```powershell
+node tools/tagmar-sync/build-preview-magias-cura.mjs
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+O lote contém 17 efeitos. **Curas Heroicas** possui seis níveis e usa a tabela de resolução: a fração obtida determina a EH recuperada e qualquer resultado decimal é arredondado para cima. **Curas Espirituais** possui seis níveis de recuperação fixa de EH, enquanto **Curas Físicas** possui cinco níveis de recuperação fixa de EF; essas duas famílias publicam diretamente no chat o botão de cura, sem rolagem de ataque.
+
+Ao aplicar a cura pelo chat, o jogador seleciona o token beneficiado. A recuperação nunca ultrapassa a EH ou EF máxima, tanto para Personagens quanto para NPCs. Efeitos adicionais descritos nos níveis mais altos, como expulsão de espíritos, continuam sob controle do jogador. Outras magias restauradoras com regras especiais permanecem informativas até receberem implementação e testes próprios.
+
 Para gerar as Magias revisadas depois da sincronização completa:
 
 ```powershell

@@ -463,6 +463,67 @@ export class tagmarItem extends Item {
         ChatMessage.create(chatData);
     }
 
+    _chatActionButtons(valor, critico, falha = false) {
+        const healTarget = this.flags?.tagmarSync?.healTarget;
+        if (healTarget) {
+            if (falha) return {button: "", buttonC: ""};
+            const label = `Aplicar Cura ${healTarget}`;
+            if (!critico && valor != 0) {
+                return {
+                    button: "",
+                    buttonC: `<button class="aplicarDano mediaeval" data-critico="false" data-cura="true" data-cura-tipo="${healTarget}" data-dano="${valor}">${label}</button>`
+                };
+            }
+            if (critico) {
+                return {
+                    button: "",
+                    buttonC: `<p>
+                        <button class="aplicarDano mediaeval" data-critico="false" data-cura="true" data-cura-tipo="${healTarget}" data-dano="${this.system.dano.d25}">Aplicar 25% Cura ${healTarget}</button>
+                        <br><button class="aplicarDano mediaeval" data-critico="false" data-cura="true" data-cura-tipo="${healTarget}" data-dano="${this.system.dano.d50}">Aplicar 50% Cura ${healTarget}</button>
+                        <br><button class="aplicarDano mediaeval" data-critico="false" data-cura="true" data-cura-tipo="${healTarget}" data-dano="${this.system.dano.d75}">Aplicar 75% Cura ${healTarget}</button>
+                        <br><button class="aplicarDano mediaeval" data-critico="false" data-cura="true" data-cura-tipo="${healTarget}" data-dano="${this.system.dano.d100}">Aplicar 100% Cura ${healTarget}</button>
+                    </p>`
+                };
+            }
+            return {button: "", buttonC: ""};
+        }
+
+        let button = "";
+        let buttonC = "";
+        if (!critico && valor != 0) button = `<button class="aplicarDano mediaeval" data-critico="false" data-cura="false" data-dano="${valor}">Aplicar Dano</button>`;
+        if (!critico && valor != 0) buttonC = `<button class="aplicarDano mediaeval" data-critico="false" data-cura="true" data-cura-tipo="EH" data-dano="${valor}">Aplicar Cura EH</button>`;
+        if (critico) {
+            button = `<p>
+                <button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d25}">Aplicar 25% Dano</button>
+                <br><button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d50}">Aplicar 50% Dano</button>
+                <br><button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d75}">Aplicar 75% Dano</button>
+                <br><button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d100}">Aplicar 100% Dano</button>
+            </p>`;
+        }
+        return {button, buttonC};
+    }
+
+    async _curaFixaToChat() {
+        const healTarget = this.flags?.tagmarSync?.healTarget;
+        const healAmount = Number(this.flags?.tagmarSync?.healAmount ?? 0);
+        if (!healTarget || healAmount <= 0) {
+            ui.notifications.error('Dados de cura incompletos neste item.');
+            return;
+        }
+        const description = this.system.descricao
+            ? `<div class="mediaeval rola rola_desc">${this.system.descricao.replace(/\n/g, "<br>")}</div>`
+            : "";
+        await ChatMessage.create({
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            content: `<img src="${this.img}" style="display:block;margin-left:auto;margin-right:auto;" />
+                <h2 class="mediaeval rola" style="text-align:center;">${this.name}</h2>
+                ${description}
+                <h2 class="mediaeval rola rola_dano" style="text-align:center;">Cura ${healTarget}: ${healAmount}</h2>
+                <button class="aplicarDano mediaeval" data-critico="false" data-cura="true" data-cura-tipo="${healTarget}" data-dano="${healAmount}">Aplicar Cura ${healTarget}</button>`
+        });
+    }
+
     async combateToChat(coluna_rolada, resultado, puni_25, puni_50, puni_75, puni_100, r, municao_text, valor_tabela) {
         let dadosColoridos = await import("/systems/"+game.system.id+"/modules/dadosColoridos.js");
         let critico = false;
@@ -576,24 +637,14 @@ export class tagmarItem extends Item {
             critico = true;
         }
         let coluna = "<h4 class='mediaeval rola'>Coluna: " + coluna_rolada + "</h4>";
-        let dano_text = "<h2 class='mediaeval rola rola_dano' style='text-align: center;'>Dano: " + dano_total + "</h2>";
+        const actionLabel = this.flags?.tagmarSync?.healTarget ? `Cura ${this.flags.tagmarSync.healTarget}` : "Dano";
+        let dano_text = `<h2 class='mediaeval rola rola_dano' style='text-align: center;'>${actionLabel}: ${dano_total}</h2>`;
         let table_dano = `<table style="margin-left: auto;margin-right: auto;text-align:center;" class="mediaeval"><tr><th>25%</th><th>50%</th><th>75%</th><th>100%</th></tr><tr><td>${this.system.dano.d25}</td><td>${this.system.dano.d50}</td><td>${this.system.dano.d75}</td><td>${this.system.dano.d100}</td></tr></table>`;
-        if (critico) dano_text = table_dano;
+        if (critico && !(this.flags?.tagmarSync?.healTarget && falha)) dano_text = table_dano;
         if (game.settings.get('tagmar_rpg', 'dadosColoridos')) {
             dadosColoridos.dadosColoridos(resultado, r);
         }
-        let button = "";
-        let buttonC = "";
-        if (!critico && dano_total != 0) button = `<button class="aplicarDano mediaeval" data-critico="false" data-cura="false" data-dano="${dano_total}">Aplicar Dano</button>`;
-        if (!critico && dano_total != 0) buttonC = `<button class="aplicarDano mediaeval" data-critico="false" data-cura="true" data-dano="${dano_total}">Aplicar Cura EH</button>`;
-        if (critico) {
-            button = `<p>
-                <button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d25}">Aplicar 25% Dano</button>
-                <br><button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d50}">Aplicar 50% Dano</button>
-                <br><button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d75}">Aplicar 75% Dano</button>
-                <br><button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d100}">Aplicar 100% Dano</button>
-            </p>`;
-        }
+        const {button, buttonC} = this._chatActionButtons(dano_total, critico, falha);
         let itemId = `<h1 class="esconde" id="itemId" data-item-id="${this.id}">id</h1>`;
         await r.toMessage({
             user: game.user.id,
@@ -779,24 +830,16 @@ export class tagmarItem extends Item {
         }
         let coluna = "<h4 class='mediaeval rola'>Coluna: " + coluna_rolada + "</h4>";
         let ajuste_text = "<h1 class='mediaeval rola' style='text-align: center;'>AAC20: " + ajusteDano + "%</h1>";
-        let dano_text = "<h1 class='mediaeval rola rola_dano' style='text-align: center;'>Dano: " + dano_novo + "</h1>";
+        const healTarget = this.flags?.tagmarSync?.healTarget;
+        if (healTarget) dano_novo = Math.ceil(dano_novo);
+        const actionLabel = healTarget ? `Cura ${healTarget}` : "Dano";
+        let dano_text = `<h1 class='mediaeval rola rola_dano' style='text-align: center;'>${actionLabel}: ${dano_novo}</h1>`;
         let table_dano = `<table style="margin-left: auto;margin-right: auto;text-align:center;" class="mediaeval"><tr><th>25%</th><th>50%</th><th>75%</th><th>100%</th></tr><tr><td>${this.system.dano.d25}</td><td>${this.system.dano.d50}</td><td>${this.system.dano.d75}</td><td>${this.system.dano.d100}</td></tr></table>`;
-        if (critico) dano_text = table_dano;
+        if (critico && !(healTarget && falha)) dano_text = table_dano;
         if (game.settings.get('tagmar_rpg', 'dadosColoridos')) {
             dadosColoridos.dadosColoridos(resultado, r);
         }
-        let button = "";
-        let buttonC = "";
-        if (!critico && dano_novo != 0) button = `<button class="aplicarDano mediaeval" data-critico="false" data-cura="false" data-dano="${dano_novo}">Aplicar Dano</button>`;
-        if (!critico && dano_novo != 0) buttonC = `<button class="aplicarDano mediaeval" data-critico="false" data-cura="true" data-dano="${dano_novo}">Aplicar Cura EH</button>`;
-        if (critico) {
-            button = `<p>
-                <button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d25}">Aplicar 25% Dano</button>
-                <br><button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d50}">Aplicar 50% Dano</button>
-                <br><button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d75}">Aplicar 75% Dano</button>
-                <br><button class="aplicarDano mediaeval" data-critico="true" data-cura="false" data-dano="${this.system.dano.d100}">Aplicar 100% Dano</button>
-            </p>`;
-        }
+        const {button, buttonC} = this._chatActionButtons(dano_novo, critico, falha);
         let itemId = `<h1 class="esconde" id="itemId" data-item-id="${this.id}">id</h1>`;
         await r.toMessage({
             user: game.user.id,
@@ -808,6 +851,10 @@ export class tagmarItem extends Item {
     }
 
     async rollCombate() {
+        if (this.flags?.tagmarSync?.healingMode === "fixed") {
+            await this._curaFixaToChat();
+            return;
+        }
         const tabela_resol = game.tagmar.tabela_resol;
         let municao = this.system.municao;
         let muni_usada = 0;
