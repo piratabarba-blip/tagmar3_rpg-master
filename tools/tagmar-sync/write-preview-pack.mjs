@@ -25,7 +25,8 @@ const previewParts = [
   ["preview-combate.json", "preview-combate-folders.json"],
   ["preview-defesa.json", "preview-defesa-folders.json"],
   ["preview-tecnicas.json", "preview-tecnicas-folders.json"],
-  ["preview-magias.json", "preview-magias-folders.json"]
+  ["preview-magias.json", "preview-magias-folders.json"],
+  ["preview-magias-dano.json", "preview-magias-dano-folders.json"]
 ];
 const items = [];
 const folders = [];

@@ -70,3 +70,12 @@ Nesta primeira conversão, as magias preservam a apresentação e a mecânica cl
 - Proteções, resistências, durações e demais efeitos não devem ser inferidos apenas pelo nome da magia.
 - A implementação deve usar as regras oficiais e o comportamento clássico como especificação, sem inventar automações ausentes.
 - A automação só será publicada depois de testes separados de dano, cura, Karma, resistência e escolha de nível.
+
+## Efeitos criados pelos jogadores
+
+Os efeitos gerais não serão publicados como uma lista automática no compêndio revisado. O próprio jogador cria, configura e ativa o efeito na ficha, usando o atributo, a operação e o valor adequados à situação da mesa.
+
+- O gerador não deve presumir modificadores a partir apenas do nome de uma condição.
+- Condições narrativas e penalidades circunstanciais permanecem sob controle da mesa.
+- A mecânica atual de efeitos da ficha deve ser preservada.
+- Efeitos específicos de magias só poderão ser automatizados futuramente quando cada nível possuir uma regra oficial objetiva e tiver sido testado separadamente.

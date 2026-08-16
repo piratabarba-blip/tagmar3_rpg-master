@@ -155,6 +155,21 @@ node tools/tagmar-sync/write-preview-pack.mjs
 
 Os lotes clássicos de 1, 10 e 50 moedas preservam seus nomes, ícones e comportamento como pertences de tesouro. Cada documento registra a moeda, a quantidade representada e seu valor equivalente em cobre segundo a conversão oficial: 1 M.O. = 10 M.P. = 100 M.C. A entrada de resultado vazio também é preservada para tabelas aleatórias.
 
+## Efeitos da ficha
+
+O compêndio revisado não cria uma lista automática de efeitos gerais. O próprio jogador configura os efeitos na ficha e controla quando ficam ativos. O sincronizador não transforma condições narrativas em modificadores numéricos sem uma regra oficial objetiva e testada.
+
+## Magias de dano
+
+Os níveis ofensivos são gerados como itens de Combate dentro de `07 - MAGIAS / MAGIAS DE ATAQUE`, preservando o funcionamento clássico da ficha. A descrição oficial atual define o nível do efeito, o dano máximo, o alcance e a área. As frações de 25%, 50%, 75% e 100% são calculadas a partir desse dano e continuam usando a rolagem e os botões de aplicação de dano já existentes no sistema.
+
+```powershell
+node tools/tagmar-sync/build-preview-magias-dano.mjs
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+O primeiro lote validado contém **Bola de Fogo** e **Raio Elétrico**. Outras magias ofensivas só serão acrescentadas depois de validar individualmente suas exceções, alvos, áreas, danos contínuos e efeitos especiais.
+
 Para gerar as Magias revisadas depois da sincronização completa:
 
 ```powershell
