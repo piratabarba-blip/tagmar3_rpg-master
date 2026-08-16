@@ -108,6 +108,14 @@
         "Livro de Regras - Regras Complementares"
       ],
       "pagePrefixes": []
+    },
+    {
+      "id": "rituais",
+      "label": "Materiais Mágicos e Rituais",
+      "indexPages": [
+        "Livro de Regras - Magia"
+      ],
+      "pagePrefixes": []
     }
   ]
 }

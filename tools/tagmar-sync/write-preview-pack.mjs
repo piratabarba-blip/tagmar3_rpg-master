@@ -19,6 +19,7 @@ const previewParts = [
   ["preview-pertences.json", "preview-pertences-folders.json"],
   ["preview-tesouros.json", "preview-tesouros-folders.json"],
   ["preview-venenos.json", "preview-venenos-folders.json"],
+  ["preview-rituais.json", "preview-rituais-folders.json"],
   ["preview-habilidades.json", "preview-habilidades-folders.json"],
   ["preview-combate.json", "preview-combate-folders.json"],
   ["preview-defesa.json", "preview-defesa-folders.json"],

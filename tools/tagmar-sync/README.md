@@ -136,6 +136,16 @@ node tools/tagmar-sync/write-preview-pack.mjs
 
 Os exemplos vêm do capítulo oficial de Regras Complementares. Venenos preservam Força de Ataque, método de aplicação, efeitos e duração; drogas preservam também ciclo e uso viciante. Os ícones, pesos e preços disponíveis são reaproveitados dos documentos correspondentes do compêndio clássico, que permanece inalterado.
 
+Para gerar o kit de Materiais Mágicos e Rituais:
+
+```powershell
+node tools/tagmar-sync/sync.mjs --category=rituais --write
+node tools/tagmar-sync/build-preview-rituais.mjs
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+O kit continua personalizável como no compêndio clássico. A descrição oficial de cada efeito mágico é a autoridade para o preço dos materiais; o kit registra que os componentes são consumidos integralmente e que a evocação ritual demora tantas horas quanto o nível do efeito. Não são inventados componentes que a magia não especifique.
+
 Para gerar as Magias revisadas depois da sincronização completa:
 
 ```powershell
