@@ -146,6 +146,15 @@ node tools/tagmar-sync/write-preview-pack.mjs
 
 O kit continua personalizável como no compêndio clássico. A descrição oficial de cada efeito mágico é a autoridade para o preço dos materiais; o kit registra que os componentes são consumidos integralmente e que a evocação ritual demora tantas horas quanto o nível do efeito. Não são inventados componentes que a magia não especifique.
 
+Para gerar os Valores Monetários revisados:
+
+```powershell
+node tools/tagmar-sync/build-preview-moedas.mjs
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+Os lotes clássicos de 1, 10 e 50 moedas preservam seus nomes, ícones e comportamento como pertences de tesouro. Cada documento registra a moeda, a quantidade representada e seu valor equivalente em cobre segundo a conversão oficial: 1 M.O. = 10 M.P. = 100 M.C. A entrada de resultado vazio também é preservada para tabelas aleatórias.
+
 Para gerar as Magias revisadas depois da sincronização completa:
 
 ```powershell
