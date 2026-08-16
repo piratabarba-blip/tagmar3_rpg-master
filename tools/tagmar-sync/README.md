@@ -206,4 +206,20 @@ node tools/tagmar-sync/build-preview-magias.mjs
 node tools/tagmar-sync/write-preview-pack.mjs
 ```
 
-As listas oficiais de aquisição são a autoridade para pastas e custos. As descrições preenchem Evocação, Alcance, Duração e Efeito sem modificar a mecânica clássica de nível, Karma e total. Como no compêndio clássico, o texto visível de cada magia começa com Alcance, Duração e Evocação; os mesmos valores também permanecem em campos internos para automações futuras. O núcleo revisado contém 248 magias únicas e 426 documentos, pois uma mesma magia pode existir em várias listas com custos próprios. Magias de suplementos não entram automaticamente no pack do núcleo.
+As listas oficiais de aquisição são a autoridade para pastas e custos. As descrições preenchem Evocação, Alcance, Duração e Efeito sem modificar a mecânica clássica de nível, Karma e total. Como no compêndio clássico, o texto visível de cada magia começa com Alcance, Duração e Evocação; os mesmos valores também permanecem em campos internos para automações futuras. O núcleo revisado contém 248 magias únicas e 426 documentos, pois uma mesma magia pode existir em várias listas com custos próprios. As magias suplementares são produzidas por geradores separados para não alterarem esse conjunto nuclear.
+
+## Magias Ancestrais e Magias Perdidas
+
+Os dois suplementos são sincronizados em categorias próprias e não alteram as Magias do núcleo. As listas oficiais determinam profissão, especialização e custo; as páginas individuais fornecem Alcance, Duração, Evocação e a descrição integral. Entradas repetidas de forma idêntica na mesma lista oficial são consolidadas, mas a mesma magia continua aparecendo em todas as listas distintas nas quais pode ser adquirida.
+
+```powershell
+node tools/tagmar-sync/sync.mjs --category=magias-ancestrais --write
+node tools/tagmar-sync/sync.mjs --category=magias-perdidas --write
+node tools/tagmar-sync/build-preview-magias-suplementares.mjs
+node tools/tagmar-sync/audit-preview.mjs --write
+node tools/tagmar-sync/write-preview-pack.mjs
+```
+
+As pastas principais são `08 - MAGIAS ANCESTRAIS` e `09 - MAGIAS PERDIDAS`, com subdivisões por profissão e por Trilha, Confraria, Ordem ou Colégio. Os documentos permanecem informativos e preservam a gestão manual de Karma, duração e efeitos pelo jogador. O gerador não adiciona automações novas às magias suplementares.
+
+O lote atual contém 76 Magias Ancestrais únicas em 82 listas de aquisição e 169 Magias Perdidas únicas em 188 listas. A página de **Ataque de Riso** existe na seção de descrições do site, mas a magia não aparece em nenhuma lista oficial de aquisição; por isso ela fica registrada como fonte não listada e não é inserida artificialmente no compêndio.

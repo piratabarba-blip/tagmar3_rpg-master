@@ -84,6 +84,28 @@
       ]
     },
     {
+      "id": "magias-ancestrais",
+      "label": "Magias Ancestrais",
+      "indexPages": [
+        "Livro das Magias Perdidas - Magias Ancestrais",
+        "Livro das Magias Perdidas - Descrição das Magias Ancestrais"
+      ],
+      "pagePrefixes": [
+        "Magia - "
+      ]
+    },
+    {
+      "id": "magias-perdidas",
+      "label": "Magias Perdidas",
+      "indexPages": [
+        "Livro das Magias Perdidas - Magias Perdidas",
+        "Livro das Magias Perdidas - Descrição das Magias Perdidas"
+      ],
+      "pagePrefixes": [
+        "Magia - "
+      ]
+    },
+    {
       "id": "pertences",
       "label": "Pertences e Afins",
       "indexPages": [

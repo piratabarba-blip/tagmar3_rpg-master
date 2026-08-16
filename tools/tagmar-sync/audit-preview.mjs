@@ -20,6 +20,8 @@ const parts = [
   "defesa",
   "tecnicas",
   "magias",
+  "magias-ancestrais",
+  "magias-perdidas",
   "magias-dano",
   "magias-cura"
 ];
