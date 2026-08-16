@@ -162,7 +162,7 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
             const li = $(ev.currentTarget).parents(".item");
             const item = this.document.items.get(li.data('itemId'));
             const nivel = item.system.nivel;
-            if (["Habilidade", "Tecnica_Combate"].includes(item.type) && nivel >= this.document.system.estagio) {
+            if (["Habilidade", "Tecnica_Combate", "Magia"].includes(item.type) && nivel >= this.document.system.estagio) {
                 ui.notifications.warn(`O nível de ${item.name} não pode ser maior que o estágio do personagem.`);
                 return;
             }

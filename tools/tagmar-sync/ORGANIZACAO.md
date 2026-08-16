@@ -62,7 +62,7 @@ Documentos com nomes iguais não serão mesclados apenas pelo nome. O ID estáve
 
 ## Automação das magias
 
-Nesta primeira conversão, as magias preservam a apresentação e a mecânica clássica de custo, nível, Karma e total. A automação dos efeitos será feita junto da implementação de Combate.
+As magias preservam a apresentação e a mecânica clássica de custo, nível, Karma e total. Efeitos objetivos de dano e cura são gerados separadamente; as demais magias continuam informativas.
 
 - Cada nível descrito na página oficial deve ser tratado individualmente.
 - Magias ofensivas, como **Raio Elétrico**, devem informar e aplicar o dano correto do nível usado.
@@ -73,7 +73,8 @@ Nesta primeira conversão, as magias preservam a apresentação e a mecânica cl
 - Nenhuma cura pode elevar EH ou EF acima do máximo do Personagem ou NPC.
 - Proteções, resistências, durações e demais efeitos não devem ser inferidos apenas pelo nome da magia.
 - A implementação deve usar as regras oficiais e o comportamento clássico como especificação, sem inventar automações ausentes.
-- A automação só será publicada depois de testes separados de dano, cura, Karma, resistência e escolha de nível.
+- Todas as automações existentes no sistema devem ser preservadas.
+- Nesta fase não serão criadas novas automações: Karma, duração, efeitos contínuos e condições permanecem sob controle do jogador.
 
 ## Efeitos criados pelos jogadores
 
