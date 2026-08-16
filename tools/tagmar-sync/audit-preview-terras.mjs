@@ -7,7 +7,7 @@ const root = resolve(here, "..", "..");
 const cacheDir = join(root, ".cache", "tagmar-sync");
 const reportPath = join(cacheDir, "audit-terras-report.json");
 const writeReport = process.argv.includes("--write");
-const parts = ["terras-personagens"];
+const parts = ["terras-personagens", "terras-combate"];
 const items = [];
 const folders = [];
 const byPart = {};
@@ -52,13 +52,28 @@ for (const profession of items.filter((item) => item.type === "Profissao")) {
     if (!Number.isInteger(profession.system?.p_aquisicao?.[field])) errors.push(`${profession.name} sem ${field}`);
   }
 }
+for (const weapon of items.filter((item) => item.type === "Combate")) {
+  for (const field of ["def_l", "def_m", "def_p", "forca_min"]) {
+    if (!Number.isInteger(weapon.system?.[field])) errors.push(`${weapon.name} sem ${field}`);
+  }
+  for (const percentage of [25, 50, 75, 100]) {
+    if (!Number.isInteger(weapon.system?.dano_base?.[`d${percentage}`])) errors.push(`${weapon.name} sem dano ${percentage}%`);
+  }
+  if (!weapon.flags?.tagmarSync?.legacyItemId) errors.push(`${weapon.name} sem referência mecânica clássica`);
+}
 
 const manifest = JSON.parse(await readFile(join(cacheDir, "manifest.json"), "utf8"));
 const report = {
   generatedAt: new Date().toISOString(),
   sourceManifestGeneratedAt: manifest.generatedAt,
   status: errors.length ? "error" : warnings.length ? "warning" : "ok",
-  totals: { items: items.length, folders: folders.length, races: items.filter((item) => item.type === "Raca").length, professions: items.filter((item) => item.type === "Profissao").length },
+  totals: {
+    items: items.length,
+    folders: folders.length,
+    races: items.filter((item) => item.type === "Raca").length,
+    professions: items.filter((item) => item.type === "Profissao").length,
+    weapons: items.filter((item) => item.type === "Combate").length
+  },
   byPart,
   errors,
   warnings

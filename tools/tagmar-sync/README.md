@@ -239,4 +239,12 @@ node tools/tagmar-sync/write-preview-terras-pack.mjs
 
 A primeira etapa contém `01 - RAÇAS` e `02 - PROFISSÕES`: sete raças jogadoras e as profissões Berserker e Feiticeiro. Os valores mecânicos vêm das tabelas oficiais atuais; campos e imagens seguem o formato que a ficha já utiliza. Divergências em relação ao compêndio clássico são preservadas nos metadados para auditoria, mas o documento gerado usa a regra oficial corrente.
 
+O lote seguinte acrescenta `04 - COMBATE TERRAS SELVAGENS`, com as armas específicas do suplemento separadas pelos grupos de combate. Armas básicas que já existem no compêndio principal não são duplicadas. Os números vêm da tabela oficial atual, enquanto imagens, campos internos e casos sem valores próprios publicados preservam a implementação clássica já testada.
+
+```powershell
+node tools/tagmar-sync/build-preview-terras-combate.mjs
+node tools/tagmar-sync/audit-preview-terras.mjs --write
+node tools/tagmar-sync/write-preview-terras-pack.mjs
+```
+
 Alguns links antigos do índice oficial podem responder com erro do servidor. A opção `--skip-errors` registra essas falhas e preserva qualquer cópia válida já armazenada, sem inventar conteúdo nem interromper a atualização das demais páginas.
