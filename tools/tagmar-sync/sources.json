@@ -106,6 +106,24 @@
       ]
     },
     {
+      "id": "terras-selvagens",
+      "label": "Aventuras nas Terras Selvagens",
+      "indexPages": [
+        "Aventuras nas Terras Selvagens"
+      ],
+      "pagePrefixes": [
+        "1.",
+        "2.",
+        "3.",
+        "4.",
+        "LATS - ",
+        "Terras Selvagens - ",
+        "Técnicas de combate - ",
+        "Criando Personagens",
+        "Raça Jogadora - "
+      ]
+    },
+    {
       "id": "pertences",
       "label": "Pertences e Afins",
       "indexPages": [

@@ -223,3 +223,20 @@ node tools/tagmar-sync/write-preview-pack.mjs
 As pastas principais são `08 - MAGIAS ANCESTRAIS` e `09 - MAGIAS PERDIDAS`, com subdivisões por profissão e por Trilha, Confraria, Ordem ou Colégio. Os documentos permanecem informativos e preservam a gestão manual de Karma, duração e efeitos pelo jogador. O gerador não adiciona automações novas às magias suplementares.
 
 O lote atual contém 76 Magias Ancestrais únicas em 82 listas de aquisição e 169 Magias Perdidas únicas em 188 listas. A página de **Ataque de Riso** existe na seção de descrições do site, mas a magia não aparece em nenhuma lista oficial de aquisição; por isso ela fica registrada como fonte não listada e não é inserida artificialmente no compêndio.
+
+## Terras Selvagens
+
+O conteúdo atual de **Aventuras nas Terras Selvagens** é mantido no pack independente `terras-selvagens-t3er`. O pack clássico `terras-selvagens` é usado apenas como referência estrutural e não é modificado. Isso permite atualizar o material em oficialização sem alterar a versão clássica já publicada e testada.
+
+Para sincronizar as páginas oficiais, gerar a primeira etapa e produzir o pack:
+
+```powershell
+node tools/tagmar-sync/sync.mjs --category=terras-selvagens --skip-errors --write
+node tools/tagmar-sync/build-preview-terras-personagens.mjs
+node tools/tagmar-sync/audit-preview-terras.mjs --write
+node tools/tagmar-sync/write-preview-terras-pack.mjs
+```
+
+A primeira etapa contém `01 - RAÇAS` e `02 - PROFISSÕES`: sete raças jogadoras e as profissões Berserker e Feiticeiro. Os valores mecânicos vêm das tabelas oficiais atuais; campos e imagens seguem o formato que a ficha já utiliza. Divergências em relação ao compêndio clássico são preservadas nos metadados para auditoria, mas o documento gerado usa a regra oficial corrente.
+
+Alguns links antigos do índice oficial podem responder com erro do servidor. A opção `--skip-errors` registra essas falhas e preserva qualquer cópia válida já armazenada, sem inventar conteúdo nem interromper a atualização das demais páginas.

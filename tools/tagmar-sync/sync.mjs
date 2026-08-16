@@ -10,6 +10,7 @@ const pagesDir = join(cacheDir, "pages");
 const manifestPath = join(cacheDir, "manifest.json");
 const writeSnapshot = process.argv.includes("--write");
 const indexesOnly = process.argv.includes("--indexes-only");
+const skipErrors = process.argv.includes("--skip-errors");
 const categoryArg = process.argv.find((arg) => arg.startsWith("--category="))?.split("=", 2)[1];
 const limitArg = process.argv.find((arg) => arg.startsWith("--limit="))?.split("=", 2)[1];
 const pageLimit = limitArg ? Number.parseInt(limitArg, 10) : Number.POSITIVE_INFINITY;
@@ -84,6 +85,7 @@ async function loadPreviousManifest() {
 
 const previous = await loadPreviousManifest();
 const currentPages = [];
+const failedPages = [];
 
 const selectedCategories = categoryArg
   ? config.categories.filter((category) => category.id === categoryArg)
@@ -108,7 +110,14 @@ for (const category of selectedCategories) {
     .sort((a, b) => a.localeCompare(b, "pt-BR"))
     .slice(0, pageLimit);
   for (const pageName of selectedPages) {
-    const page = await fetchPage(pageName);
+    let page;
+    try {
+      page = await fetchPage(pageName);
+    } catch (error) {
+      if (!skipErrors) throw error;
+      failedPages.push({ category: category.id, pageName, url: pageUrl(pageName), error: error.message });
+      continue;
+    }
     currentPages.push({ category: category.id, pageName, url: page.url, hash: page.hash });
     if (writeSnapshot) {
       const filename = `${digest(`${category.id}:${pageName}`).slice(0, 16)}.html`;
@@ -130,13 +139,16 @@ const removed = authoritativeCategoryScan
   ? previousSelectedPages.filter((page) => !currentKeys.has(`${page.category}:${page.pageName}`))
   : [];
 
-console.log(JSON.stringify({ checkedAt: new Date().toISOString(), total: currentPages.length, added, changed, removed, unchanged }, null, 2));
+console.log(JSON.stringify({ checkedAt: new Date().toISOString(), total: currentPages.length, added, changed, removed, unchanged, failed: failedPages }, null, 2));
 
 if (writeSnapshot) {
   await mkdir(cacheDir, { recursive: true });
   const preservedPages = previous.pages.filter((page) => {
     if (!selectedCategoryIds.has(page.category)) return true;
-    if (authoritativeCategoryScan) return false;
+    const pageKey = `${page.category}:${page.pageName}`;
+    if (authoritativeCategoryScan) {
+      return failedPages.some((failed) => `${failed.category}:${failed.pageName}` === pageKey);
+    }
     return !currentKeys.has(`${page.category}:${page.pageName}`);
   });
   const mergedPages = [...preservedPages, ...currentPages]

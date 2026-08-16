@@ -85,6 +85,17 @@
       }
     },
     {
+      "name": "terras-selvagens-t3er",
+      "label": "Terras Selvagens — Edição Atual (Prévia)",
+      "system": "tagmar_rpg",
+      "path": "packs/terras-selvagens-t3er",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
       "name": "criando-fichas",
       "label": "Criando Fichas",
       "system": "tagmar_rpg",
