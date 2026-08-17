@@ -20,8 +20,8 @@ const stripEmptyParagraphs = (value) => value
   .trim();
 
 const specs = [
-  { name: "Combate Aéreo", pageName: "Técnicas de combate - Combate Aéreo", img: "assets/element-air.jpg" },
-  { name: "Combate Aquático", pageName: "Técnicas de combate - Combate Aquático", img: "assets/element-water.jpg" }
+  { name: "Combate Aéreo", pageName: "Técnicas de combate - Combate Aéreo", img: "systems/tagmar_rpg/assets/tagmar-geradas/combate-aereo.webp" },
+  { name: "Combate Aquático", pageName: "Técnicas de combate - Combate Aquático", img: "systems/tagmar_rpg/assets/tagmar-geradas/combate-aquatico.webp" }
 ];
 
 const rootRoute = "06 - TÉCNICAS DE COMBATE TERRAS SELVAGENS";
