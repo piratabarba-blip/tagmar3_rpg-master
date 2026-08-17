@@ -2,6 +2,9 @@ import { createHash } from "node:crypto";
 import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  TERRAS_ATS_PDF_FALLBACKS, TERRAS_ATS_PDF_URL, renderTerrasPdfFallback
+} from "./terras-pdf-fallbacks.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..", "..");
@@ -41,6 +44,7 @@ const baseName = (value) => stripTags(value)
   .replace(/\s*[-–—]\s*revis[aã]o\s*$/iu, "").trim();
 const baseKey = (value) => key(baseName(value));
 const isRevision = (value) => /revis[aã]o/iu.test(value);
+const pdfFallbackByKey = new Map(TERRAS_ATS_PDF_FALLBACKS.map((fallback) => [baseKey(fallback.name), fallback]));
 const snapshotFilename = (page) => `${createHash("sha256").update(`${page.category}:${page.pageName}`).digest("hex").slice(0, 16)}.html`;
 
 function rowsFromTable(table) {
@@ -195,10 +199,24 @@ const folders = orderedRoutes.map((route, index) => {
 const items = [];
 for (const acquisition of acquisitions) {
   const description = pickDescription(acquisition.rawName);
-  const source = description?.page ?? null;
+  let source = description?.page ?? null;
   let parsed = null;
   if (source) {
     parsed = parsedBySourceName.get(source.pageName);
+  }
+  const emptySiteSource = parsed?.officialContentMissing === true ? source : null;
+  const pdfFallback = emptySiteSource ? pdfFallbackByKey.get(baseKey(acquisition.name)) : null;
+  if (pdfFallback) {
+    const pages = pdfFallback.pages.join("-");
+    parsed = {
+      alcance: pdfFallback.alcance, duracao: pdfFallback.duracao, evocacao: pdfFallback.evocacao,
+      effect: renderTerrasPdfFallback(pdfFallback), officialContentMissing: false, pdfFallback: true
+    };
+    source = {
+      pageName: `Tagmar - Livro ATS (PDF, p. ${pages})`, url: TERRAS_ATS_PDF_URL,
+      fetchUrl: TERRAS_ATS_PDF_URL, transport: "pdf-fallback",
+      hash: createHash("sha256").update(JSON.stringify(pdfFallback)).digest("hex")
+    };
   }
   const reusedImage = imageByKey.get(baseKey(acquisition.name));
   const alcance = parsed?.alcance || "Não informado na página oficial";
@@ -232,6 +250,8 @@ for (const acquisition of acquisitions) {
       fetchUrl: source?.fetchUrl ?? source?.url ?? null,
       transport: source?.transport ?? null,
       sourceHash: source?.hash ?? null,
+      sourcePdfPages: pdfFallback?.pages ?? null,
+      emptySiteSourceUrl: pdfFallback ? emptySiteSource?.url ?? null : null,
       reusedImageItemId: reusedImage?.itemId ?? null,
       generatedImageNeeded: !reusedImage || reusedImage.generic,
       officialContentMissing: parsed?.officialContentMissing ?? false,

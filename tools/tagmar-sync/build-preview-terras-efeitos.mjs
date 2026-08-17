@@ -86,6 +86,7 @@ const parsedSections = (name, expression, options = {}) => {
 };
 
 const damageDefinitions = [
+  { name: "Enxame de Pragas", parse: () => parsedSections("Enxame de Pragas", /causa\s+(\d+)\s+de dano/i, { range: "20m", note: "Mantenha a concentração; faça os ataques por alvo e aplique manualmente área, doença, fuga e penalidade de visibilidade." }) },
   { name: "Estremecer", parse: () => parsedSections("Estremecer", /Provoca\s+(?:\d+\s*\/\s*){3}(\d+)/i, { range: "2m", note: "Use uma única rolagem contra todos na área; aplique manualmente afastamento, queda e RM." }) },
   { name: "Espírito das Feras", parse: () => parsedSections("Espírito das Feras", /Causa\s+(\d+)\s+de\s+da[dn]o/i, { range: "20m", note: "Faça um ataque separado para cada alvo permitido pelo efeito." }) },
   { name: "Disparo de vácuo", parse: () => parsedSections("Disparo de vácuo", /dano base\s+(\d+)/i, { range: "50m" }) },

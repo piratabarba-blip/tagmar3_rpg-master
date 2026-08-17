@@ -275,6 +275,8 @@ As fichas de magia permanecem informativas e não administram Karma, duração o
 
 As receitas produzidas por magias ficam em `10 - POÇÕES TERRAS SELVAGENS`, separadas por lista do Feiticeiro e por magia criadora. Cada resultado de nível é um `Pertence` pronto para ser arrastado à ficha, com custo, quantidade, ingrediente e descrição oficial quando publicados. A Poção da Restauração oferece os resultados individuais e modelos de composição que aplicam a soma oficial de `5 mp × nível de cada efeito`, sem repetir o mesmo efeito. Hálitos de Dragão são separados por escama e tipo de dano; Poções do Tamanho são separadas em crescimento, encolhimento e fórmula dupla. A fabricação, o gasto de Karma, os limites e a escolha dos efeitos permanecem manuais.
 
+Quando um verbete listado oficialmente ainda estiver vazio na TagmarPedia, o gerador pode usar um fallback editorial do PDF oficial **Tagmar - Livro ATS**. O fallback só é aplicado enquanto a página individual estiver sem conteúdo; registra URL, páginas e hash do trecho utilizado. Quando o site publicar o verbete, o conteúdo da TagmarPedia volta a ter prioridade automaticamente. Os quatro fallbacks atuais são Bestializar, Enxame de Pragas, Escudo Espiritual e Invocar Espíritos.
+
 As regras extensas de consulta ficam no pack separado de diários `terras-selvagens-regras-t3er`, para não aparecerem como pertences nem alterarem a ficha. A prévia contém **Introdução às Terras Selvagens**, **Criando Personagens**, **Caracterizações para as Terras Selvagens**, **Influência das Regiões Mágicas** e **Equipamentos e Novas Armas**, todos com fonte e hash registrados. O mapa planar oficial é armazenado localmente em `assets/tagmar-site/mapa-planar.jpg`, permitindo a consulta sem internet.
 
 ```powershell
