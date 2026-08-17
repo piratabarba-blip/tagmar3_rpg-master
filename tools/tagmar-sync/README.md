@@ -237,6 +237,8 @@ node tools/tagmar-sync/build-preview-terras-combate.mjs
 node tools/tagmar-sync/build-preview-terras-defesa.mjs
 node tools/tagmar-sync/build-preview-terras-tecnicas.mjs
 node tools/tagmar-sync/build-preview-terras-magias.mjs
+node tools/tagmar-sync/build-preview-terras-efeitos.mjs
+node tools/tagmar-sync/build-preview-terras-pocoes.mjs
 node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
 ```
@@ -267,7 +269,11 @@ node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
 ```
 
-As magias atuais ficam em `07 - MAGIAS TERRAS SELVAGENS` e seguem as 20 tabelas oficiais de aquisição, organizadas por profissão, confraria, tradição, caminho, colégio e trilha. Uma mesma magia pode aparecer em várias pastas com custos diferentes; cada entrada conserva o custo e o nome bruto de sua tabela. As listas sombrias usam as pastas finais `COLÉGIO SOMBRIO — AAROIM` e `COLÉGIO SOMBRIO — NAARI`, respeitando o limite de três níveis dos compêndios do Foundry. Alcance, Duração, Evocação e o texto integral vêm da página oficial. O lote permanece informativo e não adiciona automações novas de Karma, duração, dano, cura ou efeitos.
+As magias atuais ficam em `07 - MAGIAS TERRAS SELVAGENS` e seguem as 20 tabelas oficiais de aquisição, organizadas por profissão, confraria, tradição, caminho, colégio e trilha. Uma mesma magia pode aparecer em várias pastas com custos diferentes; cada entrada conserva o custo e o nome bruto de sua tabela. As listas sombrias usam as pastas finais `COLÉGIO SOMBRIO — AAROIM` e `COLÉGIO SOMBRIO — NAARI`, respeitando o limite de três níveis dos compêndios do Foundry. Alcance, Duração, Evocação e o texto integral vêm da página oficial.
+
+As fichas de magia permanecem informativas e não administram Karma, duração ou efeitos. Em pastas auxiliares separadas, ataques que a própria regra manda resolver na Tabela de Resolução e curas instantâneas de valor fixo reutilizam a mecânica já testada pelo sistema. Dano fixo condicionado a RM, recuperação por hora, percentuais, poções, bônus temporários e demais efeitos continuam sob administração manual do jogador. Todo dano percentual é arredondado para cima.
+
+As receitas produzidas por magias ficam em `10 - POÇÕES TERRAS SELVAGENS`, separadas por lista do Feiticeiro e por magia criadora. Cada resultado de nível é um `Pertence` pronto para ser arrastado à ficha, com custo, quantidade, ingrediente e descrição oficial quando publicados. A Poção da Restauração oferece os resultados individuais e modelos de composição que aplicam a soma oficial de `5 mp × nível de cada efeito`, sem repetir o mesmo efeito. Hálitos de Dragão são separados por escama e tipo de dano; Poções do Tamanho são separadas em crescimento, encolhimento e fórmula dupla. A fabricação, o gasto de Karma, os limites e a escolha dos efeitos permanecem manuais.
 
 As regras extensas de consulta ficam no pack separado de diários `terras-selvagens-regras-t3er`, para não aparecerem como pertences nem alterarem a ficha. A prévia contém **Introdução às Terras Selvagens**, **Criando Personagens**, **Caracterizações para as Terras Selvagens**, **Influência das Regiões Mágicas** e **Equipamentos e Novas Armas**, todos com fonte e hash registrados. O mapa planar oficial é armazenado localmente em `assets/tagmar-site/mapa-planar.jpg`, permitindo a consulta sem internet.
 

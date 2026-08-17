@@ -7,7 +7,7 @@ const root = resolve(here, "..", "..");
 const cacheDir = join(root, ".cache", "tagmar-sync");
 const reportPath = join(cacheDir, "audit-terras-report.json");
 const writeReport = process.argv.includes("--write");
-const parts = ["terras-personagens", "terras-combate", "terras-defesa", "terras-tecnicas", "terras-magias"];
+const parts = ["terras-personagens", "terras-combate", "terras-defesa", "terras-tecnicas", "terras-magias", "terras-efeitos", "terras-pocoes"];
 const items = [];
 const folders = [];
 const byPart = {};
@@ -61,7 +61,8 @@ for (const profession of items.filter((item) => item.type === "Profissao")) {
     if (!Number.isInteger(profession.system?.p_aquisicao?.[field])) errors.push(`${profession.name} sem ${field}`);
   }
 }
-for (const weapon of items.filter((item) => item.type === "Combate")) {
+for (const weapon of items.filter((item) => item.type === "Combate"
+  && !["terras-magias-dano", "terras-magias-cura"].includes(item.flags?.tagmarSync?.category))) {
   for (const field of ["def_l", "def_m", "def_p", "forca_min"]) {
     if (!Number.isInteger(weapon.system?.[field])) errors.push(`${weapon.name} sem ${field}`);
   }
@@ -69,6 +70,25 @@ for (const weapon of items.filter((item) => item.type === "Combate")) {
     if (!Number.isInteger(weapon.system?.dano_base?.[`d${percentage}`])) errors.push(`${weapon.name} sem dano ${percentage}%`);
   }
   if (!weapon.flags?.tagmarSync?.legacyItemId) errors.push(`${weapon.name} sem referência mecânica clássica`);
+}
+for (const effect of items.filter((item) => ["terras-magias-dano", "terras-magias-cura"].includes(item.flags?.tagmarSync?.category))) {
+  if (effect.type !== "Combate") errors.push(`${effect.name} não usa a mecânica de rolagem existente`);
+  if (!effect.flags.tagmarSync.parentMagicName || !effect.flags.tagmarSync.parentMagicId) errors.push(`${effect.name} sem magia-pai`);
+  if (effect.flags.tagmarSync.category === "terras-magias-dano") {
+    const maximum = Number(effect.flags.tagmarSync.maxDamage);
+    if (!Number.isInteger(maximum) || maximum < 1) errors.push(`${effect.name} com dano máximo inválido`);
+    for (const percentage of [25, 50, 75, 100]) {
+      if (effect.system?.dano_base?.[`d${percentage}`] !== Math.ceil((maximum * percentage) / 100)) {
+        errors.push(`${effect.name} sem arredondamento para cima em ${percentage}%`);
+      }
+    }
+  } else {
+    if (effect.flags.tagmarSync.healingMode !== "fixed") errors.push(`${effect.name} com modo de cura inesperado`);
+    if (!["EF", "EH"].includes(effect.flags.tagmarSync.healTarget)) errors.push(`${effect.name} sem destino de cura`);
+    if (!Number.isInteger(Number(effect.flags.tagmarSync.healAmount)) || Number(effect.flags.tagmarSync.healAmount) < 1) {
+      errors.push(`${effect.name} com valor de cura inválido`);
+    }
+  }
 }
 for (const defense of items.filter((item) => item.type === "Defesa")) {
   for (const field of ["absorcao", "fis_min", "for_min"]) {
@@ -100,6 +120,12 @@ for (const magic of items.filter((item) => item.type === "Magia")) {
     errors.push(`${magic.name} sem origem de aquisição`);
   }
 }
+for (const potion of items.filter((item) => item.flags?.tagmarSync?.category === "terras-pocoes")) {
+  if (potion.type !== "Pertence") errors.push(`${potion.name} não usa a mecânica de Pertence`);
+  if (!potion.flags.tagmarSync.parentMagicName || !potion.flags.tagmarSync.parentMagicId) errors.push(`${potion.name} sem magia criadora`);
+  if (!potion.flags.tagmarSync.recipePath || !Number.isInteger(potion.flags.tagmarSync.recipeLevel)) errors.push(`${potion.name} sem origem da receita`);
+  if (potion.flags.tagmarSync.manualPreparation !== true) errors.push(`${potion.name} não preserva o preparo manual`);
+}
 
 const manifest = JSON.parse(await readFile(join(cacheDir, "manifest.json"), "utf8"));
 const report = {
@@ -111,10 +137,14 @@ const report = {
     folders: folders.length,
     races: items.filter((item) => item.type === "Raca").length,
     professions: items.filter((item) => item.type === "Profissao").length,
-    weapons: items.filter((item) => item.type === "Combate").length,
+    weapons: items.filter((item) => item.type === "Combate"
+      && !["terras-magias-dano", "terras-magias-cura"].includes(item.flags?.tagmarSync?.category)).length,
     defenses: items.filter((item) => item.type === "Defesa").length,
     wildernessTechniques: items.filter((item) => item.flags?.tagmarSync?.officialCategory === "Perícia").length,
     magics: items.filter((item) => item.type === "Magia").length,
+    magicAttacks: items.filter((item) => item.flags?.tagmarSync?.category === "terras-magias-dano").length,
+    magicHealing: items.filter((item) => item.flags?.tagmarSync?.category === "terras-magias-cura").length,
+    potionRecipes: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pocoes").length,
     uniqueMagics: new Set(items.filter((item) => item.type === "Magia").map((item) => item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR"))).size
   },
   byPart,
