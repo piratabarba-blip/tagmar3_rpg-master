@@ -17,9 +17,8 @@ if (!packName || basename(packName) !== packName) throw new Error("Informe um pa
 const sourcePackPath = resolve(packsRoot, packName);
 if (!sourcePackPath.startsWith(`${packsRoot}\\`)) throw new Error("Pack fora da pasta permitida");
 const system = JSON.parse(await readFile(join(root, "system.json"), "utf8"));
-if (!system.packs?.some((pack) => pack.name === packName && pack.type === "Item")) {
-  throw new Error(`Pack de Item não registrado no sistema: ${packName}`);
-}
+const registeredPack = system.packs?.find((pack) => pack.name === packName);
+if (!registeredPack) throw new Error(`Pack não registrado no sistema: ${packName}`);
 
 const outputPath = join(root, ".cache", "tagmar-sync", `snapshot-${packName}.json`);
 const temporaryRoot = await mkdtemp(join(tmpdir(), "tagmar-pack-read-"));
@@ -30,13 +29,26 @@ await cp(sourcePackPath, packPath, { recursive: true });
 const currentPath = join(packPath, "CURRENT");
 await writeFile(currentPath, `${(await readFile(currentPath, "utf8")).trim()}\n`, "utf8");
 const db = new ClassicLevel(packPath, { keyEncoding: "utf8", valueEncoding: "json", readOnly: true });
-const result = { pack: packName, folders: [], items: [] };
+const documentKeys = {
+  Actor: "actors",
+  Item: "items",
+  JournalEntry: "journal",
+  Macro: "macros",
+  Playlist: "playlists",
+  RollTable: "tables",
+  Scene: "scenes"
+};
+const documentKey = documentKeys[registeredPack.type];
+if (!documentKey) throw new Error(`Tipo de pack ainda não suportado: ${registeredPack.type}`);
+const result = { pack: packName, type: registeredPack.type, folders: [], documents: [], pages: [], databaseKeys: [] };
 
 try {
   await db.open();
   for await (const [key, value] of db.iterator()) {
+    result.databaseKeys.push(key);
     if (key.includes("folders!")) result.folders.push(value);
-    if (key.includes("items!")) result.items.push(value);
+    if (key.includes(`${documentKey}!`)) result.documents.push(value);
+    if (registeredPack.type === "JournalEntry" && key.includes("pages!")) result.pages.push(value);
   }
 } finally {
   await db.close();
@@ -44,10 +56,12 @@ try {
 }
 
 result.folders.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
-result.items.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
+result.documents.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
+result.pages.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
 await mkdir(dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(result, null, 2)}\n`, "utf8");
-const byType = Object.fromEntries([...result.items.reduce((map, item) => {
-  return map.set(item.type, (map.get(item.type) ?? 0) + 1);
+const byType = Object.fromEntries([...result.documents.reduce((map, document) => {
+  const type = document.type ?? registeredPack.type;
+  return map.set(type, (map.get(type) ?? 0) + 1);
 }, new Map())].sort(([a], [b]) => a.localeCompare(b, "pt-BR")));
-console.log(JSON.stringify({ output: outputPath, folders: result.folders.length, items: result.items.length, byType }, null, 2));
+console.log(JSON.stringify({ output: outputPath, type: registeredPack.type, folders: result.folders.length, documents: result.documents.length, pages: result.pages.length, byType }, null, 2));

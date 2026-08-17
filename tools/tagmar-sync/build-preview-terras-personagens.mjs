@@ -9,6 +9,7 @@ const cacheDir = join(root, ".cache", "tagmar-sync");
 const manifest = JSON.parse(await readFile(join(cacheDir, "manifest.json"), "utf8"));
 const legacyCore = JSON.parse(await readFile(join(cacheDir, "legacy-pack.json"), "utf8"));
 const legacyTerras = JSON.parse(await readFile(join(cacheDir, "snapshot-terras-selvagens.json"), "utf8"));
+const currentCore = JSON.parse(await readFile(join(cacheDir, "preview-personagens.json"), "utf8"));
 const edition = "Aventuras nas Terras Selvagens";
 const category = "terras-selvagens";
 
@@ -201,10 +202,74 @@ for (const spec of professionSpecs) {
   });
 }
 
+const currentProfessionByName = new Map(currentCore.filter((item) => item.type === "Profissao")
+  .map((item) => [key(item.name), item]));
+const extendedProfessionSpecs = [
+  {
+    name: "Bardo",
+    additions: ["Confraria dos Encantadores", "Confraria dos Iluminados"],
+    pages: ["2.5 Confraria dos Encantadores", "2.12 Confraria dos Iluminados"]
+  },
+  {
+    name: "Guerreiro",
+    additions: ["Academia dos Guardas", "Academia dos Duelistas"],
+    pages: ["2.6 Academia dos guardas", "2.9 Academia dos Duelistas"]
+  },
+  {
+    name: "Ladino",
+    additions: ["Guilda dos Caçadores de Recompensa", "Guilda dos Trapaceiros"],
+    pages: ["2.4 Guilda dos Caçadores de Recompensa", "2.7 Guilda dos trapaceiros"]
+  },
+  {
+    name: "Mago",
+    additions: ["Colégio Sombrio", "Colégio Cronomântico"],
+    pages: ["2.3 Colégio dos Magos Sombrios - Colégio Sombrio", "2.8 Colégio Cronomântico"]
+  },
+  {
+    name: "Rastreador",
+    additions: ["Trilha da Noite", "Trilha dos Mestres das Feras"],
+    pages: ["2.10 Trilha da Noite", "2.11 Trilha dos Mestres das Feras"]
+  }
+];
+
+for (const spec of extendedProfessionSpecs) {
+  const base = currentProfessionByName.get(key(spec.name));
+  if (!base) throw new Error(`Profissão revisada ausente para extensão de Terras Selvagens: ${spec.name}`);
+  const existing = String(base.system.especializacoes ?? "").split(",").map((value) => value.trim()).filter(Boolean);
+  const specializations = [...new Set([...existing, ...spec.additions])];
+  const sourcePages = spec.pages.map((pageName) => source(pageName));
+  const descriptions = [];
+  for (const pageName of spec.pages) descriptions.push(pageContent(await pageHtml(pageName)));
+  professions.push({
+    _id: stableId("tagmar-terras-profissao-estendida", spec.name),
+    name: spec.name,
+    type: "Profissao",
+    img: base.img,
+    folder: folderIds.get("02 - PROFISSÕES"),
+    system: {
+      ...structuredClone(base.system),
+      especializacoes: `${specializations.join(",")},`,
+      descricao: [base.system.descricao, ...descriptions].filter(Boolean).join("<hr>")
+    },
+    flags: { tagmarSync: {
+      edition,
+      category,
+      origin: "terras-selvagens-profession-extension",
+      sourceName: sourcePages[0].pageName,
+      sourceUrl: sourcePages[0].url,
+      sourceHash: sourcePages[0].hash,
+      specializationSources: sourcePages.map((page) => ({ pageName: page.pageName, url: page.url, hash: page.hash })),
+      baseProfessionId: base._id,
+      addedSpecializations: spec.additions,
+      needsReview: false
+    } }
+  });
+}
+
 const items = [...races, ...professions];
 const itemIds = new Set(items.map((item) => item._id));
 const folderIdSet = new Set(folders.map((folder) => folder._id));
-if (races.length !== 7 || professions.length !== 2) throw new Error("Contagem inesperada em personagens das Terras Selvagens");
+if (races.length !== 7 || professions.length !== 7) throw new Error("Contagem inesperada em personagens das Terras Selvagens");
 if (itemIds.size !== items.length) throw new Error("IDs duplicados em personagens das Terras Selvagens");
 if (items.some((item) => !folderIdSet.has(item.folder))) throw new Error("Item órfão em personagens das Terras Selvagens");
 if (items.some((item) => !item.flags.tagmarSync.sourceUrl)) throw new Error("Item sem origem oficial");
@@ -216,6 +281,7 @@ await writeFile(output, `${JSON.stringify(items, null, 2)}\n`, "utf8");
 await writeFile(foldersOutput, `${JSON.stringify(folders, null, 2)}\n`, "utf8");
 console.log(JSON.stringify({
   output, foldersOutput, races: races.length, professions: professions.length, folders: folders.length,
+  extendedProfessions: extendedProfessionSpecs.map((spec) => spec.name),
   berserkerTechniquePoints: professions.find((item) => item.name === "Berserker").system.p_aquisicao.p_tec,
   legacyBerserkerTechniquePoints: professions.find((item) => item.name === "Berserker").flags.tagmarSync.legacyTechniquePoints
 }, null, 2));

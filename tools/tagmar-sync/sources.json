@@ -110,7 +110,17 @@
       "id": "terras-selvagens",
       "label": "Aventuras nas Terras Selvagens",
       "indexPages": [
-        "Aventuras nas Terras Selvagens"
+        "Aventuras nas Terras Selvagens",
+        "LATS - LISTA DE MAGIAS",
+        "LATS - Tabelas das Magias das Profissões e Especializações",
+        "Assimilação Verdadeira",
+        "Enxame de Pragas",
+        "Escudo Espiritual",
+        "Invocar Espiritos",
+        "Resistência Climática",
+        "Aprimorar Habilidades (Revisão)",
+        "Visão Animal (Revisão)",
+        "Bestializar"
       ],
       "pagePrefixes": [
         "1.",
@@ -119,6 +129,7 @@
         "4.",
         "LATS - ",
         "Terras Selvagens - ",
+        "Magia - ",
         "Técnicas de combate - ",
         "Criando Personagens",
         "Raça Jogadora - "

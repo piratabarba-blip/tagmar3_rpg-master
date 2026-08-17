@@ -236,11 +236,12 @@ node tools/tagmar-sync/build-preview-terras-personagens.mjs
 node tools/tagmar-sync/build-preview-terras-combate.mjs
 node tools/tagmar-sync/build-preview-terras-defesa.mjs
 node tools/tagmar-sync/build-preview-terras-tecnicas.mjs
+node tools/tagmar-sync/build-preview-terras-magias.mjs
 node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
 ```
 
-A primeira etapa contém `01 - RAÇAS` e `02 - PROFISSÕES`: sete raças jogadoras e as profissões Berserker e Feiticeiro. Os valores mecânicos vêm das tabelas oficiais atuais; campos e imagens seguem o formato que a ficha já utiliza. Divergências em relação ao compêndio clássico são preservadas nos metadados para auditoria, mas o documento gerado usa a regra oficial corrente.
+A primeira etapa contém `01 - RAÇAS` e `02 - PROFISSÕES`: sete raças jogadoras, as profissões Berserker e Feiticeiro e versões ampliadas de Bardo, Guerreiro, Ladino, Mago e Rastreador. Essas versões preservam integralmente a mecânica revisada das profissões clássicas e acrescentam apenas as especializações publicadas em Terras Selvagens, com suas descrições oficiais. Os valores mecânicos vêm das tabelas oficiais atuais; campos e imagens seguem o formato que a ficha já utiliza. Divergências em relação ao compêndio clássico são preservadas nos metadados para auditoria, mas o documento gerado usa a regra oficial corrente.
 
 O lote seguinte acrescenta `04 - COMBATE TERRAS SELVAGENS`, com as armas específicas do suplemento separadas pelos grupos de combate. Armas básicas que já existem no compêndio principal não são duplicadas. Os números vêm da tabela oficial atual, enquanto imagens, campos internos e casos sem valores próprios publicados preservam a implementação clássica já testada.
 
@@ -264,6 +265,16 @@ As perícias **Combate Aéreo** e **Combate Aquático** ficam em `06 - TÉCNICAS
 node tools/tagmar-sync/build-preview-terras-tecnicas.mjs
 node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
+```
+
+As magias atuais ficam em `07 - MAGIAS TERRAS SELVAGENS` e seguem as 20 tabelas oficiais de aquisição, organizadas por profissão, confraria, tradição, caminho, colégio e trilha. Uma mesma magia pode aparecer em várias pastas com custos diferentes; cada entrada conserva o custo e o nome bruto de sua tabela. As listas sombrias usam as pastas finais `COLÉGIO SOMBRIO — AAROIM` e `COLÉGIO SOMBRIO — NAARI`, respeitando o limite de três níveis dos compêndios do Foundry. Alcance, Duração, Evocação e o texto integral vêm da página oficial. O lote permanece informativo e não adiciona automações novas de Karma, duração, dano, cura ou efeitos.
+
+As regras extensas de consulta ficam no pack separado de diários `terras-selvagens-regras-t3er`, para não aparecerem como pertences nem alterarem a ficha. A prévia contém os capítulos oficiais **Caracterizações para as Terras Selvagens** e **Influência das Regiões Mágicas**, com fonte e hash registrados. O mapa planar oficial é armazenado localmente em `assets/tagmar-site/mapa-planar.jpg`, permitindo a consulta sem internet.
+
+```powershell
+node tools/tagmar-sync/build-preview-terras-regras.mjs
+node tools/tagmar-sync/audit-preview-terras-regras.mjs
+node tools/tagmar-sync/write-preview-terras-regras-pack.mjs
 ```
 
 O sincronizador consulta primeiro o endpoint oficial `rest.aspx`, que devolve o conteúdo limpo do verbete, e usa `Default.aspx` como alternativa. A opção `--skip-errors` registra eventuais falhas e preserva qualquer cópia válida já armazenada, sem inventar conteúdo nem interromper a atualização das demais páginas.

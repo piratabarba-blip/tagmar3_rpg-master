@@ -7,7 +7,7 @@ const root = resolve(here, "..", "..");
 const cacheDir = join(root, ".cache", "tagmar-sync");
 const reportPath = join(cacheDir, "audit-terras-report.json");
 const writeReport = process.argv.includes("--write");
-const parts = ["terras-personagens", "terras-combate", "terras-defesa", "terras-tecnicas"];
+const parts = ["terras-personagens", "terras-combate", "terras-defesa", "terras-tecnicas", "terras-magias"];
 const items = [];
 const folders = [];
 const byPart = {};
@@ -26,9 +26,17 @@ const repeated = (values) => [...values.reduce((map, value) => map.set(value, (m
 for (const [id] of repeated(items.map((item) => item._id))) errors.push(`ID de item duplicado: ${id}`);
 for (const [id] of repeated(folders.map((folder) => folder._id))) errors.push(`ID de pasta duplicado: ${id}`);
 const folderIds = new Set(folders.map((folder) => folder._id));
+const folderById = new Map(folders.map((folder) => [folder._id, folder]));
 for (const folder of folders) {
   if (!folder._id || !folder.name || folder.type !== "Item") errors.push(`Pasta inválida: ${folder.name ?? folder._id}`);
   if (folder.folder && !folderIds.has(folder.folder)) errors.push(`Pasta órfã: ${folder.name}`);
+  let depth = 1;
+  let parent = folder.folder ? folderById.get(folder.folder) : null;
+  while (parent) {
+    depth += 1;
+    parent = parent.folder ? folderById.get(parent.folder) : null;
+  }
+  if (depth > 3) errors.push(`Pasta excede o limite de profundidade do compêndio: ${folder.name} (${depth})`);
 }
 for (const item of items) {
   const label = `${item.type}: ${item.name}`;
@@ -36,7 +44,8 @@ for (const item of items) {
   if (!folderIds.has(item.folder)) errors.push(`Item em pasta inexistente: ${label}`);
   if (!item.flags?.tagmarSync?.sourceName || !item.flags?.tagmarSync?.sourceUrl) errors.push(`Item sem fonte: ${label}`);
   if (item.flags?.tagmarSync?.needsReview) warnings.push(`Revisão sinalizada: ${label}`);
-  if (!String(item.system?.descricao ?? "").trim()) errors.push(`Item sem descrição: ${label}`);
+  const description = item.type === "Magia" ? item.system?.efeito : item.system?.descricao;
+  if (!String(description ?? "").trim()) errors.push(`Item sem descrição: ${label}`);
 }
 for (const race of items.filter((item) => item.type === "Raca")) {
   for (const attribute of ["INT", "AUR", "CAR", "FOR", "FIS", "AGI", "PER"]) {
@@ -77,6 +86,20 @@ for (const technique of items.filter((item) => item.flags?.tagmarSync?.officialC
     errors.push(`${technique.name} inventa ou omite a administração manual do custo não publicado`);
   }
 }
+for (const magic of items.filter((item) => item.type === "Magia")) {
+  if (!Number.isInteger(magic.system?.custo) || magic.system.custo < 1) errors.push(`${magic.name} com custo inválido`);
+  for (const field of ["alcance", "duracao", "evocacao"]) {
+    if (!String(magic.system?.[field] ?? "").trim()) errors.push(`${magic.name} sem ${field}`);
+  }
+  if (!magic.system?.efeito?.includes("<strong>Alcance:</strong>")
+    || !magic.system?.efeito?.includes("<strong>Duração:</strong>")
+    || !magic.system?.efeito?.includes("<strong>Evocação:</strong>")) {
+    errors.push(`${magic.name} sem cabeçalho visível completo`);
+  }
+  if (!magic.flags?.tagmarSync?.acquisitionList || !magic.flags?.tagmarSync?.acquisitionTableName) {
+    errors.push(`${magic.name} sem origem de aquisição`);
+  }
+}
 
 const manifest = JSON.parse(await readFile(join(cacheDir, "manifest.json"), "utf8"));
 const report = {
@@ -90,7 +113,9 @@ const report = {
     professions: items.filter((item) => item.type === "Profissao").length,
     weapons: items.filter((item) => item.type === "Combate").length,
     defenses: items.filter((item) => item.type === "Defesa").length,
-    wildernessTechniques: items.filter((item) => item.flags?.tagmarSync?.officialCategory === "Perícia").length
+    wildernessTechniques: items.filter((item) => item.flags?.tagmarSync?.officialCategory === "Perícia").length,
+    magics: items.filter((item) => item.type === "Magia").length,
+    uniqueMagics: new Set(items.filter((item) => item.type === "Magia").map((item) => item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR"))).size
   },
   byPart,
   errors,

@@ -96,6 +96,17 @@
       }
     },
     {
+      "name": "terras-selvagens-regras-t3er",
+      "label": "Terras Selvagens — Regras (Prévia)",
+      "system": "tagmar_rpg",
+      "path": "packs/terras-selvagens-regras-t3er",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
       "name": "criando-fichas",
       "label": "Criando Fichas",
       "system": "tagmar_rpg",
