@@ -269,7 +269,7 @@ node tools/tagmar-sync/write-preview-terras-pack.mjs
 
 As magias atuais ficam em `07 - MAGIAS TERRAS SELVAGENS` e seguem as 20 tabelas oficiais de aquisição, organizadas por profissão, confraria, tradição, caminho, colégio e trilha. Uma mesma magia pode aparecer em várias pastas com custos diferentes; cada entrada conserva o custo e o nome bruto de sua tabela. As listas sombrias usam as pastas finais `COLÉGIO SOMBRIO — AAROIM` e `COLÉGIO SOMBRIO — NAARI`, respeitando o limite de três níveis dos compêndios do Foundry. Alcance, Duração, Evocação e o texto integral vêm da página oficial. O lote permanece informativo e não adiciona automações novas de Karma, duração, dano, cura ou efeitos.
 
-As regras extensas de consulta ficam no pack separado de diários `terras-selvagens-regras-t3er`, para não aparecerem como pertences nem alterarem a ficha. A prévia contém os capítulos oficiais **Caracterizações para as Terras Selvagens** e **Influência das Regiões Mágicas**, com fonte e hash registrados. O mapa planar oficial é armazenado localmente em `assets/tagmar-site/mapa-planar.jpg`, permitindo a consulta sem internet.
+As regras extensas de consulta ficam no pack separado de diários `terras-selvagens-regras-t3er`, para não aparecerem como pertences nem alterarem a ficha. A prévia contém **Introdução às Terras Selvagens**, **Criando Personagens**, **Caracterizações para as Terras Selvagens**, **Influência das Regiões Mágicas** e **Equipamentos e Novas Armas**, todos com fonte e hash registrados. O mapa planar oficial é armazenado localmente em `assets/tagmar-site/mapa-planar.jpg`, permitindo a consulta sem internet.
 
 ```powershell
 node tools/tagmar-sync/build-preview-terras-regras.mjs

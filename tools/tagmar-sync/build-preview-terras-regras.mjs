@@ -39,6 +39,16 @@ ${html
 
 const specs = [
   {
+    pageName: "Terras Selvagens - Introdução",
+    name: "Introdução às Terras Selvagens",
+    folder: "00 - GUIA"
+  },
+  {
+    pageName: "Criando Personagens",
+    name: "Criando Personagens",
+    folder: "01 - CRIAÇÃO DE PERSONAGENS"
+  },
+  {
     pageName: "3.1 Caracterizações para as Terras Selvagens",
     name: "Caracterizações para as Terras Selvagens",
     folder: "01 - CRIAÇÃO DE PERSONAGENS"
@@ -47,6 +57,11 @@ const specs = [
     pageName: "3.3 Influência das regiões mágicas sobre os personagens",
     name: "Influência das Regiões Mágicas",
     folder: "02 - AMBIENTAÇÃO E REGRAS"
+  },
+  {
+    pageName: "4.1 Tabela e funcionamento das novas armas",
+    name: "Equipamentos e Novas Armas",
+    folder: "03 - EQUIPAMENTOS E COMBATE"
   }
 ];
 
