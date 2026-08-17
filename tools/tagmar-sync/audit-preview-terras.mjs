@@ -7,7 +7,7 @@ const root = resolve(here, "..", "..");
 const cacheDir = join(root, ".cache", "tagmar-sync");
 const reportPath = join(cacheDir, "audit-terras-report.json");
 const writeReport = process.argv.includes("--write");
-const parts = ["terras-personagens", "terras-combate", "terras-defesa"];
+const parts = ["terras-personagens", "terras-combate", "terras-defesa", "terras-tecnicas"];
 const items = [];
 const folders = [];
 const byPart = {};
@@ -68,6 +68,15 @@ for (const defense of items.filter((item) => item.type === "Defesa")) {
   if (!Number.isInteger(defense.system?.defesa_base?.valor)) errors.push(`${defense.name} sem valor de defesa base`);
   if (!defense.flags?.tagmarSync?.legacyItemId) errors.push(`${defense.name} sem referência mecânica clássica`);
 }
+for (const technique of items.filter((item) => item.flags?.tagmarSync?.officialCategory === "Perícia")) {
+  if (technique.type !== "Habilidade") errors.push(`${technique.name} não preserva a categoria oficial Perícia`);
+  if (technique.system?.ajuste?.atributo !== "FIS") errors.push(`${technique.name} sem atributo Físico`);
+  if (technique.system?.nivel !== 0 || technique.system?.total !== -7) errors.push(`${technique.name} sem regra inicial de -7`);
+  if (technique.system?.nao_rolar_sem_nivel !== false) errors.push(`${technique.name} bloqueia teste sem nível`);
+  if (technique.flags?.tagmarSync?.officialAcquisitionCost !== null || technique.flags?.tagmarSync?.manualAcquisition !== true) {
+    errors.push(`${technique.name} inventa ou omite a administração manual do custo não publicado`);
+  }
+}
 
 const manifest = JSON.parse(await readFile(join(cacheDir, "manifest.json"), "utf8"));
 const report = {
@@ -80,7 +89,8 @@ const report = {
     races: items.filter((item) => item.type === "Raca").length,
     professions: items.filter((item) => item.type === "Profissao").length,
     weapons: items.filter((item) => item.type === "Combate").length,
-    defenses: items.filter((item) => item.type === "Defesa").length
+    defenses: items.filter((item) => item.type === "Defesa").length,
+    wildernessTechniques: items.filter((item) => item.flags?.tagmarSync?.officialCategory === "Perícia").length
   },
   byPart,
   errors,

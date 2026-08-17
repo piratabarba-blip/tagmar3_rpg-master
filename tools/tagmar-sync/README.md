@@ -233,6 +233,9 @@ Para sincronizar as páginas oficiais, gerar a primeira etapa e produzir o pack:
 ```powershell
 node tools/tagmar-sync/sync.mjs --category=terras-selvagens --skip-errors --write
 node tools/tagmar-sync/build-preview-terras-personagens.mjs
+node tools/tagmar-sync/build-preview-terras-combate.mjs
+node tools/tagmar-sync/build-preview-terras-defesa.mjs
+node tools/tagmar-sync/build-preview-terras-tecnicas.mjs
 node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
 ```
@@ -255,4 +258,12 @@ node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
 ```
 
-Alguns links antigos do índice oficial podem responder com erro do servidor. A opção `--skip-errors` registra essas falhas e preserva qualquer cópia válida já armazenada, sem inventar conteúdo nem interromper a atualização das demais páginas.
+As perícias **Combate Aéreo** e **Combate Aquático** ficam em `06 - TÉCNICAS DE COMBATE TERRAS SELVAGENS / PERÍCIAS AMBIENTAIS`. Como a fonte oficial as classifica como Perícia e determina teste em -7 quando não há nível, os documentos usam a mecânica já existente de `Habilidade`, com atributo Físico e nível inicial zero. O site não publica custo de aquisição para elas; o compêndio registra essa ausência e deixa a aquisição sob administração manual, sem inventar regra ou criar automação nova.
+
+```powershell
+node tools/tagmar-sync/build-preview-terras-tecnicas.mjs
+node tools/tagmar-sync/audit-preview-terras.mjs --write
+node tools/tagmar-sync/write-preview-terras-pack.mjs
+```
+
+O sincronizador consulta primeiro o endpoint oficial `rest.aspx`, que devolve o conteúdo limpo do verbete, e usa `Default.aspx` como alternativa. A opção `--skip-errors` registra eventuais falhas e preserva qualquer cópia válida já armazenada, sem inventar conteúdo nem interromper a atualização das demais páginas.

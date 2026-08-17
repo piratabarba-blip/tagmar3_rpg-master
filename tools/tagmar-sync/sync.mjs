@@ -35,6 +35,10 @@ function pageUrl(pageName) {
   return `${config.baseUrl}${encodeURIComponent(pageName).replace(/%20/g, "+")}`;
 }
 
+function restPageUrl(pageName) {
+  return `${config.restBaseUrl}${encodeURIComponent(pageName).replace(/%20/g, "+")}`;
+}
+
 function extractBody(html) {
   const marker = "<!-- INICIO do Corpo de Texto -->";
   const endMarker = "<!-- FIM do Corpo de Texto -->";
@@ -43,6 +47,14 @@ function extractBody(html) {
   const end = html.indexOf(endMarker, start + marker.length);
   if (start < 0 || end < 0) throw new Error("Marcadores do corpo da página não encontrados");
   return html.slice(start + marker.length, end).trim();
+}
+
+function extractRestBody(html) {
+  const match = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  if (!match) throw new Error("Corpo da resposta REST não encontrado");
+  const body = match[1].trim();
+  if (!body || !/<h[1-6][^>]*>/i.test(body)) throw new Error("Resposta REST sem conteúdo de verbete");
+  return body;
 }
 
 function normalizeBody(body) {
@@ -69,13 +81,23 @@ function discoverLinks(body, prefixes) {
 
 async function fetchPage(pageName) {
   const url = pageUrl(pageName);
-  const response = await fetch(url, {
-    headers: { "User-Agent": "Tagmar-Foundry-Compendium-Sync/1.0 (+https://github.com/piratabarba-blip/tagmar3_rpg-master)" }
-  });
-  if (!response.ok) throw new Error(`${response.status} ${response.statusText}: ${url}`);
-  const html = await response.text();
-  const body = extractBody(html);
-  return { pageName, url, body, hash: digest(normalizeBody(body)) };
+  const headers = { "User-Agent": "Tagmar-Foundry-Compendium-Sync/1.0 (+https://github.com/piratabarba-blip/tagmar3_rpg-master)" };
+  const attempts = [
+    { transport: "rest", fetchUrl: restPageUrl(pageName), extract: extractRestBody },
+    { transport: "default", fetchUrl: url, extract: extractBody }
+  ];
+  const failures = [];
+  for (const attempt of attempts) {
+    try {
+      const response = await fetch(attempt.fetchUrl, { headers });
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      const body = attempt.extract(await response.text());
+      return { pageName, url, fetchUrl: attempt.fetchUrl, transport: attempt.transport, body, hash: digest(normalizeBody(body)) };
+    } catch (error) {
+      failures.push(`${attempt.transport}: ${error.message}`);
+    }
+  }
+  throw new Error(`${url} — ${failures.join("; ")}`);
 }
 
 async function loadPreviousManifest() {
@@ -118,7 +140,7 @@ for (const category of selectedCategories) {
       failedPages.push({ category: category.id, pageName, url: pageUrl(pageName), error: error.message });
       continue;
     }
-    currentPages.push({ category: category.id, pageName, url: page.url, hash: page.hash });
+    currentPages.push({ category: category.id, pageName, url: page.url, fetchUrl: page.fetchUrl, transport: page.transport, hash: page.hash });
     if (writeSnapshot) {
       const filename = `${digest(`${category.id}:${pageName}`).slice(0, 16)}.html`;
       await mkdir(pagesDir, { recursive: true });

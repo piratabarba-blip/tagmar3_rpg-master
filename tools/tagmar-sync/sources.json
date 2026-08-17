@@ -1,5 +1,6 @@
 {
   "baseUrl": "https://tagmar.com.br/wiki/Default.aspx?PageName=",
+  "restBaseUrl": "https://tagmar.com.br/wiki/rest.aspx?word=true&PageName=",
   "requestDelayMs": 1000,
   "categories": [
     {
