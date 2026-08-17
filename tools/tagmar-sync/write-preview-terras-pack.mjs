@@ -15,7 +15,7 @@ const packPath = resolve(root, "packs", "terras-selvagens-t3er");
 const expectedPath = resolve(root, "packs", "terras-selvagens-t3er");
 if (packPath !== expectedPath) throw new Error("Destino do pack fora do caminho permitido");
 
-const parts = ["terras-personagens", "terras-combate"];
+const parts = ["terras-personagens", "terras-combate", "terras-defesa"];
 const items = [];
 const folders = [];
 for (const part of parts) {

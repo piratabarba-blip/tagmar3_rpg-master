@@ -247,4 +247,12 @@ node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
 ```
 
+As proteções específicas ficam em `05 - DEFESA TERRAS SELVAGENS`, nas pastas **ARMADURAS**, **ELMOS**, **ESCUDO** e **PROTETOR EXOTICO**. O lote contém armaduras e materiais especiais, proteções de cauda dos Sekbetes, protetores de asas dos Napóis e os demais equipamentos publicados na tabela oficial.
+
+```powershell
+node tools/tagmar-sync/build-preview-terras-defesa.mjs
+node tools/tagmar-sync/audit-preview-terras.mjs --write
+node tools/tagmar-sync/write-preview-terras-pack.mjs
+```
+
 Alguns links antigos do índice oficial podem responder com erro do servidor. A opção `--skip-errors` registra essas falhas e preserva qualquer cópia válida já armazenada, sem inventar conteúdo nem interromper a atualização das demais páginas.

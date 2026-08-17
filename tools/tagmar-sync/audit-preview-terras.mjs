@@ -7,7 +7,7 @@ const root = resolve(here, "..", "..");
 const cacheDir = join(root, ".cache", "tagmar-sync");
 const reportPath = join(cacheDir, "audit-terras-report.json");
 const writeReport = process.argv.includes("--write");
-const parts = ["terras-personagens", "terras-combate"];
+const parts = ["terras-personagens", "terras-combate", "terras-defesa"];
 const items = [];
 const folders = [];
 const byPart = {};
@@ -61,6 +61,13 @@ for (const weapon of items.filter((item) => item.type === "Combate")) {
   }
   if (!weapon.flags?.tagmarSync?.legacyItemId) errors.push(`${weapon.name} sem referência mecânica clássica`);
 }
+for (const defense of items.filter((item) => item.type === "Defesa")) {
+  for (const field of ["absorcao", "fis_min", "for_min"]) {
+    if (!Number.isInteger(defense.system?.[field])) errors.push(`${defense.name} sem ${field}`);
+  }
+  if (!Number.isInteger(defense.system?.defesa_base?.valor)) errors.push(`${defense.name} sem valor de defesa base`);
+  if (!defense.flags?.tagmarSync?.legacyItemId) errors.push(`${defense.name} sem referência mecânica clássica`);
+}
 
 const manifest = JSON.parse(await readFile(join(cacheDir, "manifest.json"), "utf8"));
 const report = {
@@ -72,7 +79,8 @@ const report = {
     folders: folders.length,
     races: items.filter((item) => item.type === "Raca").length,
     professions: items.filter((item) => item.type === "Profissao").length,
-    weapons: items.filter((item) => item.type === "Combate").length
+    weapons: items.filter((item) => item.type === "Combate").length,
+    defenses: items.filter((item) => item.type === "Defesa").length
   },
   byPart,
   errors,
