@@ -8,6 +8,7 @@ const root = join(here, "..", "..");
 const cacheDir = join(root, ".cache", "tagmar-sync");
 const category = "terras-selvagens";
 const manifest = JSON.parse(await readFile(join(cacheDir, "manifest.json"), "utf8"));
+const system = JSON.parse(await readFile(join(root, "system.json"), "utf8"));
 
 const stableId = (namespace, name) => createHash("sha256")
   .update(`${namespace}:${name.normalize("NFC").toLocaleLowerCase("pt-BR")}`)
@@ -80,7 +81,7 @@ const folders = [...new Set(specs.map((spec) => spec.folder))].map((name, index)
     flags: {},
     _stats: {
       systemId: "tagmar_rpg",
-      systemVersion: "2.6.0-v14.1",
+      systemVersion: system.version,
       coreVersion: "14.366",
       createdTime: null,
       modifiedTime: null,
@@ -106,7 +107,7 @@ for (const [index, spec] of specs.entries()) {
     flags: { tagmarSync: { sourcePage: spec.pageName, sourceUrl: sourcePage.url, sourceHash: sourcePage.hash } },
     _stats: {
       systemId: "tagmar_rpg",
-      systemVersion: "2.6.0-v14.1",
+      systemVersion: system.version,
       coreVersion: "14.366",
       createdTime: null,
       modifiedTime: null,

@@ -10,6 +10,7 @@ const { ClassicLevel } = require(`${foundryModules}/classic-level`);
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..", "..");
 const cacheDir = join(root, ".cache", "tagmar-sync");
+const system = JSON.parse(await readFile(join(root, "system.json"), "utf8"));
 const packPath = resolve(root, "packs", "criando-fichas-t3er");
 const expectedPath = resolve(root, "packs", "criando-fichas-t3er");
 if (packPath !== expectedPath) throw new Error("Destino do pack fora do caminho permitido");
@@ -54,7 +55,7 @@ const itemDocuments = items.map((item) => ({
     duplicateSource: null,
     coreVersion: "14.366",
     systemId: "tagmar_rpg",
-    systemVersion: "2.6.0-v14.1"
+    systemVersion: system.version
   }
 }));
 let writtenFolders = 0;
