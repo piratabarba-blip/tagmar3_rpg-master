@@ -208,7 +208,7 @@ const extendedProfessionSpecs = [
   {
     name: "Bardo",
     additions: ["Confraria dos Encantadores", "Confraria dos Iluminados"],
-    pages: ["2.5 Confraria dos Encantadores", "2.12 Confraria dos Iluminados"]
+    pages: ["REVISÃO da Confraria dos Encantadores", "2.12 Confraria dos Iluminados"]
   },
   {
     name: "Guerreiro",
