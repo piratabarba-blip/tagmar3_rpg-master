@@ -37,8 +37,16 @@ const specs = [
   ["Calco", "Calco", "01 - REINOS"],
   ["Cidades-Estado", "Cidades-Estado", "01 - REINOS"],
   ["Porto Livre", "Porto Livre", "01 - REINOS"],
-  ["Livro dos Reinos - Epílogo", "Epílogo", "02 - ENCERRAMENTO"],
-  ["Livro dos Reinos - Créditos", "Créditos", "02 - ENCERRAMENTO"]
+  ["Livro dos Deuses", "Guia do Livro dos Deuses", "02 - PANTEÃO E CALENDÁRIO"],
+  ["Os deuses de Tagmar", "Os deuses de Tagmar", "02 - PANTEÃO E CALENDÁRIO"],
+  ["Calendário de Tagmar", "Calendário e festividades", "02 - PANTEÃO E CALENDÁRIO"],
+  ["Livro de Ambientação", "Guia do Livro de Ambientação", "03 - REGIÕES E GEOGRAFIA"],
+  ["As Regiões de Tagmar", "As Regiões de Tagmar", "03 - REGIÕES E GEOGRAFIA"],
+  ["Região dos Reinos", "Região dos Reinos", "03 - REGIÕES E GEOGRAFIA"],
+  ["Região das Terras selvagens", "Região das Terras Selvagens", "03 - REGIÕES E GEOGRAFIA"],
+  ["Região do Império", "Região do Império", "03 - REGIÕES E GEOGRAFIA"],
+  ["Livro dos Reinos - Epílogo", "Epílogo", "04 - ENCERRAMENTO"],
+  ["Livro dos Reinos - Créditos", "Créditos", "04 - ENCERRAMENTO"]
 ];
 
 function source(pageName) {
@@ -58,7 +66,9 @@ ${html.replace(/<p>\s*<\/p>/gi, "")}
 const folderColors = new Map([
   ["00 - GUIA", "#11bfae"],
   ["01 - REINOS", "#b99300"],
-  ["02 - ENCERRAMENTO", "#7254a8"]
+  ["02 - PANTEÃO E CALENDÁRIO", "#2878a8"],
+  ["03 - REGIÕES E GEOGRAFIA", "#298b57"],
+  ["04 - ENCERRAMENTO", "#7254a8"]
 ]);
 const folderIds = new Map();
 const folders = [...new Set(specs.map(([, , folder]) => folder))].map((name, index) => {
@@ -78,7 +88,12 @@ for (const [index, [pageName, name, folder]] of specs.entries()) {
   const html = await readFile(join(cacheDir, "pages", snapshotFilename(pageSource)), "utf8");
   const documentId = stableId("tagmar-reinos-journal", pageName);
   const pageId = stableId("tagmar-reinos-page", pageName);
-  const syncFlags = { sourceBook: "Livro dos Reinos", sourcePage: pageName, sourceUrl: pageSource.url, sourceHash: pageSource.hash };
+  const sourceBook = ["Calendário de Tagmar", "Livro de Ambientação", "As Regiões de Tagmar", "Região dos Reinos", "Região das Terras selvagens", "Região do Império"].includes(pageName)
+    ? "Livro de Ambientação"
+    : ["Livro dos Deuses", "Os deuses de Tagmar"].includes(pageName)
+      ? "Livro dos Deuses"
+      : "Livro dos Reinos";
+  const syncFlags = { sourceBook, sourcePage: pageName, sourceUrl: pageSource.url, sourceHash: pageSource.hash };
   documents.push({
     _id: documentId, name, folder: folderIds.get(folder), pages: [pageId], sort: index * 100000,
     ownership: { default: 0 }, flags: { tagmarSync: syncFlags },

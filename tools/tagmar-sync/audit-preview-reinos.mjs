@@ -10,15 +10,21 @@ const pages = JSON.parse(await readFile(join(cacheDir, "preview-reinos-pages.jso
 const folders = JSON.parse(await readFile(join(cacheDir, "preview-reinos-folders.json"), "utf8"));
 const errors = [];
 
-if (documents.length !== 23) errors.push(`Esperados 23 diários; encontrados ${documents.length}`);
-if (pages.length !== 23) errors.push(`Esperadas 23 páginas; encontradas ${pages.length}`);
-if (folders.length !== 3) errors.push(`Esperadas 3 pastas; encontradas ${folders.length}`);
+if (documents.length !== 31) errors.push(`Esperados 31 diários; encontrados ${documents.length}`);
+if (pages.length !== 31) errors.push(`Esperadas 31 páginas; encontradas ${pages.length}`);
+if (folders.length !== 5) errors.push(`Esperadas 5 pastas; encontradas ${folders.length}`);
 const ids = [...documents, ...pages, ...folders].map((entry) => entry._id);
 if (new Set(ids).size !== ids.length) errors.push("Há IDs duplicados no pack");
 for (const document of documents) {
   if (!folders.some((folder) => folder._id === document.folder)) errors.push(`${document.name}: pasta inválida`);
   if (document.pages.length !== 1 || !pages.some((page) => page._id === document.pages[0])) errors.push(`${document.name}: página inválida`);
-  if (document.flags?.tagmarSync?.sourceBook !== "Livro dos Reinos") errors.push(`${document.name}: livro de origem ausente`);
+  if (!["Livro dos Reinos", "Livro dos Deuses", "Livro de Ambientação"].includes(document.flags?.tagmarSync?.sourceBook)) errors.push(`${document.name}: livro de origem ausente`);
+}
+for (const reference of ["Guia do Livro dos Deuses", "Os deuses de Tagmar", "Calendário e festividades"]) {
+  if (!documents.some((document) => document.name === reference)) errors.push(`Referência do panteão ausente: ${reference}`);
+}
+for (const reference of ["Guia do Livro de Ambientação", "As Regiões de Tagmar", "Região dos Reinos", "Região das Terras Selvagens", "Região do Império"]) {
+  if (!documents.some((document) => document.name === reference)) errors.push(`Referência geográfica ausente: ${reference}`);
 }
 for (const page of pages) {
   const content = page.text?.content ?? "";

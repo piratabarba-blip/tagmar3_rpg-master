@@ -9,6 +9,7 @@ const pilot = process.argv.includes("--pilot");
 const detailsFile = pilot ? "details-pilot.json" : "details.json";
 const outputFile = pilot ? "mechanics-pilot.json" : "mechanics.json";
 const details = JSON.parse(await readFile(join(cacheDir, detailsFile), "utf8"));
+const editorialOverrides = JSON.parse(await readFile(join(here, "creature-editorial-overrides.json"), "utf8"));
 
 function decodeEntities(value) {
   const named = { amp: "&", apos: "'", gt: ">", lt: "<", nbsp: " ", quot: "\"" };
@@ -23,6 +24,24 @@ const cleanText = (value) => decodeEntities(String(value).replace(/<[^>]+>/g, " 
   .trim();
 const normalize = (value) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/gi, " ").trim().toLocaleLowerCase("pt-BR");
 const specialCreatureTechniques = new Set(["ataques multiplos", "bote", "carga aerea", "carga de quadrupede", "prender"]);
+
+function applyEditorialOverrides(creatureName, techniques) {
+  const result = techniques.map((entry) => ({ ...entry }));
+  for (const override of editorialOverrides.overrides.filter((entry) => entry.creature === creatureName)) {
+    if (override.type !== "replace-technique") continue;
+    const index = result.findIndex((entry) => normalize(entry.name) === normalize(override.from));
+    if (index < 0) throw new Error(`${creatureName}: técnica editorial de origem não encontrada: ${override.from}`);
+    result[index] = {
+      ...result[index],
+      name: override.to,
+      value: override.value,
+      pageName: `Técnicas de combate - ${override.to}`,
+      sourceUrl: `https://tagmar.com.br/wiki/Default.aspx?PageName=${encodeURIComponent(`Técnicas de combate - ${override.to}`)}`,
+      editorialCorrection: { from: override.from, reason: override.reason }
+    };
+  }
+  return result;
+}
 
 function decodePageName(href) {
   const raw = href.match(/[?&]PageName=([^&#]+)/i)?.[1] ?? "";
@@ -115,7 +134,7 @@ for (const detail of details.details) {
     sourceHash: detail.hash,
     sourceVariant: selectedVariant.variant,
     habilidades: linked.filter((entry) => entry.kind === "habilidade"),
-    tecnicas: [...linked.filter((entry) => entry.kind === "tecnica"), ...unlinked]
+    tecnicas: applyEditorialOverrides(detail.name, [...linked.filter((entry) => entry.kind === "tecnica"), ...unlinked])
   });
 }
 

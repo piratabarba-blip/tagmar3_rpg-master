@@ -7,6 +7,7 @@ const root = join(here, "..", "..");
 const cacheDir = join(root, ".cache", "tagmar-sync");
 const classic = JSON.parse(await readFile(join(cacheDir, "snapshot-criaturas-e-arquetipos-sem-tecnicas.json"), "utf8"));
 const official = JSON.parse(await readFile(join(cacheDir, "creatures", "index.json"), "utf8"));
+const aliases = JSON.parse(await readFile(join(here, "creature-name-aliases.json"), "utf8")).aliases;
 
 const normalize = (value) => value.normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "")
@@ -27,11 +28,17 @@ for (const actor of classicActors) {
 
 const officialRows = official.creatures.map((creature) => ({ ...creature, normalizedName: normalize(creature.name) }));
 const officialKeys = new Set(officialRows.map((creature) => creature.normalizedName));
-const matched = officialRows
-  .filter((creature) => classicByKey.has(creature.normalizedName))
-  .map((creature) => ({ ...creature, classic: classicByKey.get(creature.normalizedName) }));
-const officialOnly = officialRows.filter((creature) => !classicByKey.has(creature.normalizedName));
-const classicOnly = classicActors.filter((actor) => !officialKeys.has(actor.key));
+const matched = officialRows.flatMap((creature) => {
+  const aliasName = aliases[creature.name];
+  const classicKey = aliasName ? normalize(aliasName) : creature.normalizedName;
+  const classicMatches = classicByKey.get(classicKey);
+  if (!classicMatches) return [];
+  return [{ ...creature, classic: classicMatches, ...(aliasName ? { nameAlias: { official: creature.name, classic: aliasName } } : {}) }];
+});
+const matchedOfficialKeys = new Set(matched.map((creature) => creature.normalizedName));
+const matchedClassicIds = new Set(matched.flatMap((creature) => creature.classic.map((actor) => actor.id)));
+const officialOnly = officialRows.filter((creature) => !matchedOfficialKeys.has(creature.normalizedName));
+const classicOnly = classicActors.filter((actor) => !matchedClassicIds.has(actor.id));
 const duplicateClassicKeys = [...classicByKey.entries()]
   .filter(([, actors]) => actors.length > 1)
   .map(([key, actors]) => ({ key, actors }));

@@ -74,13 +74,46 @@
   ],
   "packs": [
     {
-      "name": "terras-selvagens",
-      "label": "Terras Selvagens",
+      "name": "criando-fichas-t3er",
+      "label": "Criando Fichas — Edição Revisada (Prévia)",
       "system": "tagmar_rpg",
-      "path": "packs/terras-selvagens",
+      "path": "packs/criando-fichas-t3er",
       "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "reino-de-tagmar-t3er",
+      "label": "Reino de Tagmar — Referências Oficiais (Prévia)",
+      "system": "tagmar_rpg",
+      "path": "packs/reino-de-tagmar-t3er",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "criaturas-t3er",
+      "label": "Criaturas — Edição Oficial Sincronizada (Prévia)",
+      "system": "tagmar_rpg",
+      "path": "packs/criaturas-t3er",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "NONE",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "registro-de-datas",
+      "label": "Registro de Datas",
+      "system": "tagmar_rpg",
+      "path": "packs/registro-de-datas",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "NONE",
         "GAMEMASTER": "OWNER"
       }
     },
@@ -118,28 +151,6 @@
       }
     },
     {
-      "name": "criando-fichas-t3er",
-      "label": "Criando Fichas — Edição Revisada (Prévia)",
-      "system": "tagmar_rpg",
-      "path": "packs/criando-fichas-t3er",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "GAMEMASTER": "OWNER"
-      }
-    },
-    {
-      "name": "registro-de-datas",
-      "label": "Registro de Datas",
-      "system": "tagmar_rpg",
-      "path": "packs/registro-de-datas",
-      "type": "JournalEntry",
-      "ownership": {
-        "PLAYER": "NONE",
-        "GAMEMASTER": "OWNER"
-      }
-    },
-    {
       "name": "criaturas-e-arquetipos-sem-tecnicas",
       "label": "Criaturas e Arquetipos Sem Tecnicas",
       "system": "tagmar_rpg",
@@ -151,24 +162,13 @@
       }
     },
     {
-      "name": "reino-de-tagmar-t3er",
-      "label": "Reino de Tagmar — Referências Oficiais (Prévia)",
+      "name": "terras-selvagens",
+      "label": "Terras Selvagens",
       "system": "tagmar_rpg",
-      "path": "packs/reino-de-tagmar-t3er",
-      "type": "JournalEntry",
+      "path": "packs/terras-selvagens",
+      "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
-        "GAMEMASTER": "OWNER"
-      }
-    },
-    {
-      "name": "criaturas-t3er",
-      "label": "Criaturas — Edição Oficial Sincronizada (Prévia)",
-      "system": "tagmar_rpg",
-      "path": "packs/criaturas-t3er",
-      "type": "Actor",
-      "ownership": {
-        "PLAYER": "NONE",
         "GAMEMASTER": "OWNER"
       }
     }

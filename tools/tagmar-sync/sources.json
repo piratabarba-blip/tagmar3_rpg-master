@@ -7,7 +7,7 @@
       "id": "habilidades",
       "label": "Habilidades",
       "indexPages": [
-        "Manual de Regras - Habilidades"
+        "Livro de Regras - Habilidades"
       ],
       "pagePrefixes": [
         "Habilidades - "
@@ -78,7 +78,9 @@
         "Colégio do Conhecimento",
         "Ordens Sacerdotais",
         "As Trilhas",
-        "As Confrarias"
+        "As Confrarias",
+        "Magia - Fanatismo",
+        "Magia - Detecções"
       ],
       "pagePrefixes": [
         "Magia - "
@@ -163,6 +165,14 @@
         "Calco",
         "Cidades-Estado",
         "Porto Livre",
+        "Livro dos Deuses",
+        "Os deuses de Tagmar",
+        "Calendário de Tagmar",
+        "Livro de Ambientação",
+        "As Regiões de Tagmar",
+        "Região dos Reinos",
+        "Região das Terras selvagens",
+        "Região do Império",
         "Livro dos Reinos - Epílogo",
         "Livro dos Reinos - Créditos"
       ],

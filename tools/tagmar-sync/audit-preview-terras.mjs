@@ -6,6 +6,9 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..", "..");
 const cacheDir = join(root, ".cache", "tagmar-sync");
 const reportPath = join(cacheDir, "audit-terras-report.json");
+const normalize = (value) => String(value ?? "").normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9]+/gi, " ").trim().toLocaleLowerCase("pt-BR");
 const writeReport = process.argv.includes("--write");
 const parts = ["terras-personagens", "terras-combate", "terras-defesa", "terras-tecnicas", "terras-magias", "terras-efeitos", "terras-pocoes"];
 const items = [];
@@ -21,6 +24,15 @@ for (const part of parts) {
 
 const errors = [];
 const warnings = [];
+const duplicateItems = items.reduce((groups, item) => {
+  const key = `${item.folder}:${item.type}:${normalize(item.name)}`;
+  if (!groups.has(key)) groups.set(key, []);
+  groups.get(key).push(item);
+  return groups;
+}, new Map());
+for (const [key, grouped] of duplicateItems) {
+  if (grouped.length > 1) errors.push(`Itens homônimos na mesma pasta/tipo: ${key} (${grouped.length})`);
+}
 const repeated = (values) => [...values.reduce((map, value) => map.set(value, (map.get(value) ?? 0) + 1), new Map())]
   .filter(([, count]) => count > 1);
 for (const [id] of repeated(items.map((item) => item._id))) errors.push(`ID de item duplicado: ${id}`);

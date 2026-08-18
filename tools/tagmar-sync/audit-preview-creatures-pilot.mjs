@@ -54,7 +54,7 @@ try {
 
 const errors = [];
 const warnings = [];
-if (canonicalSkills.length !== 39) errors.push(`catálogo revisado: ${canonicalSkills.length} habilidades, esperadas 39`);
+if (canonicalSkills.length !== 42) errors.push(`catálogo revisado: ${canonicalSkills.length} habilidades, esperadas 42`);
 const matchedNames = new Set(syncAudit.matched.filter((row) => row.classic.length === 1).map((row) => row.name));
 const mechanicsByName = new Map(mechanics.creatures.map((creature) => [creature.name, creature]));
 const fullDetailsByName = new Map(fullDetails.creatures.map((creature) => [creature.name, creature]));
@@ -77,6 +77,9 @@ for (const creature of expectedCreatures) {
     continue;
   }
   const [actorId, actor] = actorEntry;
+  if (actor.prototypeToken?.actorLink !== false) errors.push(`${creature.name}: token protótipo está vinculado ao ator`);
+  if (/^https?:\/\//i.test(String(actor.img ?? ""))) errors.push(`${creature.name}: imagem do ator ainda é remota`);
+  if (/^https?:\/\//i.test(String(actor.prototypeToken?.texture?.src ?? ""))) errors.push(`${creature.name}: imagem do token ainda é remota`);
   const details = fullDetailsByName.get(creature.name);
   if (!details) errors.push(`${creature.name}: detalhes oficiais completos ausentes`);
   else {
@@ -190,6 +193,14 @@ for (const creature of expectedCreatures) {
       if (Number(item.system?.nivel) > Number(actor.system?.estagio)) errors.push(`${creature.name}/${expected.name}: nível ${item.system?.nivel} acima do estágio ${actor.system?.estagio}`);
       if (!item.flags?.tagmarSync?.mappingStatus) errors.push(`${creature.name}/${expected.name}: política de mapeamento ausente`);
       if (item.flags?.tagmarSync?.needsMechanicalReview) warnings.push(`${creature.name}/${expected.name}: verbete oficial vazio; revisão mecânica sinalizada`);
+      if (normalize(expected.name) === "ataques multiplos" && expected.value != null) {
+        if (Number(item.flags?.tagmarSync?.officialValue) !== Number(expected.value)) errors.push(`${creature.name}/${expected.name}: quantidade oficial não preservada nas flags`);
+        if (!String(item.system?.restricao ?? "").includes(`Quantidade oficial: ${expected.value} ataques por rodada.`)) errors.push(`${creature.name}/${expected.name}: quantidade oficial ausente da restrição`);
+      }
+      if (normalize(expected.name) === "prender" && expected.difficulty) {
+        if (item.flags?.tagmarSync?.officialDifficulty !== expected.difficulty) errors.push(`${creature.name}/${expected.name}: dificuldade oficial não preservada nas flags`);
+        if (!String(item.system?.restricao ?? "").includes(`Dificuldade oficial para Escapar: ${expected.difficulty}.`)) errors.push(`${creature.name}/${expected.name}: dificuldade oficial ausente da restrição`);
+      }
       if (["Ataques múltiplos", "Bote", "Carga Aérea", "Carga de Quadrúpede", "Prender"].includes(expected.name)) {
         const canonical = canonicalSpecialTechniques.get(normalize(expected.name));
         if (item.flags?.tagmarSync?.mappingStatus !== "oficial-livro-criaturas") errors.push(`${creature.name}/${expected.name}: regra especial não veio do Livro de Criaturas`);
@@ -208,6 +219,13 @@ for (const creature of expectedCreatures) {
         if (!item.flags?.tagmarSync?.ruleSource?.url) errors.push(`${creature.name}/${expected.name}: fonte oficial do livro ausente`);
       }
     }
+  }
+  if (creature.name === 'Cão de raça "Alão"') {
+    const aerial = actorItems.find((item) => item.type === "Tecnica_Combate" && normalize(item.name) === "carga aerea");
+    const quadruped = actorItems.find((item) => item.type === "Tecnica_Combate" && normalize(item.name) === "carga de quadrupede");
+    if (aerial) errors.push(`${creature.name}: correção editorial falhou; Carga Aérea ainda está presente`);
+    if (!quadruped || Number(quadruped.system?.fa) !== 4) errors.push(`${creature.name}: Carga de Quadrúpede editorial ausente ou diferente de 4`);
+    if (quadruped && quadruped.flags?.tagmarSync?.editorialCorrection?.from !== "Carga Aérea") errors.push(`${creature.name}: origem da correção editorial não registrada`);
   }
   if (creature.name === "Cobra Venenosa") {
     if (!actorItems.some((item) => item.type === "Combate" && normalize(item.name) === "bote")) errors.push(`${creature.name}: ataque Bote clássico foi removido`);

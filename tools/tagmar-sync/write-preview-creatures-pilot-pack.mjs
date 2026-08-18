@@ -21,14 +21,19 @@ const allMatched = process.argv.includes("--all-matched");
 const allOfficial = process.argv.includes("--all-official");
 const mechanics = JSON.parse(await readFile(join(cacheRoot, "creatures", (allMatched || allOfficial) ? "mechanics.json" : "mechanics-pilot.json"), "utf8"));
 const fullDetails = JSON.parse(await readFile(join(cacheRoot, "creatures", "full-details.json"), "utf8"));
+const creatureImages = JSON.parse(await readFile(join(cacheRoot, "creature-images.json"), "utf8"));
 const revised = JSON.parse(await readFile(join(cacheRoot, "snapshot-criando-fichas-t3er.json"), "utf8"));
 const classic = JSON.parse(await readFile(join(cacheRoot, "snapshot-criando-fichas.json"), "utf8"));
 const specialTechniqueRules = JSON.parse(await readFile(join(here, "creature-special-techniques.json"), "utf8"));
+const editorialOverrides = JSON.parse(await readFile(join(here, "creature-editorial-overrides.json"), "utf8"));
 const documentTemplates = JSON.parse(await readFile(join(root, "template.json"), "utf8"));
 
 const pilotNames = ["Águia", "Cobra Venenosa", "Corvo", "Crocodilo", "Urso"];
 const normalize = (value) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/gi, " ").trim().toLocaleLowerCase("pt-BR");
 const stableId = (namespace, value) => createHash("sha256").update(`${namespace}:${String(value).normalize("NFC").toLocaleLowerCase("pt-BR")}`).digest("hex").slice(0, 16);
+const localCreatureImagePath = (url) => {
+  return url ? creatureImages.images[url] ?? null : null;
+};
 const mechanicsByName = new Map(mechanics.creatures.map((creature) => [creature.name, creature]));
 const fullDetailsByName = new Map(fullDetails.creatures.map((creature) => [creature.name, creature]));
 const excludedForMissingModels = new Set();
@@ -55,8 +60,8 @@ const canonicalSkillCatalog = revised.documents
   .filter((item) => item.type === "Habilidade")
   .filter((item, index, catalog) => catalog.findIndex((candidate) => normalize(candidate.name) === normalize(item.name)) === index)
   .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
-if (canonicalSkillCatalog.length !== 39) {
-  throw new Error(`Catálogo revisado de habilidades inesperado: ${canonicalSkillCatalog.length}, esperado 39`);
+if (canonicalSkillCatalog.length !== 42) {
+  throw new Error(`Catálogo revisado de habilidades inesperado: ${canonicalSkillCatalog.length}, esperado 42`);
 }
 const techniqueAliases = new Map([
   [normalize("Inibir Ataque"), normalize("Inibir Ataques")]
@@ -77,6 +82,58 @@ const canonicalSpecialTechniques = new Map(
 const specialRulesByName = new Map(
   Object.entries(specialTechniqueRules.techniques).map(([name, rule]) => [normalize(name), rule])
 );
+const officialMagicOverridesByCreature = new Map(
+  editorialOverrides.overrides
+    .filter((entry) => entry.type === "add-official-magics")
+    .map((entry) => [entry.creature, entry])
+);
+
+const officialSupplementalMagicPages = new Map([
+  [normalize("Fanatismo"), "1bdf07a8964359fe.html"],
+  [normalize("Detecções"), "cd3209bdaa0b6b77.html"]
+]);
+
+const stripHtml = (value) => String(value ?? "")
+  .replace(/<[^>]+>/g, " ")
+  .replace(/&nbsp;/gi, " ")
+  .replace(/&amp;/gi, "&")
+  .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
+  .replace(/\s+/g, " ").trim();
+
+async function buildOfficialMagic(entry, creature, itemId) {
+  const filename = officialSupplementalMagicPages.get(normalize(entry.name));
+  if (!filename) throw new Error(`${creature.name}: página oficial da magia não configurada: ${entry.name}`);
+  const html = await readFile(join(cacheRoot, "pages", filename), "utf8");
+  const official = /Images\/Oficial\.png/i.test(html)
+    && /material oriundo dos livros oficiais/i.test(html);
+  if (!official) throw new Error(`${creature.name}/${entry.name}: a página sincronizada não possui selo oficial`);
+  const field = (label) => stripHtml(html.match(new RegExp(`<b[^>]*>\\s*${label}\\s*<\\/b>\\s*:\\s*(.*?)(?:<br\\s*\\/?>)+`, "is"))?.[1]);
+  const disclaimer = html.match(/<p[^>]*>\s*Esta página contém material oriundo dos livros oficiais.*?<\/p>/is);
+  let effect = disclaimer ? html.slice((disclaimer.index ?? 0) + disclaimer[0].length) : html;
+  const footer = effect.search(/<hr[^>]*>\s*<h3/i);
+  if (footer >= 0) effect = effect.slice(0, footer);
+  const alcance = field("Alcance");
+  const duracao = field("Duração");
+  const evocacao = field("Evocação");
+  return {
+    _id: itemId, name: entry.name, type: "Magia", img: "icons/svg/explosion.svg", folder: null,
+    system: {
+      alcance, descricao: "", favorito: false, custo: 0, nivel: entry.level, evocacao, duracao,
+      efeito: `<strong>Alcance:</strong> ${alcance}<br/><strong>Duração:</strong> ${duracao}<br/><strong>Evocação:</strong> ${evocacao}<br/><br/>${effect}`,
+      total: { valor: entry.level, valorKarma: 0 }
+    },
+    effects: [], sort: 0, ownership: { default: 0 },
+    flags: { tagmarSync: {
+      creatureEmbedded: true, mappingStatus: "oficial-livro-criaturas-e-livro-magias",
+      creatureKey: creature.key, creatureName: creature.name,
+      sourcePage: `Magia - ${entry.name}`, officialBadge: true,
+      sourceConflict: entry.name === "Detecções" && entry.level === 10
+        ? "Livro de Criaturas indica nível 10; descrição oficial publicada detalha efeitos até 8."
+        : null
+    } },
+    _stats: itemStats({})
+  };
+}
 
 if (allMatched || allOfficial) {
   const unresolvedTechniques = new Map();
@@ -115,7 +172,8 @@ const itemStats = (item) => ({ ...(item._stats ?? {}), systemId: "tagmar_rpg", s
 const sourceFlags = (creature, entry, mappingStatus) => ({
   creatureKey: creature.key, creatureName: creature.name, sourceUrl: entry.sourceUrl ?? creature.sourceUrl,
   sourcePageName: entry.pageName ?? null, sourceHash: creature.sourceHash, officialValue: entry.value ?? null,
-  officialDifficulty: entry.difficulty ?? null, mappingStatus
+  officialDifficulty: entry.difficulty ?? null, mappingStatus,
+  editorialCorrection: entry.editorialCorrection ?? null
 });
 
 const isPlainObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -141,13 +199,15 @@ const itemSystemTemplate = (type) => ({
 
 function buildCurrentNpc(legacyActor, row, actorId, folderId) {
   const systemData = mergeCurrentSchema(npcTemplate, legacyActor.system);
+  const prototypeToken = structuredClone(legacyActor.prototypeToken);
+  prototypeToken.actorLink = false;
   return {
     _id: actorId,
     name: row.name,
     type: "NPC",
     img: legacyActor.img,
     system: systemData,
-    prototypeToken: structuredClone(legacyActor.prototypeToken),
+    prototypeToken,
     items: [],
     effects: structuredClone(legacyActor.effects ?? []),
     folder: folderId,
@@ -160,7 +220,7 @@ function buildCurrentNpc(legacyActor, row, actorId, folderId) {
 
 function buildOfficialNpc(row, actorId, folderId, referenceActor) {
   const details = fullDetailsByName.get(row.name);
-  const image = details?.imageUrl ?? "icons/svg/mystery-man.svg";
+  const image = localCreatureImagePath(details?.imageUrl) ?? "icons/svg/mystery-man.svg";
   const prototypeToken = structuredClone(referenceActor?.prototypeToken ?? {
     name: row.name, displayName: 20, actorLink: false, appendNumber: false, prependAdjective: false,
     texture: { src: image, anchorX: 0.5, anchorY: 0.5, offsetX: 0, offsetY: 0, fit: "contain", scaleX: 1, scaleY: 1, rotation: 0, tint: "#ffffff", alphaThreshold: 0.75 },
@@ -168,7 +228,9 @@ function buildOfficialNpc(row, actorId, folderId, referenceActor) {
     bar1: { attribute: "ef_npc" }, bar2: { attribute: "eh_npc" }, randomImg: false
   });
   prototypeToken.name = row.name;
+  prototypeToken.actorLink = false;
   prototypeToken.texture = { ...(prototypeToken.texture ?? {}), src: image };
+  prototypeToken.randomImg = false;
   return {
     _id: actorId, name: row.name, type: "NPC", img: image,
     system: structuredClone(npcTemplate), prototypeToken, items: [], effects: [], folder: folderId, sort: 0,
@@ -180,10 +242,15 @@ function synchronizeActorDetails(actor, row) {
   const details = fullDetailsByName.get(row.name);
   if (!details || details.combat?.error) return;
   const combat = details.combat;
+  const image = localCreatureImagePath(details.imageUrl);
   actor.name = row.name;
-  actor.img = details.imageUrl ?? actor.img;
-  if (details.imageUrl && actor.prototypeToken?.texture) actor.prototypeToken.texture.src = details.imageUrl;
-  actor.system.descricao = details.biography || actor.system.descricao || "";
+  actor.img = image ?? actor.img;
+  if (image && actor.prototypeToken?.texture) {
+    actor.prototypeToken.texture.src = image;
+    actor.prototypeToken.randomImg = false;
+  }
+  const biography = details.biography || actor.system.descricao || "";
+  actor.system.descricao = details.imageUrl && image ? biography.replaceAll(details.imageUrl, image) : biography;
   actor.system.estagio = combat.stage;
   for (const code of ["INT", "AUR", "CAR", "FOR", "FIS", "AGI", "PER"]) {
     const value = Number(details.attributes?.values?.[code.toLowerCase()] ?? actor.system.atributos?.[code] ?? 0);
@@ -524,8 +591,17 @@ for (const row of officialRows) {
     actor.items.push(itemId);
     addedTechniques += 1;
   }
+  let addedOfficialMagics = 0;
+  const magicOverride = officialMagicOverridesByCreature.get(row.name);
+  for (const entry of magicOverride?.magics ?? []) {
+    const itemId = stableId("tagmar-creature-official-magic", `${row.key}:${entry.name}:${entry.level}`);
+    const value = await buildOfficialMagic(entry, completeDetails, itemId);
+    operations.push({ type: "put", key: `!actors.items!${actorId}.${itemId}`, value });
+    actor.items.push(itemId);
+    addedOfficialMagics += 1;
+  }
   operations.push({ type: "put", key: `!actors!${actorId}`, value: actor });
-  counts.push({ name: row.name, status: creature ? (excludedForMissingModels.has(row.name) ? "partial-missing-model" : "synchronized-complete") : "complete-stats-attacks-biography-mechanics-section-pending", source: legacyActor ? "classic+official" : "official-only", preserved, officialAttacks: synchronizedAttacks, defenseItems, officialSkills: synchronizedSkills, untrainedSkills, skillCatalogSize: canonicalSkillCatalog.length, officialTechniques: addedTechniques, total: actor.items.length });
+  counts.push({ name: row.name, status: creature ? (excludedForMissingModels.has(row.name) ? "partial-missing-model" : "synchronized-complete") : "complete-stats-attacks-biography-mechanics-section-pending", source: legacyActor ? "classic+official" : "official-only", preserved, officialAttacks: synchronizedAttacks, defenseItems, officialSkills: synchronizedSkills, untrainedSkills, skillCatalogSize: canonicalSkillCatalog.length, officialTechniques: addedTechniques, officialMagics: addedOfficialMagics, total: actor.items.length });
 }
 
 try {

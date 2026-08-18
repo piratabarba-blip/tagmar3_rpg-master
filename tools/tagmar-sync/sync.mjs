@@ -83,8 +83,10 @@ async function fetchPage(pageName) {
   const url = pageUrl(pageName);
   const headers = { "User-Agent": "Tagmar-Foundry-Compendium-Sync/1.0 (+https://github.com/piratabarba-blip/tagmar3_rpg-master)" };
   const attempts = [
-    { transport: "rest", fetchUrl: restPageUrl(pageName), extract: extractRestBody },
-    { transport: "default", fetchUrl: url, extract: extractBody }
+    // A página normal preserva tabelas e estrutura editorial necessárias aos
+    // geradores; o endpoint REST é apenas o fallback para verbetes simples.
+    { transport: "default", fetchUrl: url, extract: extractBody },
+    { transport: "rest", fetchUrl: restPageUrl(pageName), extract: extractRestBody }
   ];
   const failures = [];
   for (const attempt of attempts) {

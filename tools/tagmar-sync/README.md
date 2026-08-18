@@ -74,6 +74,15 @@ Para gerar o pack separado de prévia:
 node tools/tagmar-sync/write-preview-pack.mjs
 ```
 
+Antes de reconstruir o pack completo de criaturas, baixe as imagens oficiais para o sistema. O comando usa nomes determinísticos, reaproveita arquivos existentes e limita as consultas a uma por segundo:
+
+```powershell
+node tools/tagmar-sync/download-creature-images.mjs
+node tools/tagmar-sync/write-preview-creatures-pilot-pack.mjs --all-official
+```
+
+Os atores e tokens usam somente caminhos locais em `assets/tokens/oficiais-sincronizados`; URLs remotas não devem ser gravadas no pack porque o navegador do Foundry pode bloqueá-las por CORS.
+
 O único destino permitido é `packs/criando-fichas-t3er`. O pack clássico `packs/criando-fichas` nunca é aberto para escrita por esse comando.
 
 Para gerar as Raças e Profissões do núcleo revisado:

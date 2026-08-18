@@ -331,3 +331,16 @@
     background-repeat: no-repeat;
     background-size:cover;
 }
+
+/* Identifica visualmente o compêndio clássico mantido apenas para consulta. */
+.directory-item:is(
+    [data-pack="tagmar_rpg.criando-fichas"],
+    [data-pack="tagmar_rpg.terras-selvagens"],
+    [data-pack="tagmar_rpg.criaturas-e-arquetipos-sem-tecnicas"]
+) > .compendium-banner,
+[data-pack="tagmar_rpg.criando-fichas"] .compendium-banner,
+[data-pack="tagmar_rpg.terras-selvagens"] .compendium-banner,
+[data-pack="tagmar_rpg.criaturas-e-arquetipos-sem-tecnicas"] .compendium-banner {
+    filter: grayscale(100%) brightness(45%) contrast(85%) !important;
+    opacity: 0.72;
+}

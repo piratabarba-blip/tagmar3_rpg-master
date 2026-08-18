@@ -184,7 +184,8 @@ function extractBiography(html, sourceUrl) {
 
 function extractImage(html, sourceUrl) {
   const raw = html.match(/<img\s+[^>]*src=['"]([^'"]*\/images\/criaturas\/[^'"]+)['"]/i)?.[1];
-  return raw ? new URL(decodeEntities(raw), sourceUrl).href : null;
+  const cleaned = decodeEntities(raw ?? "").replace(/<br\s*\/?>$/i, "");
+  return cleaned ? new URL(cleaned, sourceUrl).href : null;
 }
 
 const creatures = [];

@@ -197,7 +197,17 @@ const folders = orderedRoutes.map((route, index) => {
 });
 
 const items = [];
+// Uma revisão pode ser legítima em uma tradição própria (por exemplo,
+// Aaroim). Porém, se a mesma rota também lista a versão corrente, a revisão
+// repetida nessa rota não deve criar um terceiro item homônimo.
+const currentAcquisitionKeys = new Set(
+  acquisitions
+    .filter((entry) => !isRevision(entry.rawName))
+    .map((entry) => `${entry.route}:${baseKey(entry.name)}`)
+);
 for (const acquisition of acquisitions) {
+  if (isRevision(acquisition.rawName)
+    && currentAcquisitionKeys.has(`${acquisition.route}:${baseKey(acquisition.name)}`)) continue;
   const description = pickDescription(acquisition.rawName);
   let source = description?.page ?? null;
   let parsed = null;

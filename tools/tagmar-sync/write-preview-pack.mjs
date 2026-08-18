@@ -42,6 +42,51 @@ for (const [itemsFile, foldersFile] of previewParts) {
     if (error.code !== "ENOENT") throw error;
   }
 }
+// Biblioteca autoral criada no compêndio clássico para auxiliar o Mestre a
+// montar criaturas. Ela é preservada localmente e não participa da
+// sincronização editorial com o site oficial.
+const classicSnapshot = JSON.parse(await readFile(join(cacheDir, "snapshot-criando-fichas.json"), "utf8"));
+const supportRoot = classicSnapshot.folders.find((folder) => folder.name === "11 - CRIANDO CRIATURAS");
+if (!supportRoot) throw new Error("Pasta clássica 11 - CRIANDO CRIATURAS não encontrada");
+const supportFolderIds = new Set([supportRoot._id]);
+let supportFolderAdded = true;
+while (supportFolderAdded) {
+  supportFolderAdded = false;
+  for (const folder of classicSnapshot.folders) {
+    if (supportFolderIds.has(folder._id) || !supportFolderIds.has(folder.folder)) continue;
+    supportFolderIds.add(folder._id);
+    supportFolderAdded = true;
+  }
+}
+const supportFlags = {
+  origin: "material-autoral-classico",
+  purpose: "consulta-e-criacao-de-criaturas",
+  official: false,
+  synchronizedWithOfficialSite: false,
+  protectedFromOfficialSync: true
+};
+const supportFolders = classicSnapshot.folders
+  .filter((folder) => supportFolderIds.has(folder._id))
+  .map((folder) => ({
+    ...structuredClone(folder),
+    name: folder._id === supportRoot._id ? "11 - CRIANDO CRIATURAS — MATERIAL DE APOIO" : folder.name,
+    flags: { ...(folder.flags ?? {}), tagmarSync: supportFlags }
+  }));
+const supportItems = classicSnapshot.documents
+  .filter((item) => supportFolderIds.has(item.folder))
+  .map((item) => ({
+    ...structuredClone(item),
+    flags: { ...(item.flags ?? {}), tagmarSync: supportFlags }
+  }));
+const existingFolderIds = new Set(folders.map((folder) => folder._id));
+const existingItemIds = new Set(items.map((item) => item._id));
+const folderCollisions = supportFolders.filter((folder) => existingFolderIds.has(folder._id));
+const itemCollisions = supportItems.filter((item) => existingItemIds.has(item._id));
+if (folderCollisions.length || itemCollisions.length) {
+  throw new Error(`Colisões ao preservar material de apoio: ${folderCollisions.length} pastas, ${itemCollisions.length} itens`);
+}
+folders.push(...supportFolders);
+items.push(...supportItems);
 if (!items.length || !folders.length) throw new Error("Nenhuma prévia foi gerada");
 const db = new ClassicLevel(packPath, { keyEncoding: "utf8", valueEncoding: "json" });
 
@@ -80,4 +125,7 @@ try {
 if (writtenFolders !== folders.length || writtenItems !== itemDocuments.length) {
   throw new Error(`Falha de validação: esperado ${folders.length}/${itemDocuments.length}, gravado ${writtenFolders}/${writtenItems}`);
 }
-console.log(JSON.stringify({ packPath, folders: writtenFolders, items: writtenItems }, null, 2));
+console.log(JSON.stringify({
+  packPath, folders: writtenFolders, items: writtenItems,
+  supportLibrary: { folders: supportFolders.length, items: supportItems.length, official: false, synchronizedWithOfficialSite: false }
+}, null, 2));

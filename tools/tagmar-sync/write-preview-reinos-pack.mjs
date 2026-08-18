@@ -17,7 +17,7 @@ if (packPath !== resolve(root, "packs", "reino-de-tagmar-t3er")) throw new Error
 const documents = JSON.parse(await readFile(join(cacheDir, "preview-reinos-documents.json"), "utf8"));
 const pages = JSON.parse(await readFile(join(cacheDir, "preview-reinos-pages.json"), "utf8"));
 const folders = JSON.parse(await readFile(join(cacheDir, "preview-reinos-folders.json"), "utf8"));
-if (documents.length !== 23 || pages.length !== 23 || folders.length !== 3) throw new Error("Prévia do Reino de Tagmar incompleta");
+if (documents.length !== 31 || pages.length !== 31 || folders.length !== 5) throw new Error("Prévia do Reino de Tagmar incompleta");
 const parentByPageId = new Map(documents.flatMap((document) => document.pages.map((pageId) => [pageId, document._id])));
 
 const stagingRoot = await mkdtemp(join(tmpdir(), "tagmar-reinos-pack-"));

@@ -14,6 +14,10 @@ const stableId = (namespace, name) => createHash("sha256")
   .digest("hex")
   .slice(0, 16);
 const stripTags = (value) => value.replace(/<[^>]+>/g, " ").replace(/&nbsp;/gi, " ").replace(/\s+/g, " ").trim();
+const cleanSkillName = (value) => stripTags(value)
+  .replace(/[♘🦺🚫👨‍🎓…👷🏼*]+/gu, "")
+  .replace(/\.+$/g, "")
+  .trim();
 const mechanicalKey = (value) => stripTags(value)
   .replace(/[*.…]+/g, "")
   .normalize("NFD")
@@ -25,7 +29,7 @@ const mechanicalKey = (value) => stripTags(value)
 const systemGroupKey = (value) => mechanicalKey(value).replace(/\s+/g, "_");
 
 const source = manifest.pages.find((page) =>
-  page.category === "habilidades" && page.pageName === "Manual de Regras - Habilidades"
+  page.category === "habilidades" && page.pageName === "Livro de Regras - Habilidades"
 );
 if (!source) throw new Error("Execute sync.mjs --category=habilidades --write antes de gerar a prévia");
 
@@ -39,9 +43,6 @@ try {
   html = await readFile(join(cacheDir, "pages", `${filename}.html`), "utf8");
 }
 
-const descriptionStart = html.search(/<h[1-4][^>]*>\s*Descrição das Habilidades\s*<\/h[1-4]>/i);
-if (descriptionStart < 0) throw new Error("Seção 'Descrição das Habilidades' não encontrada");
-const relevant = html.slice(descriptionStart);
 const groupByTable = ["Profissional", "Manobra", "Conhecimento", "Subterfúgio", "Influência", "Geral"];
 const legacyFolders = new Map(legacy.folders.map((folder) => [mechanicalKey(folder.name), folder]));
 const legacySkillsRoot = legacyFolders.get(mechanicalKey("03 - HABILIDADES"));
@@ -75,36 +76,45 @@ const legacySkills = new Map(
     .filter((item) => item.type === "Habilidade")
     .map((item) => [mechanicalKey(item.name), item])
 );
-const tables = [...html.matchAll(/<table[^>]*>.*?<\/table>/gis)].slice(2, 8);
 const mechanics = new Map();
-for (let tableIndex = 0; tableIndex < tables.length; tableIndex += 1) {
-  const rows = [...tables[tableIndex][0].matchAll(/<tr[^>]*>(.*?)<\/tr>/gis)].slice(1);
+for (const table of html.matchAll(/<table[^>]*>.*?<\/table>/gis)) {
+  const rows = [...table[0].matchAll(/<tr[^>]*>(.*?)<\/tr>/gis)];
+  let groups = null;
   for (const row of rows) {
     const cells = [...row[1].matchAll(/<t[hd][^>]*>(.*?)<\/t[hd]>/gis)].map((cell) => stripTags(cell[1]));
-    if (cells.length < 3) continue;
-    mechanics.set(mechanicalKey(cells[0]), {
-      custo: Number.parseInt(cells[1], 10),
-      atributo: cells[2].normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase(),
-      grupo: groupByTable[tableIndex]
-    });
+    const possibleGroups = [cells[0], cells[4], cells[8]];
+    if (possibleGroups.every((group) => groupByTable.includes(group))) {
+      groups = possibleGroups;
+      continue;
+    }
+    if (!groups) continue;
+    for (let column = 0; column < groups.length; column += 1) {
+      const offset = column * 4;
+      const name = cleanSkillName(cells[offset] ?? "");
+      const custo = Number.parseInt(cells[offset + 1], 10);
+      const atributo = (cells[offset + 2] ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+      if (!name || !Number.isInteger(custo) || !atributo) continue;
+      mechanics.set(mechanicalKey(name), { name, custo, atributo, grupo: groups[column] });
+    }
   }
 }
 
-// Algumas páginas antigas possuem abertura h3 e fechamento h2. Aceitamos ambos,
-// mas só transformamos cabeçalhos que também aparecem nas tabelas mecânicas.
-const headingPattern = /<h[23][^>]*>\s*(.*?)\s*<\/h[23]>/gis;
-const headings = [...relevant.matchAll(headingPattern)];
+if (mechanics.size !== 42) {
+  throw new Error(`Catálogo oficial inesperado: ${mechanics.size} habilidades, esperadas 42`);
+}
+
+const skillPages = new Map(manifest.pages
+  .filter((page) => page.category === "habilidades" && page.pageName.startsWith("Habilidades - "))
+  .map((page) => [mechanicalKey(page.pageName.slice("Habilidades - ".length)), page]));
 const items = [];
 
-for (let index = 0; index < headings.length; index += 1) {
-  const heading = headings[index];
-  const name = stripTags(heading[1]);
-  const mechanical = mechanics.get(mechanicalKey(name));
-  if (!mechanical) continue;
-  const start = heading.index + heading[0].length;
-  const end = headings[index + 1]?.index ?? relevant.length;
-  const description = relevant.slice(start, end).trim();
-  if (!description) continue;
+for (const mechanical of mechanics.values()) {
+  const name = mechanical.name;
+  const skillPage = skillPages.get(mechanicalKey(name));
+  if (!skillPage) throw new Error(`Verbete oficial de habilidade ausente: ${name}`);
+  const skillFile = join(cacheDir, "pages", `${createHash("sha256").update(`${skillPage.category}:${skillPage.pageName}`).digest("hex").slice(0, 16)}.html`);
+  const description = (await readFile(skillFile, "utf8")).trim();
+  if (!description) throw new Error(`Verbete oficial de habilidade vazio: ${name}`);
   const legacySkill = legacySkills.get(mechanicalKey(name));
 
   items.push({
@@ -131,10 +141,13 @@ for (let index = 0; index < headings.length; index += 1) {
       tagmarSync: {
         edition: "Tagmar 3 Edição Revisada",
         category: "habilidades",
-        sourceName: source.pageName,
-        sourceUrl: source.url,
-        sourceHash: source.hash,
-        needsMechanicalMapping: !mechanical,
+        sourceName: skillPage.pageName,
+        sourceUrl: skillPage.url,
+        sourceHash: skillPage.hash,
+        mechanicsSourceName: source.pageName,
+        mechanicsSourceUrl: source.url,
+        mechanicsSourceHash: source.hash,
+        needsMechanicalMapping: false,
         legacyItemId: legacySkill?._id ?? null
       }
     }
