@@ -175,11 +175,22 @@ function extractBiography(html, sourceUrl) {
   const endMatch = html.slice(start).match(/<br\s*\/?>\s*<div>\s*<table[^>]+grdAtaques/i);
   const end = endMatch ? start + endMatch.index : html.length;
   let content = html.slice(start, end).trim();
-  content = content.replace(/\s(?:src|href)=(['"])(\.\.\/[^'"]+)\1/gi, (all, quote, target) => {
-    const absolute = new URL(target, sourceUrl).href;
-    return all.replace(`${quote}${target}${quote}`, `${quote}${absolute}${quote}`);
+  // A biografia deve permanecer como texto de consulta. O único link clicável
+  // é a fonte oficial acrescentada ao final, evitando referências parciais e
+  // inconsistentes entre habilidades e técnicas mencionadas no corpo.
+  content = content.replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi, "$1");
+  content = content.replace(/\b(href|src)=(?:"([^"]*)"|'([^']*)')/gi, (all, attribute, doubleQuoted, singleQuoted) => {
+    const quote = doubleQuoted !== undefined ? '"' : "'";
+    const target = decodeEntities(doubleQuoted ?? singleQuoted).trim();
+    if (/^(?:https?:|data:|mailto:|tel:|#|@UUID\[|systems\/)/i.test(target)) return all;
+    try {
+      const absolute = new URL(target, sourceUrl).href.replace(/&/g, "&amp;");
+      return `${attribute}=${quote}${absolute}${quote}`;
+    } catch {
+      return all;
+    }
   });
-  return `${content}\n<p><strong>Fonte oficial:</strong> <a href="${sourceUrl}">${sourceUrl}</a></p>`;
+  return `${content}\n<hr>\n<p class="tagmar-fonte-oficial" style="clear: both; margin-top: 1rem;"><strong>Consultar fonte oficial:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener">${sourceUrl}</a></p>`;
 }
 
 function extractImage(html, sourceUrl) {

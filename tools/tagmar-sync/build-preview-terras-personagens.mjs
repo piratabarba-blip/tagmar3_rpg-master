@@ -54,12 +54,26 @@ function mechanicTable(html) {
   return rowsFromTable(table);
 }
 
-function pageContent(html) {
+function absolutizeOfficialUrls(html, pageUrl) {
+  return html.replace(/\b(href|src)=(?:"([^"]*)"|'([^']*)')/gi, (match, attribute, doubleQuoted, singleQuoted) => {
+    const quote = doubleQuoted !== undefined ? '"' : "'";
+    const value = decodeEntities(doubleQuoted ?? singleQuoted).trim();
+    if (/^(?:https?:|data:|mailto:|tel:|#|@UUID\[|systems\/)/i.test(value)) return match;
+    try {
+      const absolute = new URL(value, pageUrl).href.replace(/&/g, "&amp;");
+      return `${attribute}=${quote}${absolute}${quote}`;
+    } catch {
+      return match;
+    }
+  });
+}
+
+function pageContent(html, pageUrl) {
   const firstTableEnd = html.indexOf("</table>");
   let body = firstTableEnd >= 0 ? html.slice(firstTableEnd + 8) : html;
   const footer = body.search(/<hr[^>]*>[\s\S]*?<h3[^>]*>\s*Verbetes/i);
   if (footer >= 0) body = body.slice(0, footer);
-  return body.trim();
+  return absolutizeOfficialUrls(body.trim(), pageUrl);
 }
 
 function requiredNumber(text, pattern, label) {
@@ -135,7 +149,8 @@ const races = raceSpecs.map((spec) => {
 });
 
 for (let index = 0; index < races.length; index += 1) {
-  races[index].system.descricao = pageContent(await pageHtml(raceSpecs[index].page));
+  const page = source(raceSpecs[index].page);
+  races[index].system.descricao = pageContent(await pageHtml(raceSpecs[index].page), page.url);
 }
 
 const legacyProfessionByName = new Map(legacyTerras.items.filter((item) => item.type === "Profissao")
@@ -181,7 +196,7 @@ for (const spec of professionSpecs) {
       especializacoes: `${spec.specializations.join(",")},`,
       eh_base: requiredNumber(plain, /EH básica\s*=\s*(\d+)/i, `${spec.name}.EH`),
       lista_eh: { v1: integer(evolution[1]), v2: integer(evolution[2]), v3: integer(evolution[3]), v4: integer(evolution[4]) },
-      descricao: pageContent(html),
+      descricao: pageContent(html, page.url),
       hab_nata: innate,
       grupo_pen: key(penalized),
       p_aquisicao: {
@@ -239,7 +254,10 @@ for (const spec of extendedProfessionSpecs) {
   const specializations = [...new Set([...existing, ...spec.additions])];
   const sourcePages = spec.pages.map((pageName) => source(pageName));
   const descriptions = [];
-  for (const pageName of spec.pages) descriptions.push(pageContent(await pageHtml(pageName)));
+  for (const pageName of spec.pages) {
+    const page = source(pageName);
+    descriptions.push(pageContent(await pageHtml(pageName), page.url));
+  }
   professions.push({
     _id: stableId("tagmar-terras-profissao-estendida", spec.name),
     name: spec.name,

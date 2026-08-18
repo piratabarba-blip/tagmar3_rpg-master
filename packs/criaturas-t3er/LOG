@@ -1,48 +1,5 @@
-2026/08/18-02:06:51.999 9440 Recovering log #3
-2026/08/18-02:06:52.184 9440 Level-0 table #5: started
-2026/08/18-02:06:52.899 9440 Level-0 table #5: 66196387 bytes OK
-2026/08/18-02:06:52.917 9440 Delete type=0 #3
-2026/08/18-02:06:52.917 9440 Delete type=3 #2
-2026/08/18-02:06:52.919 4224 Level-0 table #8: started
-2026/08/18-02:06:52.919 4224 Level-0 table #8: 0 bytes OK
-2026/08/18-02:06:52.920 4224 Delete type=0 #6
-2026/08/18-02:06:52.920 4224 Manual compaction at level-0 from '' @ 72057594037927935 : 1 .. '\xf4\x8f\xbf\xbf' @ 0 : 0; will stop at '!folders!fc15cdfa9a6e4ba9' @ 7 : 1
-2026/08/18-02:06:52.920 4224 Compacting 1@0 + 0@1 files
-2026/08/18-02:06:52.991 4224 Generated table #9@0: 297 keys, 2112493 bytes
-2026/08/18-02:06:53.064 4224 Generated table #10@0: 560 keys, 2120352 bytes
-2026/08/18-02:06:53.120 4224 Generated table #11@0: 719 keys, 2122619 bytes
-2026/08/18-02:06:53.181 4224 Generated table #12@0: 715 keys, 2120025 bytes
-2026/08/18-02:06:53.257 4224 Generated table #13@0: 738 keys, 2121772 bytes
-2026/08/18-02:06:53.315 4224 Generated table #14@0: 688 keys, 2122768 bytes
-2026/08/18-02:06:53.371 4224 Generated table #15@0: 703 keys, 2121222 bytes
-2026/08/18-02:06:53.431 4224 Generated table #16@0: 706 keys, 2122309 bytes
-2026/08/18-02:06:53.502 4224 Generated table #17@0: 705 keys, 2120777 bytes
-2026/08/18-02:06:53.563 4224 Generated table #18@0: 693 keys, 2121921 bytes
-2026/08/18-02:06:53.623 4224 Generated table #19@0: 688 keys, 2121668 bytes
-2026/08/18-02:06:53.685 4224 Generated table #20@0: 720 keys, 2121523 bytes
-2026/08/18-02:06:53.712 4224 Generated table #21@0: 720 keys, 2122703 bytes
-2026/08/18-02:06:53.774 4224 Generated table #22@0: 713 keys, 2123379 bytes
-2026/08/18-02:06:53.830 4224 Generated table #23@0: 686 keys, 2120846 bytes
-2026/08/18-02:06:53.890 4224 Generated table #24@0: 737 keys, 2122660 bytes
-2026/08/18-02:06:53.952 4224 Generated table #25@0: 721 keys, 2122592 bytes
-2026/08/18-02:06:54.011 4224 Generated table #26@0: 691 keys, 2121237 bytes
-2026/08/18-02:06:54.081 4224 Generated table #27@0: 723 keys, 2122147 bytes
-2026/08/18-02:06:54.137 4224 Generated table #28@0: 695 keys, 2122139 bytes
-2026/08/18-02:06:54.197 4224 Generated table #29@0: 709 keys, 2120813 bytes
-2026/08/18-02:06:54.261 4224 Generated table #30@0: 714 keys, 2123307 bytes
-2026/08/18-02:06:54.318 4224 Generated table #31@0: 686 keys, 2121328 bytes
-2026/08/18-02:06:54.375 4224 Generated table #32@0: 700 keys, 2120163 bytes
-2026/08/18-02:06:54.401 4224 Generated table #33@0: 708 keys, 2123292 bytes
-2026/08/18-02:06:54.461 4224 Generated table #34@0: 708 keys, 2121583 bytes
-2026/08/18-02:06:54.522 4224 Generated table #35@0: 730 keys, 2120009 bytes
-2026/08/18-02:06:54.548 4224 Generated table #36@0: 699 keys, 2124752 bytes
-2026/08/18-02:06:54.602 4224 Generated table #37@0: 687 keys, 2120822 bytes
-2026/08/18-02:06:54.656 4224 Generated table #38@0: 731 keys, 2121774 bytes
-2026/08/18-02:06:54.720 4224 Generated table #39@0: 734 keys, 2122180 bytes
-2026/08/18-02:06:54.731 4224 Generated table #40@0: 155 keys, 417114 bytes
-2026/08/18-02:06:54.731 4224 Compacted 1@0 + 0@1 files => 66184289 bytes
-2026/08/18-02:06:54.731 4224 compacted to: files[ 0 32 0 0 0 0 0 ]
-2026/08/18-02:06:54.731 4224 Delete type=2 #5
-2026/08/18-02:06:54.733 4224 Moved #9 to level-2 2112493 bytes OK: files[ 0 31 1 0 0 0 0 ]
-2026/08/18-02:06:54.733 4224 Manual compaction at level-0 from '!folders!fc15cdfa9a6e4ba9' @ 7 : 1 .. '\xf4\x8f\xbf\xbf' @ 0 : 0; will stop at (end)
-2026/08/18-02:06:54.734 4224 Moved #10 to level-2 2120352 bytes OK: files[ 0 30 2 0 0 0 0 ]
+2026/08/18-13:57:16.467 b10c Recovering log #3
+2026/08/18-13:57:16.643 b10c Level-0 table #5: started
+2026/08/18-13:57:17.333 b10c Level-0 table #5: 66198633 bytes OK
+2026/08/18-13:57:17.349 b10c Delete type=0 #3
+2026/08/18-13:57:17.349 b10c Delete type=3 #2

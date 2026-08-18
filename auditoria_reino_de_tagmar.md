@@ -99,6 +99,14 @@ O pack `reino-de-tagmar-t3er` foi instalado no sistema ativo do Foundry. A vers�
 
 A comparação SHA-256 dos cinco arquivos do pacote de origem e do pacote ativo não apresentou diferenças.
 
+## Correção de links no Foundry
+
+Os links relativos herdados do HTML oficial, como `Default.aspx?PageName=...`, eram interpretados pelo Foundry como caminhos de `localhost:30000`. O gerador agora converte todos os atributos `href` e `src` relativos em URLs absolutas baseadas na página oficial de origem.
+
+A auditoria rejeita qualquer novo link ou imagem relativa incompatível com o Foundry. Os 46 diários passaram nessa verificação em 18/08/2026. O pack corrigido foi instalado, com a versão anterior preservada em:
+
+`C:\Users\PIRATA\AppData\Local\FoundryVTT\Data\systems\tagmar_rpg\packs\reino-de-tagmar-t3er.backup-20260818-132957`
+
 ## Próxima ampliação
 
 O núcleo planejado de Reino de Tagmar e ambientação está completo. Prosseguir com a auditoria conjunta dos compêndios revisados.

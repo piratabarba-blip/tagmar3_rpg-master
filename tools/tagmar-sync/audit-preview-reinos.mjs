@@ -41,11 +41,25 @@ for (const reference of ["Cosmologia de Tagmar", "Considerações finais da ambi
 const regionsDocument = documents.find((document) => document.name === "As Regiões de Tagmar");
 const regionsPage = pages.find((page) => page._id === regionsDocument?.pages?.[0]);
 if (!regionsPage?.text?.content?.includes("systems/tagmar_rpg/assets/mapas/tagmar2-mapa-v7-lo2.jpg")) errors.push("Mapa geral local ausente em As Regiões de Tagmar");
+function findRelativeAttributes(content) {
+  const relative = [];
+  for (const match of content.matchAll(/\b(href|src)=(?:"([^"]*)"|'([^']*)')/gi)) {
+    const attribute = match[1].toLowerCase();
+    const value = (match[2] ?? match[3]).trim();
+    const allowed = attribute === "href"
+      ? /^(?:https?:|mailto:|tel:|#|@UUID\[)/i
+      : /^(?:https?:|data:|systems\/)/i;
+    if (!allowed.test(value)) relative.push(`${attribute}=${value}`);
+  }
+  return relative;
+}
 for (const page of pages) {
   const content = page.text?.content ?? "";
   if (content.length < 150) errors.push(`${page.name}: conteúdo parece truncado (${content.length} caracteres)`);
   if (!content.includes("Fonte oficial sincronizada:")) errors.push(`${page.name}: fonte oficial ausente`);
   if (!page.flags?.tagmarSync?.sourceHash) errors.push(`${page.name}: hash da origem ausente`);
+  const relativeAttributes = findRelativeAttributes(content);
+  if (relativeAttributes.length) errors.push(`${page.name}: URL relativa incompatível com o Foundry (${relativeAttributes[0]})`);
 }
 for (const realm of ["Levânia", "Ludgrim", "Eredra", "Verrogar", "Dantsem", "Marana", "Luna", "Portis", "Âmiem", "Abadom", "Acordo", "Plana", "Filanti", "Conti", "Azanti", "Calco", "Cidades-Estado", "Porto Livre"]) {
   if (!documents.some((document) => document.name === realm)) errors.push(`Reino ausente: ${realm}`);

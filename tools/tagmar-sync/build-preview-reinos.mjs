@@ -70,6 +70,21 @@ function source(pageName) {
   return page;
 }
 
+function absolutizeOfficialUrls(html, pageUrl) {
+  return html.replace(/\b(href|src)=(?:"([^"]*)"|'([^']*)')/gi, (match, attribute, doubleQuoted, singleQuoted) => {
+    const quote = doubleQuoted !== undefined ? '"' : "'";
+    const value = doubleQuoted ?? singleQuoted;
+    const normalized = value.replace(/&amp;/gi, "&").trim();
+    if (/^(?:https?:|data:|mailto:|tel:|#|@UUID\[|systems\/)/i.test(normalized)) return match;
+    try {
+      const absolute = new URL(normalized, pageUrl).href.replace(/&/g, "&amp;");
+      return `${attribute}=${quote}${absolute}${quote}`;
+    } catch {
+      return match;
+    }
+  });
+}
+
 function prepareOfficialHtml(html, page) {
   const localizedHtml = page.pageName === "As Regiões de Tagmar"
     ? html.replace(
@@ -77,8 +92,9 @@ function prepareOfficialHtml(html, page) {
       "systems/tagmar_rpg/assets/mapas/tagmar2-mapa-v7-lo2.jpg"
     )
     : html;
+  const portableHtml = absolutizeOfficialUrls(localizedHtml, page.url);
   return `<section class="tagmar-reinos-referencia">
-${localizedHtml.replace(/<p>\s*<\/p>/gi, "")}
+${portableHtml.replace(/<p>\s*<\/p>/gi, "")}
 <hr>
 <p><strong>Fonte oficial sincronizada:</strong> <a href="${page.url}" target="_blank" rel="noopener">${page.pageName}</a></p>
 </section>`;
