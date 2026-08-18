@@ -1,0 +1,55 @@
+{
+  "source": {
+    "title": "Tagmar - Livro de Criaturas 3.0",
+    "url": "https://tagmar.com.br/downloads/Tagmar%20-%20Livro%20de%20Criaturas%203.0.pdf",
+    "section": "3.4 Técnicas Especiais de Combate",
+    "printedPages": "21-23"
+  },
+  "techniques": {
+    "Ataques múltiplos": {
+      "group": "Ataque",
+      "attribute": "",
+      "hasTotal": false,
+      "mechanic": 0,
+      "test": "Não",
+      "restriction": "A quantidade indicada entre parênteses limita quantos ataques podem ser realizados na mesma rodada.",
+      "description": "<p><strong>Ajuste:</strong> nenhum.</p><p>A criatura pode realizar, na mesma iniciativa, a quantidade de ataques indicada entre parênteses. Cada ataque usa normalmente o total da forma de ataque escolhida e pode visar um alvo diferente, respeitando as limitações descritas na ficha.</p>"
+    },
+    "Bote": {
+      "group": "Precisão",
+      "attribute": "",
+      "hasTotal": false,
+      "mechanic": 0,
+      "test": "Não",
+      "restriction": "Aplicação manual pelo Mestre; os efeitos não são automatizados.",
+      "description": "<p><strong>Ajuste:</strong> nenhum.</p><p>Na rodada do bote, o estágio da criatura é somado como colunas extras ao ataque. Se o primeiro ataque do combate obtiver dano máximo na EH ou causar dano na EF contra uma vítima de até metade do peso da criatura, o atacante fica sobre a vítima e recebe +7 colunas enquanto mantiver essa posição.</p><p>Para escapar, a vítima precisa obter sucesso em Escapar (Laranja/Médio) ou em Agilidade (Azul/Muito Difícil). Criaturas aladas ou capazes de erguer a vítima podem optar por carregá-la quando alcançarem dano máximo no bote.</p>"
+    },
+    "Carga Aérea": {
+      "group": "Precisão",
+      "attribute": "AGI",
+      "hasTotal": true,
+      "mechanic": 0,
+      "test": "Sim",
+      "restriction": "Somente ataques corpo a corpo da própria criatura; não beneficia um personagem montado nela.",
+      "description": "<p><strong>Ajuste:</strong> Agilidade.</p><p>Após percorrer em metros pelo menos metade de sua Velocidade Base, a criatura soma o total da técnica à coluna do ataque corpo a corpo. Se atingir a EF ou obtiver resultado Azul ou Cinza na EH, o alvo faz um teste Vermelho (Difícil) de Físico.</p><p>Em caso de falha, o alvo é derrubado, perde sua ação e, se estiver segurando algo, precisa passar em Malabarismo (Médio) para não deixar o objeto cair. Alvos com mais do que o dobro do peso da criatura não podem ser derrubados.</p>"
+    },
+    "Carga de Quadrúpede": {
+      "group": "Precisão",
+      "attribute": "FIS",
+      "hasTotal": true,
+      "mechanic": 0,
+      "test": "Sim",
+      "restriction": "Somente ataques corpo a corpo da própria criatura; não beneficia um personagem montado nela.",
+      "description": "<p><strong>Ajuste:</strong> Físico.</p><p>Após percorrer em metros pelo menos metade de sua Velocidade Base, a criatura soma à coluna do ataque corpo a corpo duas vezes o total desta técnica. Se atingir a EF ou obtiver resultado Azul ou Cinza na EH, o alvo faz um teste Vermelho (Difícil) de Físico.</p><p>Em caso de falha, o alvo é derrubado e perde sua ação; se estiver segurando algo, precisa passar em Malabarismo (Médio) para não deixar o objeto cair. A criatura fica sobre o alvo e pode realizar um ataque extra na mesma rodada usando Ataque Oportuno. Alvos com mais do que o dobro do peso da criatura não podem ser derrubados.</p>"
+    },
+    "Prender": {
+      "group": "Perícia",
+      "attribute": "",
+      "hasTotal": false,
+      "mechanic": 0,
+      "test": "Não",
+      "restriction": "A dificuldade indicada na ficha é usada no teste de Escapar; aplicação manual pelo Mestre.",
+      "description": "<p><strong>Ajuste:</strong> nenhum.</p><p>Um ataque capaz de prender ativa a condição ao obter resultado Azul ou Azul Escuro, ou ao causar qualquer dano na EF. Enquanto estiver presa, a vítima tem VB 0, sofre -5 ao atacar com armas do grupo P e continua usando sua EH normalmente, mas fica vulnerável a Ataque Oportuno apenas da criatura que a prende.</p><p>Para se libertar, a vítima precisa passar em Escapar com a dificuldade indicada entre parênteses na ficha da criatura. O Mestre pode ajustar essa dificuldade conforme a situação.</p>"
+    }
+  }
+}

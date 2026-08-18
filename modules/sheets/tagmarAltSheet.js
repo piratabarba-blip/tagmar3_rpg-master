@@ -5,8 +5,8 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
         this.lastItemsUpdate = [];
         return foundry.utils.mergeObject(super.defaultOptions, {
         classes: ["tagmar", "sheet", "actor"],
-        //width: 900,
-        height: 890,
+        width: 900,
+        height: 950,
         tabs: [{
             navSelector: ".prim-tabs",
             contentSelector: ".sheet-primary",
@@ -18,10 +18,6 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
     get template() {
         let gameSystem = game.system.id;
         let layout = game.settings.get(gameSystem, "sheetTemplate");
-        if (this.document.type == "NPC") {
-            this['options']['height'] = 735;
-            this['position']['height'] = 735;
-        }
         if (this.document.type == "Personagem" && layout != "base") {
             if (layout == 'tagmar3anao') {
                 return 'systems/tagmar_rpg/templates/sheetsPoints/personagem-ficha-anao.hbs';
@@ -84,6 +80,11 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
         const data = super.getData(options);
         const actorUtils = await import("./actorUtils.js");
         data.dtypes = ["String", "Number", "Boolean"];
+        const packReference = data.document.pack;
+        const sourcePack = (typeof packReference === "string" ? game.packs.get(packReference) : packReference)
+            ?? data.document.compendium
+            ?? (data.document.collection?.locked !== undefined ? data.document.collection : null);
+        const canPersistUpdates = Boolean(options.editable && !sourcePack?.locked);
         if (data.document.type == 'Personagem') {
             let updatePers = {};
             let items_toUpdate = [];
@@ -109,7 +110,7 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
             if (this.lastUpdate) {
                 if (this.lastUpdate.hasOwnProperty('_id')) delete this.lastUpdate['_id'];
             }
-            if (Object.keys(updatePers).length > 0 && options.editable) {
+            if (Object.keys(updatePers).length > 0 && canPersistUpdates) {
                 if (!this.lastUpdate) {
                     this.lastUpdate = updatePers;
                     data.document.update(updatePers);
@@ -124,7 +125,7 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
             actorUtils._updateCombatItems(data, items_toUpdate);
             actorUtils._updateMagiasItems(data, items_toUpdate);
             actorUtils._updateTencnicasItems(data, items_toUpdate);
-            if (items_toUpdate.length > 0 && options.editable) {
+            if (items_toUpdate.length > 0 && canPersistUpdates) {
                 if (!this.lastItemsUpdate) {
                     this.lastItemsUpdate = items_toUpdate;
                     data.document.updateEmbeddedDocuments("Item", items_toUpdate);
@@ -141,14 +142,14 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
             this._prepareCharacterItems(data);
             actorUtils._prepareValorTeste(data, updateNpc);
             actorUtils._attDefesaNPC(data, updateNpc);
-            if (Object.keys(updateNpc).length > 0) {
+            if (Object.keys(updateNpc).length > 0 && canPersistUpdates) {
                 data.document.update(updateNpc);
             }
             actorUtils._updateCombatItems(data,updateItemsNpc);
             actorUtils._updateMagiasItems(data,updateItemsNpc);
             actorUtils._updateTencnicasItems(data,updateItemsNpc);
             actorUtils._updateHabilItems(data, updateItemsNpc);
-            if (updateItemsNpc.length > 0) {
+            if (updateItemsNpc.length > 0 && canPersistUpdates) {
                 data.document.updateEmbeddedDocuments("Item", updateItemsNpc);
             }
         }
@@ -629,7 +630,7 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
                     let tipoItem = "";
                     if (tipo == "Ataque") tipoItem = "Combate";
                     else if (tipo == "Defesa") tipoItem = "Defesa";
-                    else if (tipo == "Tecnica") tipoItem = "TecnicasCombate";
+                    else if (tipo == "Tecnica") tipoItem = "Tecnica_Combate";
                     if (tipoItem.length > 0) {
                         actor.createEmbeddedDocuments("Item", [{name: "Novo Item Criado", type: tipoItem}]).then(function (item) {
                             item[0].sheet.render(true);

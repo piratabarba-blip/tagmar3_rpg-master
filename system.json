@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.7.0-v14.1-rc.3",
+  "version": "2.7.0-v14.1-rc.8",
   "relationships": {
     "requires": [
       {
@@ -149,6 +149,28 @@
         "PLAYER": "NONE",
         "GAMEMASTER": "OWNER"
       }
+    },
+    {
+      "name": "reino-de-tagmar-t3er",
+      "label": "Reino de Tagmar — Referências Oficiais (Prévia)",
+      "system": "tagmar_rpg",
+      "path": "packs/reino-de-tagmar-t3er",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "criaturas-t3er",
+      "label": "Criaturas — Edição Oficial Sincronizada (Prévia)",
+      "system": "tagmar_rpg",
+      "path": "packs/criaturas-t3er",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "NONE",
+        "GAMEMASTER": "OWNER"
+      }
     }
   ],
   "languages": [
@@ -158,6 +180,6 @@
     "units": "m"
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
-  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.7.0-v14.1-rc.3/system.json",
-  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.3"
+  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.7.0-v14.1-rc.8/system.json",
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.8"
 }

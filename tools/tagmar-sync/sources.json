@@ -114,13 +114,13 @@
         "LATS - LISTA DE MAGIAS",
         "LATS - Tabelas das Magias das Profissões e Especializações",
         "Assimilação Verdadeira",
-        "Enxame de Pragas",
+        "Magia - Enxame de Pragas",
         "Escudo Espiritual",
         "Invocar Espiritos",
         "Resistência Climática",
         "Aprimorar Habilidades (Revisão)",
         "Visão Animal (Revisão)",
-        "Bestializar",
+        "Magia - Bestializar",
         "Penalidades de Combate Aéreo e Aquático",
         "REVISÃO",
         "REVISÃO da Confraria dos Encantadores"
@@ -137,6 +137,36 @@
         "Criando Personagens",
         "Raça Jogadora - "
       ]
+    },
+    {
+      "id": "reino-de-tagmar",
+      "label": "Reino de Tagmar",
+      "indexPages": [
+        "Livro dos Reinos",
+        "Cronologia dos Reinos do Mundo Conhecido",
+        "Livro dos Reinos - Prólogo",
+        "Levânia",
+        "Ludgrim",
+        "Eredra",
+        "Verrogar",
+        "Dantsem",
+        "Marana",
+        "Luna",
+        "Portis",
+        "Âmiem",
+        "Abadom",
+        "Acordo",
+        "Plana",
+        "Filanti",
+        "Conti",
+        "Azanti",
+        "Calco",
+        "Cidades-Estado",
+        "Porto Livre",
+        "Livro dos Reinos - Epílogo",
+        "Livro dos Reinos - Créditos"
+      ],
+      "pagePrefixes": []
     },
     {
       "id": "pertences",

@@ -121,8 +121,8 @@ tables.forEach((table, tableIndex) => {
 });
 
 const directDescriptionNames = new Set([
-  "Assimilação Verdadeira", "Enxame de Pragas", "Escudo Espiritual", "Invocar Espiritos",
-  "Resistência Climática", "Aprimorar Habilidades (Revisão)", "Visão Animal (Revisão)", "Bestializar"
+  "Assimilação Verdadeira", "Escudo Espiritual", "Invocar Espiritos",
+  "Resistência Climática", "Aprimorar Habilidades (Revisão)", "Visão Animal (Revisão)"
 ]);
 const descriptionPages = pages.filter((page) => page.pageName.startsWith("Magia - ") || directDescriptionNames.has(page.pageName));
 const descriptionByExactKey = new Map();
