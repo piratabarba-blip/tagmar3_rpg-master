@@ -114,6 +114,42 @@ const sourceFlags = (magic) => ({
   sourceUrl: magic.flags.tagmarSync.sourceUrl,
   sourceHash: magic.flags.tagmarSync.sourceHash
 });
+const potionIcon = (name, magicName) => {
+  const label = key(name);
+  const family = key(magicName);
+  const root = "icons/consumables/potions";
+  if (label.includes("cura")) return `${root}/bottle-bulb-corked-glowing-red.webp`;
+  if (label.includes("energetic")) return `${root}/potion-jar-corked-glowing-blue.webp`;
+  if (label.includes("saude")) return `${root}/potion-bottle-labeled-medicine-capped-red-black.webp`;
+  if (label.includes("antidoto")) return `${root}/potion-bottle-skull-label-poison-teal.webp`;
+  if (label.includes("mistica")) return `${root}/flask-corked-purple-glow.webp`;
+  if (label.includes("composta")) return `${root}/potion-bottle-corked-fancy-blue.webp`;
+  if (label.includes("queimadura")) return `${root}/potion-tube-corked-glowing-red.webp`;
+  if (label.includes("corrosao")) return `${root}/bottle-conical-fumes-green.webp`;
+  if (label.includes("eletrico")) return `${root}/flask-corked-yellow-glow.webp`;
+  if (label.includes("congelante")) return `${root}/potion-flask-corked-cyan.webp`;
+  if (label.includes("esmagamento")) return `${root}/potion-flask-corked-orange.webp`;
+  if (label.includes("sagrado")) return `${root}/potion-bottle-corked-white.webp`;
+  if (label.includes("infernal")) return `${root}/potion-tube-corked-bat-gold-red.webp`;
+  const familyIcons = new Map([
+    [key("Poção da comunicação"), "bottle-round-label-cork-blue.webp"],
+    [key("Poção da Juventude"), "potion-flask-corked-labeled-pink.webp"],
+    [key("Poção da maldição"), "flask-ornate-skull-green.webp"],
+    [key("Poção da Metamorfose"), "bottle-pear-corked-labeled-ornamental-purple.webp"],
+    [key("Poção da Restauração"), "potion-bottle-corked-labeled-red.webp"],
+    [key("Poção da viagem"), "potion-flask-corked-tied-necklace-teal.webp"],
+    [key("Poção das emoções"), "potion-flask-corled-pink-red.webp"],
+    [key("Poção de Projeção Astral"), "flask-corked-blue-glow.webp"],
+    [key("Poção de voo"), "potion-bottle-fumes-blue.webp"],
+    [key("Poção do Duplo"), "conical-ornate-purple.webp"],
+    [key("Poção do hálito de dragão"), "flask-red-bubbles-vortex.webp"],
+    [key("Poção do Sono"), "bottle-round-flask-fumes-purple.webp"],
+    [key("Poção do Tamanho"), "bottle-round-corked-orange.webp"],
+    [key("Poção do Vigor"), "flask-corked-red-glow.webp"],
+    [key("Poção Pele Cascarocha"), "round-cork-leaf-green.webp"]
+  ]);
+  return `${root}/${familyIcons.get(family) ?? "potion-flask-corked-blue.webp"}`;
+};
 function addItem({ magic, pathName, folderId, level, name, variant, detail, introduction, price, production, compoundTemplate = false }) {
   const routeKey = `${pathName}:${magic.name}:${level}:${variant}`;
   const description = [
@@ -126,7 +162,7 @@ function addItem({ magic, pathName, folderId, level, name, variant, detail, intr
     "<details><summary>Regras de preparação da magia</summary>", paragraphs(introduction), "</details>"
   ].filter(Boolean).join("");
   items.push({
-    _id: stableId("tagmar-terras-pocao", routeKey), name, type: "Pertence", img: magic.img,
+    _id: stableId("tagmar-terras-pocao", routeKey), name, type: "Pertence", img: potionIcon(name, magic.name),
     folder: folderId,
     system: { quant: 0, descricao: description, peso: 0, preco: price, inTransport: false },
     flags: { tagmarSync: {

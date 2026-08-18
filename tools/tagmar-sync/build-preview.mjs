@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { nativeSkillIcon } from "./native-action-icon.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..", "..");
@@ -121,7 +122,7 @@ for (const mechanical of mechanics.values()) {
     _id: stableId("tagmar-t3er-habilidade", name),
     name,
     type: "Habilidade",
-    img: legacySkill?.img ?? "icons/svg/book.svg",
+    img: nativeSkillIcon(name, legacySkill?.img),
     folder: folderIdByGroup.get(mechanicalKey(mechanical.grupo)) ?? null,
     system: {
       custo: mechanical?.custo ?? 0,

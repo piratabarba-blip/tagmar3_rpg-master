@@ -134,6 +134,7 @@ for (const magic of items.filter((item) => item.type === "Magia")) {
 }
 for (const potion of items.filter((item) => item.flags?.tagmarSync?.category === "terras-pocoes")) {
   if (potion.type !== "Pertence") errors.push(`${potion.name} não usa a mecânica de Pertence`);
+  if (!String(potion.img ?? "").startsWith("icons/consumables/potions/")) errors.push(`${potion.name} não usa ícone nativo de poção do Foundry`);
   if (!potion.flags.tagmarSync.parentMagicName || !potion.flags.tagmarSync.parentMagicId) errors.push(`${potion.name} sem magia criadora`);
   if (!potion.flags.tagmarSync.recipePath || !Number.isInteger(potion.flags.tagmarSync.recipeLevel)) errors.push(`${potion.name} sem origem da receita`);
   if (potion.flags.tagmarSync.manualPreparation !== true) errors.push(`${potion.name} não preserva o preparo manual`);

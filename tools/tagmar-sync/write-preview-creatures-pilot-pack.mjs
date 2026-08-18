@@ -26,13 +26,21 @@ const revised = JSON.parse(await readFile(join(cacheRoot, "snapshot-criando-fich
 const classic = JSON.parse(await readFile(join(cacheRoot, "snapshot-criando-fichas.json"), "utf8"));
 const specialTechniqueRules = JSON.parse(await readFile(join(here, "creature-special-techniques.json"), "utf8"));
 const editorialOverrides = JSON.parse(await readFile(join(here, "creature-editorial-overrides.json"), "utf8"));
+const tokenOverrides = JSON.parse(await readFile(join(here, "creature-token-overrides.json"), "utf8"));
+const tokenFamilyOverrides = JSON.parse(await readFile(join(here, "creature-token-family-overrides.json"), "utf8"));
 const documentTemplates = JSON.parse(await readFile(join(root, "template.json"), "utf8"));
 
 const pilotNames = ["Águia", "Cobra Venenosa", "Corvo", "Crocodilo", "Urso"];
 const normalize = (value) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/gi, " ").trim().toLocaleLowerCase("pt-BR");
 const stableId = (namespace, value) => createHash("sha256").update(`${namespace}:${String(value).normalize("NFC").toLocaleLowerCase("pt-BR")}`).digest("hex").slice(0, 16);
-const localCreatureImagePath = (url) => {
-  return url ? creatureImages.images[url] ?? null : null;
+const localCreatureImagePath = (name, url, currentImage = null) => {
+  const original = url ? creatureImages.images[url] ?? null : null;
+  const editorial = tokenOverrides[name] ?? tokenFamilyOverrides[original] ?? null;
+  if (editorial) return editorial;
+  const normalizedCurrent = String(currentImage ?? "").replaceAll("\\", "/").toLocaleLowerCase("pt-BR");
+  const hasClassicToken = normalizedCurrent.includes("/assets/tokens/")
+    && !normalizedCurrent.includes("/assets/tokens/oficiais-sincronizados/");
+  return hasClassicToken ? currentImage : original;
 };
 const mechanicsByName = new Map(mechanics.creatures.map((creature) => [creature.name, creature]));
 const fullDetailsByName = new Map(fullDetails.creatures.map((creature) => [creature.name, creature]));
@@ -220,7 +228,7 @@ function buildCurrentNpc(legacyActor, row, actorId, folderId) {
 
 function buildOfficialNpc(row, actorId, folderId, referenceActor) {
   const details = fullDetailsByName.get(row.name);
-  const image = localCreatureImagePath(details?.imageUrl) ?? "icons/svg/mystery-man.svg";
+  const image = localCreatureImagePath(row.name, details?.imageUrl) ?? "icons/svg/mystery-man.svg";
   const prototypeToken = structuredClone(referenceActor?.prototypeToken ?? {
     name: row.name, displayName: 20, actorLink: false, appendNumber: false, prependAdjective: false,
     texture: { src: image, anchorX: 0.5, anchorY: 0.5, offsetX: 0, offsetY: 0, fit: "contain", scaleX: 1, scaleY: 1, rotation: 0, tint: "#ffffff", alphaThreshold: 0.75 },
@@ -242,7 +250,7 @@ function synchronizeActorDetails(actor, row) {
   const details = fullDetailsByName.get(row.name);
   if (!details || details.combat?.error) return;
   const combat = details.combat;
-  const image = localCreatureImagePath(details.imageUrl);
+  const image = localCreatureImagePath(row.name, details.imageUrl, actor.img);
   actor.name = row.name;
   actor.img = image ?? actor.img;
   if (image && actor.prototypeToken?.texture) {
@@ -607,6 +615,7 @@ for (const row of officialRows) {
 try {
   await destinationDb.open();
   await destinationDb.batch(operations);
+  await destinationDb.compactRange("\x00", "\xff");
 } finally {
   await destinationDb.close();
 }

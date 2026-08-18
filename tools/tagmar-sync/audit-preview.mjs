@@ -80,6 +80,15 @@ for (const item of items) {
   if (!item.flags?.tagmarSync?.sourceName || !item.flags?.tagmarSync?.sourceUrl) errors.push(`Documento sem origem oficial: ${label}`);
   if (item.flags?.tagmarSync?.needsReview) warnings.push(`Revisão sinalizada: ${label}`);
   const image = String(item.img ?? "");
+  if (item.flags?.tagmarSync?.category === "pertences" && (!image || image.startsWith("icons/svg/"))) {
+    errors.push(`Pertence sem imagem específica: ${label} -> ${item.img}`);
+  }
+  if (String(item.flags?.tagmarSync?.category ?? "").startsWith("magias") && (!image || image.startsWith("icons/svg/"))) {
+    errors.push(`Magia sem imagem específica: ${label} -> ${item.img}`);
+  }
+  if (["habilidades", "tecnicas-combate"].includes(item.flags?.tagmarSync?.category) && (!image || image.startsWith("icons/svg/"))) {
+    errors.push(`Habilidade ou técnica sem imagem específica: ${label} -> ${item.img}`);
+  }
   if (!image.startsWith("systems/tagmar_rpg/") && !image.startsWith("icons/")) {
     warnings.push(`Imagem fora do sistema ou do núcleo Foundry: ${label} -> ${item.img}`);
   }

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { nativeMagicIcon } from "./native-magic-icon.mjs";
 import {
   TERRAS_ATS_PDF_FALLBACKS, TERRAS_ATS_PDF_URL, renderTerrasPdfFallback
 } from "./terras-pdf-fallbacks.mjs";
@@ -240,7 +241,7 @@ for (const acquisition of acquisitions) {
   items.push({
     _id: stableId("tagmar-terras-magias", `${acquisition.route}:${acquisition.rawName}`),
     name: acquisition.name, type: "Magia",
-    img: reusedImage?.img ?? "icons/svg/explosion.svg",
+    img: nativeMagicIcon(acquisition.name, reusedImage?.img ?? ""),
     folder: folderIds.get(acquisition.route),
     system: {
       alcance, descricao: "", favorito: false, custo: acquisition.custo, nivel: 0,

@@ -109,6 +109,95 @@ for (const [index, name] of folderNames.entries()) {
   folders.push({ _id: id, name, type: "Item", folder: rootId, sorting: "a", sort: classic?.sort ?? (index + 1) * 10, color: classic?.color ?? "#b000a0", flags: { tagmarSync: { edition: "Tagmar 3 Edição Revisada", category: "pertences", origin: "core" } } });
 }
 const allLegacyByName = new Map(legacyPertences.map((item) => [`${item.type}:${key(item.name)}`, item]));
+const genericBag = "icons/containers/bags/pack-simple-leather-tan.webp";
+function nativeIcon(name, folderName, legacyImage = "") {
+  const monochromeLegacy = [
+    "alao.png", "cao%20comum.png", "corvo.png", "92008.png",
+    "a9e5ae88941f75ebc7499c584ca569d3-coelho-coelho-cauda-orelha-perna-silhueta-detalhada-lebre-by-vexels.png",
+    "66722.png", "image_icon_pig_2_pic_512x512.png", "7.png", "treno.png",
+    "8bb12b2cad6c5c2e871be94ebb9c67f7-silhueta-de-clarinete-by-vexels.png"
+  ];
+  const legacyFilename = legacyImage.replaceAll("\\", "/").split("/").at(-1)?.toLocaleLowerCase("pt-BR") ?? "";
+  const repairedNativeIcons = new Map([
+    ["icons/equipment/chest/breastplate-pieced-black-02.webp", "icons/equipment/chest/breastplate-layered-leather-studded-black.webp"],
+    ["icons/equipment/chest/breastplate-pieced-black-01.webp", "icons/equipment/chest/breastplate-layered-steel-grey.webp"]
+  ]);
+  if (repairedNativeIcons.has(legacyImage)) return repairedNativeIcons.get(legacyImage);
+  if (legacyImage && legacyImage !== genericBag && !legacyImage.startsWith("icons/svg/") && !monochromeLegacy.includes(legacyFilename)) return legacyImage;
+  const value = key(name);
+  const matches = (pattern) => pattern.test(value);
+
+  if (matches(/aguia|gaviao/)) return "icons/creatures/birds/raptor-hawk-flying.webp";
+  if (matches(/corvo|pombo/)) return "icons/creatures/birds/corvid-flying-wings-purple.webp";
+  if (matches(/canario/)) return "icons/creatures/birds/songbird-yellow-flying.webp";
+  if (matches(/galinha/)) return "icons/creatures/birds/chicken-hen-white.webp";
+  if (matches(/ganso|pato/)) return "icons/creatures/birds/duck-green.webp";
+  if (matches(/cavalo|ponei/)) return "icons/environment/creatures/horse-brown.webp";
+  if (matches(/burro|mula/)) return "icons/environment/creatures/horse-tan.webp";
+  if (matches(/bufalo/)) return "icons/creatures/mammals/ox-buffalo-horned-green.webp";
+  if (matches(/^boi$/)) return "icons/creatures/mammals/ox-bull-horned-glowing-orange.webp";
+  if (matches(/vaca/)) return "icons/creatures/mammals/livestock-cow-green.webp";
+  if (matches(/cabra|bode/)) return "icons/creatures/mammals/goat-horned-blue.webp";
+  if (matches(/ovelha|carneiro/)) return "icons/creatures/mammals/livestock-sheep-green.webp";
+  if (matches(/porco/)) return "icons/creatures/mammals/livestock-pig-green.webp";
+  if (matches(/cao/)) return "icons/creatures/mammals/dog-husky-white-blue.webp";
+  if (matches(/gato/)) return "icons/creatures/mammals/cat-hunched-glowing-red.webp";
+  if (matches(/coelho|lebre/)) return "icons/creatures/mammals/rabbit-movement-glowing-green.webp";
+
+  if (matches(/barcaca|barco|canoa|caravela|galera|veleiro/)) return "icons/environment/vehicles/boat-fishing-masted.webp";
+  if (matches(/carro de boi|carroca|carruagem|charrete/)) return "icons/environment/settlement/wagon.webp";
+  if (matches(/treno/)) return "icons/environment/settlement/wagon-black.webp";
+  if (matches(/casa confortavel/)) return "icons/environment/settlement/house-two-stories.webp";
+  if (matches(/casa simples/)) return "icons/environment/settlement/house-farmland-small.webp";
+  if (matches(/hospedagem/)) return "icons/sundries/survival/bedroll-worn-tan.webp";
+
+  if (matches(/balalaica|bandolim|banjo|rabeca/)) return "icons/tools/instruments/lute-gold-brown.webp";
+  if (matches(/clarineta|gaita/)) return "icons/tools/instruments/pipe-flute-brown.webp";
+  if (matches(/berrante/)) return "icons/tools/instruments/horn-flared-wood.webp";
+  if (matches(/pandeirola/)) return "icons/tools/instruments/drum-hand-tan.webp";
+  if (matches(/triangulo de metal/)) return "icons/tools/instruments/chimes-wood-white.webp";
+
+  if (matches(/banquete nobre/)) return "icons/consumables/food/plate-steak-grilled-brown-green.webp";
+  if (matches(/banquete|refeicao cara/)) return "icons/consumables/food/plate-chicken-grilled-mushroom-brown.webp";
+  if (matches(/refeicao boa|refeicao normal/)) return "icons/consumables/food/bowl-stew-brown.webp";
+  if (matches(/refeicao barata/)) return "icons/consumables/food/bread-toast-tan.webp";
+  if (matches(/racao para animais/)) return "icons/containers/bags/sack-twisted-brown.webp";
+  if (matches(/racao semanal/)) return "icons/consumables/food/berries-ration-round-red.webp";
+  if (matches(/cesta de frutas/)) return "icons/skills/trades/farming-picking-basket-fruit-green.webp";
+  if (matches(/copo de vinho/)) return "icons/consumables/drinks/wine-amphora-clay-gray.webp";
+  if (matches(/^agua fresca$/)) return "icons/consumables/drinks/water-jug-clay-brown.webp";
+
+  if (matches(/par de botas/)) return "icons/equipment/feet/boots-leather-simple-brown.webp";
+  if (matches(/^tenda$/)) return "icons/environment/settlement/tent.webp";
+  if (matches(/^funda$/)) return "icons/weapons/slings/sling-leather.webp";
+  if (matches(/projetil.*funda/)) return "icons/weapons/ammunition/shot-round-lead.webp";
+  if (matches(/^flecha/)) return "icons/weapons/ammunition/arrows-fletching.webp";
+  if (matches(/lanca de justa/)) return "icons/weapons/polearms/spear-simple-barbed.webp";
+  if (matches(/cadeado/)) return "icons/sundries/misc/lock-steel-blue.webp";
+  if (matches(/frasco de vidro/)) return "icons/consumables/potions/bottle-round-empty-glass.webp";
+  if (matches(/agua abencoada/)) return "icons/consumables/potions/bottle-round-corked-blue.webp";
+  if (matches(/^vela/)) return "icons/sundries/lights/candle-unlit-tan.webp";
+  if (matches(/componentes misticos/)) return "icons/commodities/materials/feather-colored-green.webp";
+
+  if (matches(/escalada/)) return "icons/sundries/survival/climbing-anchor-steel-grey.webp";
+  if (matches(/montaria/)) return "icons/equipment/feet/boots-leather-simple-brown.webp";
+  if (matches(/madeira|trabalhos manuais/)) return "icons/tools/hand/hammer-cobbler-steel.webp";
+  if (matches(/metais/)) return "icons/tools/smithing/hammer-sledge-steel-grey.webp";
+  if (matches(/construcao|agricultura|minera/)) return "icons/weapons/axes/pickaxe-gray.webp";
+  if (matches(/veneficio|herbalismo|alquimia/)) return "icons/consumables/plants/dried-herb-bundle-brown.webp";
+  if (matches(/destravar fechaduras/)) return "icons/tools/hand/lockpicks-steel-grey.webp";
+
+  const defaults = {
+    ANIMAIS: "icons/environment/creatures/horse-brown.webp",
+    TRANSPORTES: "icons/environment/settlement/wagon.webp",
+    RESIDENCIAS: "icons/environment/settlement/house-wooden-fence.webp",
+    ESTALAGENS: "icons/sundries/survival/bedroll-worn-tan.webp",
+    "REFEIÇÕES": "icons/consumables/food/bowl-stew-brown.webp",
+    "INSTRUMENTOS MUSICAIS": "icons/tools/instruments/lute-gold-brown.webp",
+    "MATERIAL PROFISSIONAL": "icons/tools/hand/hammer-cobbler-steel.webp"
+  };
+  return defaults[folderName] ?? genericBag;
+}
 const items = [];
 for (const [folderName, rows] of categoryRows) for (const row of rows) {
   const type = ["ANIMAIS", "TRANSPORTES"].includes(folderName) ? "Transporte" : "Pertence";
@@ -117,7 +206,7 @@ for (const [folderName, rows] of categoryRows) for (const row of rows) {
   const system = type === "Transporte"
     ? { capacidade: legacyItem?.system?.capacidade ?? { carga: 0, pessoas: 0 }, preco: row.price, descricao: descriptionParts.join("<br/>") || legacyItem?.system?.descricao || "" }
     : { quant: 0, descricao: descriptionParts.join("<br/>") || legacyItem?.system?.descricao || "", peso: legacyItem?.system?.peso ?? 0, preco: row.price, inTransport: false };
-  items.push({ _id: stableId("tagmar-t3er-pertence", `${folderName}:${row.name}`), name: row.name, type, img: legacyItem?.img ?? "icons/containers/bags/pack-simple-leather-tan.webp", folder: folderIds.get(folderName), system, flags: { tagmarSync: { edition: "Tagmar 3 Edição Revisada", category: "pertences", origin: "core", sourceName: source.pageName, sourceUrl: source.url, sourceHash: source.hash, legacyItemId: legacyItem?._id ?? null, needsReview: !legacyItem } } });
+  items.push({ _id: stableId("tagmar-t3er-pertence", `${folderName}:${row.name}`), name: row.name, type, img: nativeIcon(row.name, folderName, legacyItem?.img), folder: folderIds.get(folderName), system, flags: { tagmarSync: { edition: "Tagmar 3 Edição Revisada", category: "pertences", origin: "core", sourceName: source.pageName, sourceUrl: source.url, sourceHash: source.hash, legacyItemId: legacyItem?._id ?? null, needsReview: !legacyItem } } });
 }
 if (new Set(items.map((item) => item._id)).size !== items.length) throw new Error("IDs duplicados em Pertences");
 if (items.some((item) => !item.system.preco)) throw new Error("Pertence sem preço");

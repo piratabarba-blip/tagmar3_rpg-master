@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { nativeMagicIcon } from "./native-magic-icon.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..", "..");
@@ -223,7 +224,7 @@ for (const spec of specs) {
       _id: stableId(`tagmar-t3er-${spec.category}`, `${acquisition.route}:${acquisition.name}`),
       name: acquisition.name,
       type: "Magia",
-      img: legacyItem?.img ?? "icons/svg/explosion.svg",
+      img: nativeMagicIcon(acquisition.name, legacyItem?.img),
       folder: folderIds.get(acquisition.route),
       system: {
         alcance,

@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,6 +21,9 @@ const fullDetails = JSON.parse(await readFile(join(root, ".cache", "tagmar-sync"
 const syncAudit = JSON.parse(await readFile(join(root, ".cache", "tagmar-sync", "creature-sync-audit.json"), "utf8"));
 const classic = JSON.parse(await readFile(join(root, ".cache", "tagmar-sync", "snapshot-criando-fichas.json"), "utf8"));
 const revised = JSON.parse(await readFile(join(root, ".cache", "tagmar-sync", "snapshot-criando-fichas-t3er.json"), "utf8"));
+const tokenOverrides = JSON.parse(await readFile(join(here, "creature-token-overrides.json"), "utf8"));
+const tokenFamilyOverrides = JSON.parse(await readFile(join(here, "creature-token-family-overrides.json"), "utf8"));
+const creatureImages = JSON.parse(await readFile(join(root, ".cache", "tagmar-sync", "creature-images.json"), "utf8"));
 const normalize = (value) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/gi, " ").trim().toLocaleLowerCase("pt-BR");
 const canonicalSkills = revised.documents
   .filter((item) => item.type === "Habilidade")
@@ -54,6 +57,25 @@ try {
 
 const errors = [];
 const warnings = [];
+const imageAudit = { mystery: [], officialMonochrome: [], actorPrototypeMismatch: [], missingLocal: [] };
+for (const actor of actors.values()) {
+  const image = String(actor.img ?? "");
+  const prototypeImage = String(actor.prototypeToken?.texture?.src ?? "");
+  if (image === "icons/svg/mystery-man.svg") imageAudit.mystery.push(actor.name);
+  if (image.includes("/assets/tokens/oficiais-sincronizados/")) imageAudit.officialMonochrome.push(actor.name);
+  if (prototypeImage !== image) imageAudit.actorPrototypeMismatch.push(actor.name);
+  if (image.startsWith("systems/tagmar_rpg/")) {
+    try {
+      await access(resolve(root, decodeURIComponent(image.slice("systems/tagmar_rpg/".length))));
+    } catch {
+      imageAudit.missingLocal.push(`${actor.name}: ${image}`);
+    }
+  }
+}
+if (imageAudit.mystery.length) errors.push(`tokens genéricos restantes: ${imageAudit.mystery.join(", ")}`);
+if (imageAudit.officialMonochrome.length) errors.push(`imagens oficiais monocromáticas restantes: ${imageAudit.officialMonochrome.join(", ")}`);
+if (imageAudit.actorPrototypeMismatch.length) errors.push(`imagem/token divergentes: ${imageAudit.actorPrototypeMismatch.join(", ")}`);
+if (imageAudit.missingLocal.length) errors.push(`arquivos locais ausentes: ${imageAudit.missingLocal.join("; ")}`);
 if (canonicalSkills.length !== 42) errors.push(`catálogo revisado: ${canonicalSkills.length} habilidades, esperadas 42`);
 const matchedNames = new Set(syncAudit.matched.filter((row) => row.classic.length === 1).map((row) => row.name));
 const mechanicsByName = new Map(mechanics.creatures.map((creature) => [creature.name, creature]));
@@ -80,6 +102,10 @@ for (const creature of expectedCreatures) {
   if (actor.prototypeToken?.actorLink !== false) errors.push(`${creature.name}: token protótipo está vinculado ao ator`);
   if (/^https?:\/\//i.test(String(actor.img ?? ""))) errors.push(`${creature.name}: imagem do ator ainda é remota`);
   if (/^https?:\/\//i.test(String(actor.prototypeToken?.texture?.src ?? ""))) errors.push(`${creature.name}: imagem do token ainda é remota`);
+  const originalToken = creatureImages.images[fullDetailsByName.get(creature.name)?.imageUrl] ?? null;
+  const expectedToken = tokenOverrides[creature.name] ?? tokenFamilyOverrides[originalToken];
+  if (expectedToken && actor.img !== expectedToken) errors.push(`${creature.name}: imagem piloto não foi aplicada ao ator`);
+  if (expectedToken && actor.prototypeToken?.texture?.src !== expectedToken) errors.push(`${creature.name}: imagem piloto não foi aplicada ao token protótipo`);
   const details = fullDetailsByName.get(creature.name);
   if (!details) errors.push(`${creature.name}: detalhes oficiais completos ausentes`);
   else {
@@ -237,7 +263,7 @@ for (const creature of expectedCreatures) {
 }
 
 const report = {
-  generatedAt: new Date().toISOString(), mode: allOfficial ? "all-official" : allMatched ? "all-matched" : "pilot", actors: actors.size, embeddedItems: items.length,
+  generatedAt: new Date().toISOString(), mode: allOfficial ? "all-official" : allMatched ? "all-matched" : "pilot", actors: actors.size, embeddedItems: items.length, imageAudit,
   expectedActors: expectedCreatures.length,
   officialOnlyActors: allOfficial ? syncAudit.officialOnly.length : 0,
   completeOfficialTables: allOfficial ? fullDetails.totals?.completeCombatTables ?? 0 : null,

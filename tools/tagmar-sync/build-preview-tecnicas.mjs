@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { nativeTechniqueIcon } from "./native-action-icon.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..", "..");
@@ -252,7 +253,7 @@ const items = acquisitions.map((acquisition) => {
     _id: stableId("tagmar-t3er-tecnica", `${route}:${acquisition.name}`),
     name: acquisition.name,
     type: "Tecnica_Combate",
-    img: legacyItem?.img ?? "icons/svg/sword.svg",
+    img: nativeTechniqueIcon(acquisition.name, legacyItem?.img),
     folder: folderIds.get(route) ?? null,
     system: {
       custo: acquisition.custo,
