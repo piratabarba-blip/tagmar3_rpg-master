@@ -45,8 +45,23 @@ const specs = [
   ["Região dos Reinos", "Região dos Reinos", "03 - REGIÕES E GEOGRAFIA"],
   ["Região das Terras selvagens", "Região das Terras Selvagens", "03 - REGIÕES E GEOGRAFIA"],
   ["Região do Império", "Região do Império", "03 - REGIÕES E GEOGRAFIA"],
-  ["Livro dos Reinos - Epílogo", "Epílogo", "04 - ENCERRAMENTO"],
-  ["Livro dos Reinos - Créditos", "Créditos", "04 - ENCERRAMENTO"]
+  ["Raças para Roleplay", "Raças para interpretação", "04 - POVOS E CULTURAS"],
+  ["As Línguas de Tagmar", "As Línguas de Tagmar", "04 - POVOS E CULTURAS"],
+  ["Os aventureiros", "Os aventureiros", "04 - POVOS E CULTURAS"],
+  ["Prólogo - Extratos do \"Livro de Maudi\"", "Prólogo histórico — Extratos do Livro de Maudi", "05 - HISTÓRIA E CRONOLOGIA"],
+  ["1º Ciclo ou O \"Tempo das Névoas\"", "Primeiro Ciclo — O Tempo das Névoas", "05 - HISTÓRIA E CRONOLOGIA"],
+  ["2º Ciclo ou \"O Tempo dos Filhos\"", "Segundo Ciclo — O Tempo dos Filhos", "05 - HISTÓRIA E CRONOLOGIA"],
+  ["3º Ciclo ou \"Tempo das Mentiras Infernais\"", "Terceiro Ciclo — Tempo das Mentiras Infernais", "05 - HISTÓRIA E CRONOLOGIA"],
+  ["Cronologia de Tagmar", "Cronologia de Tagmar", "05 - HISTÓRIA E CRONOLOGIA"],
+  ["Colégios de Magia", "Colégios de Magia", "06 - ORGANIZAÇÕES E FACÇÕES"],
+  ["Ordens Sacerdotais", "Ordens Sacerdotais", "06 - ORGANIZAÇÕES E FACÇÕES"],
+  ["As Trilhas", "Trilhas dos Rastreadores", "06 - ORGANIZAÇÕES E FACÇÕES"],
+  ["As Confrarias", "Confrarias dos Bardos", "06 - ORGANIZAÇÕES E FACÇÕES"],
+  ["Cosmologia", "Cosmologia de Tagmar", "07 - MAPAS E AMBIENTAÇÃO GERAL"],
+  ["Livro de Ambientação - Considerações Finais", "Considerações finais da ambientação", "07 - MAPAS E AMBIENTAÇÃO GERAL"],
+  ["Créditos do Livro de Ambientação", "Créditos do Livro de Ambientação", "07 - MAPAS E AMBIENTAÇÃO GERAL"],
+  ["Livro dos Reinos - Epílogo", "Epílogo", "08 - ENCERRAMENTO"],
+  ["Livro dos Reinos - Créditos", "Créditos", "08 - ENCERRAMENTO"]
 ];
 
 function source(pageName) {
@@ -56,8 +71,14 @@ function source(pageName) {
 }
 
 function prepareOfficialHtml(html, page) {
+  const localizedHtml = page.pageName === "As Regiões de Tagmar"
+    ? html.replace(
+      /http:\/\/3\.bp\.blogspot\.com\/-NN17_VJzyho\/U1bZYtXg9wI\/AAAAAAAAAVM\/KyvfawwPuso\/s1600\/tagmar2-mapa-v7-lo2\.jpg/gi,
+      "systems/tagmar_rpg/assets/mapas/tagmar2-mapa-v7-lo2.jpg"
+    )
+    : html;
   return `<section class="tagmar-reinos-referencia">
-${html.replace(/<p>\s*<\/p>/gi, "")}
+${localizedHtml.replace(/<p>\s*<\/p>/gi, "")}
 <hr>
 <p><strong>Fonte oficial sincronizada:</strong> <a href="${page.url}" target="_blank" rel="noopener">${page.pageName}</a></p>
 </section>`;
@@ -68,7 +89,11 @@ const folderColors = new Map([
   ["01 - REINOS", "#b99300"],
   ["02 - PANTEÃO E CALENDÁRIO", "#2878a8"],
   ["03 - REGIÕES E GEOGRAFIA", "#298b57"],
-  ["04 - ENCERRAMENTO", "#7254a8"]
+  ["04 - POVOS E CULTURAS", "#a84f7a"],
+  ["05 - HISTÓRIA E CRONOLOGIA", "#9a612a"],
+  ["06 - ORGANIZAÇÕES E FACÇÕES", "#5947a8"],
+  ["07 - MAPAS E AMBIENTAÇÃO GERAL", "#31778f"],
+  ["08 - ENCERRAMENTO", "#7254a8"]
 ]);
 const folderIds = new Map();
 const folders = [...new Set(specs.map(([, , folder]) => folder))].map((name, index) => {
@@ -88,10 +113,12 @@ for (const [index, [pageName, name, folder]] of specs.entries()) {
   const html = await readFile(join(cacheDir, "pages", snapshotFilename(pageSource)), "utf8");
   const documentId = stableId("tagmar-reinos-journal", pageName);
   const pageId = stableId("tagmar-reinos-page", pageName);
-  const sourceBook = ["Calendário de Tagmar", "Livro de Ambientação", "As Regiões de Tagmar", "Região dos Reinos", "Região das Terras selvagens", "Região do Império"].includes(pageName)
+  const sourceBook = ["Calendário de Tagmar", "Livro de Ambientação", "As Regiões de Tagmar", "Região dos Reinos", "Região das Terras selvagens", "Região do Império", "Raças para Roleplay", "As Línguas de Tagmar", "Os aventureiros", "Prólogo - Extratos do \"Livro de Maudi\"", "1º Ciclo ou O \"Tempo das Névoas\"", "2º Ciclo ou \"O Tempo dos Filhos\"", "3º Ciclo ou \"Tempo das Mentiras Infernais\"", "Cronologia de Tagmar", "Cosmologia", "Livro de Ambientação - Considerações Finais", "Créditos do Livro de Ambientação"].includes(pageName)
     ? "Livro de Ambientação"
     : ["Livro dos Deuses", "Os deuses de Tagmar"].includes(pageName)
       ? "Livro dos Deuses"
+      : ["Colégios de Magia", "Ordens Sacerdotais", "As Trilhas", "As Confrarias"].includes(pageName)
+        ? "Livro de Magias"
       : "Livro dos Reinos";
   const syncFlags = { sourceBook, sourcePage: pageName, sourceUrl: pageSource.url, sourceHash: pageSource.hash };
   documents.push({

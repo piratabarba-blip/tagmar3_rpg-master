@@ -212,16 +212,17 @@ Status: **parcialmente concluído**
 - Panteão e divindades, com o guia oficial do Livro dos Deuses;
 - calendário e festividades oficiais de Tagmar;
 - regiões e geografia, com o guia oficial do Livro de Ambientação e as regiões dos Reinos, Terras Selvagens e Império;
-- 31 documentos em 5 pastas, todos com URL, suplemento e hash de origem;
+- povos e culturas, com raças para interpretação, línguas e aventureiros;
+- história e cronologia ampliada, com o Livro de Maudi, os três Ciclos e a cronologia geral;
+- organizações e facções, com colégios, ordens sacerdotais, trilhas e confrarias;
+- mapa geral oficial armazenado localmente para evitar dependência do endereço externo antigo;
+- cosmologia, considerações finais e créditos do Livro de Ambientação;
+- 46 documentos em 9 pastas, todos com URL, suplemento e hash de origem;
 - pack reconstruído, auditado e instalado no sistema ativo em 18/08/2026.
 
 ### Próximos conteúdos possíveis
 
-1. Povos e culturas.
-2. História e cronologia ampliada.
-3. Organizações e facções.
-4. Mapas oficiais disponíveis.
-5. Ambientação geral do mundo conhecido.
+O núcleo previsto de Reino de Tagmar e ambientação está completo. Novos conteúdos só devem ser adicionados quando houver uma fonte oficial relevante que ainda não esteja representada.
 
 ### Regras
 
