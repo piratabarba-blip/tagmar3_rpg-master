@@ -117,7 +117,7 @@
         "LATS - Tabelas das Magias das Profissões e Especializações",
         "Assimilação Verdadeira",
         "Magia - Enxame de Pragas",
-        "Escudo Espiritual",
+        "Magia - Escudo Espiritual",
         "Invocar Espiritos",
         "Resistência Climática",
         "Aprimorar Habilidades (Revisão)",
@@ -194,6 +194,18 @@
       "pagePrefixes": []
     },
     {
+      "id": "o-imperio",
+      "label": "O Império",
+      "indexPages": [
+        "O império"
+      ],
+      "pagePrefixes": [
+        "Império - ",
+        "A Magia no Império - "
+      ],
+      "recursiveDiscovery": true
+    },
+    {
       "id": "pertences",
       "label": "Pertences e Afins",
       "indexPages": [
@@ -210,6 +222,16 @@
         "Livro dos Objetos Mágicos - Poções e Elixires"
       ],
       "pagePrefixes": []
+    },
+    {
+      "id": "objetos-magicos",
+      "label": "Livro dos Objetos Mágicos",
+      "indexPages": [
+        "Livro dos Objetos Mágicos"
+      ],
+      "pagePrefixes": [
+        "Livro dos Objetos Mágicos -"
+      ]
     },
     {
       "id": "venenos-drogas",

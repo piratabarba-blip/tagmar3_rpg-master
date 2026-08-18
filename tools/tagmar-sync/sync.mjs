@@ -122,10 +122,19 @@ const authoritativeCategoryScan = !indexesOnly && pageLimit === Number.POSITIVE_
 
 for (const category of selectedCategories) {
   const discovered = new Set(category.indexPages);
-  for (const indexPage of category.indexPages) {
+  const prefetched = new Map();
+  const discoveryQueue = [...category.indexPages];
+  while (discoveryQueue.length) {
+    const indexPage = discoveryQueue.shift();
+    if (prefetched.has(indexPage)) continue;
     const index = await fetchPage(indexPage);
+    prefetched.set(indexPage, index);
     if (category.pagePrefixes.length) {
-      for (const pageName of discoverLinks(index.body, category.pagePrefixes)) discovered.add(pageName);
+      for (const pageName of discoverLinks(index.body, category.pagePrefixes)) {
+        const isNew = !discovered.has(pageName);
+        discovered.add(pageName);
+        if (isNew && category.recursiveDiscovery) discoveryQueue.push(pageName);
+      }
     }
     await sleep(config.requestDelayMs);
   }
@@ -136,7 +145,7 @@ for (const category of selectedCategories) {
   for (const pageName of selectedPages) {
     let page;
     try {
-      page = await fetchPage(pageName);
+      page = prefetched.get(pageName) ?? await fetchPage(pageName);
     } catch (error) {
       if (!skipErrors) throw error;
       failedPages.push({ category: category.id, pageName, url: pageUrl(pageName), error: error.message });

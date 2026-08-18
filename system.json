@@ -75,7 +75,7 @@
   "packs": [
     {
       "name": "criando-fichas-t3er",
-      "label": "Criando Fichas — Edição Revisada (Prévia)",
+      "label": "Tagmar — Criação de Fichas (Edição Sincronizada)",
       "system": "tagmar_rpg",
       "path": "packs/criando-fichas-t3er",
       "type": "Item",
@@ -86,7 +86,7 @@
     },
     {
       "name": "reino-de-tagmar-t3er",
-      "label": "Reino de Tagmar — Referências Oficiais (Prévia)",
+      "label": "Reino de Tagmar — Referências Oficiais (Edição Sincronizada)",
       "system": "tagmar_rpg",
       "path": "packs/reino-de-tagmar-t3er",
       "type": "JournalEntry",
@@ -96,8 +96,41 @@
       }
     },
     {
+      "name": "objetos-magicos-t3er",
+      "label": "Objetos Mágicos — Itens Oficiais (Edição Sincronizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/objetos-magicos-t3er",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "objetos-magicos-regras-t3er",
+      "label": "Objetos Mágicos — Guia e Regras (Edição Sincronizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/objetos-magicos-regras-t3er",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "o-imperio-t3er",
+      "label": "O Império — Referências Oficiais (Edição Sincronizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/o-imperio-t3er",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
       "name": "criaturas-t3er",
-      "label": "Criaturas — Edição Oficial Sincronizada (Prévia)",
+      "label": "Criaturas de Tagmar — Edição Oficial Sincronizada",
       "system": "tagmar_rpg",
       "path": "packs/criaturas-t3er",
       "type": "Actor",
@@ -119,7 +152,7 @@
     },
     {
       "name": "terras-selvagens-t3er",
-      "label": "Terras Selvagens — Edição Atual (Prévia)",
+      "label": "Terras Selvagens — Criação de Fichas (Edição Sincronizada)",
       "system": "tagmar_rpg",
       "path": "packs/terras-selvagens-t3er",
       "type": "Item",
@@ -130,7 +163,7 @@
     },
     {
       "name": "terras-selvagens-regras-t3er",
-      "label": "Terras Selvagens — Regras (Prévia)",
+      "label": "Terras Selvagens — Regras (Edição Sincronizada)",
       "system": "tagmar_rpg",
       "path": "packs/terras-selvagens-regras-t3er",
       "type": "JournalEntry",
@@ -141,7 +174,7 @@
     },
     {
       "name": "criando-fichas",
-      "label": "Criando Fichas",
+      "label": "Tagmar — Criação de Fichas (Edição Antiga — Desatualizada)",
       "system": "tagmar_rpg",
       "path": "packs/criando-fichas",
       "type": "Item",
@@ -152,7 +185,7 @@
     },
     {
       "name": "criaturas-e-arquetipos-sem-tecnicas",
-      "label": "Criaturas e Arquetipos Sem Tecnicas",
+      "label": "Criaturas e Arquétipos (Edição Antiga — Desatualizada)",
       "system": "tagmar_rpg",
       "path": "packs/criaturas-e-arquetipos-sem-tecnicas",
       "type": "Actor",
@@ -163,7 +196,7 @@
     },
     {
       "name": "terras-selvagens",
-      "label": "Terras Selvagens",
+      "label": "Terras Selvagens (Edição Antiga — Desatualizada)",
       "system": "tagmar_rpg",
       "path": "packs/terras-selvagens",
       "type": "Item",

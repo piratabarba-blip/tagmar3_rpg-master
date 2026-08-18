@@ -57,9 +57,13 @@ function rowsFromTable(table) {
 function parseMagicPage(html) {
   let body = html.replace(/^\s*<h4[^>]*>.*?<\/h4>/is, "");
   const officialContentMissing = /Esta página ainda não possui conteúdo/iu.test(body);
+  const fieldStart = body.search(/<b[^>]*>\s*(?:Alcance|Dura(?:ç|&ccedil;|&#231;)ão|Evoca(?:ç|&ccedil;|&#231;)ão)\s*:?\s*<\/b>/iu);
+  if (fieldStart >= 0) body = body.slice(fieldStart).replace(/<hr\b[\s\S]*$/iu, "");
   const labelValue = (label) => {
     const bold = body.match(new RegExp(`<b[^>]*>\\s*${label}\\s*:?\\s*<\\/b>\\s*:?\\s*(.*?)<\\/p>`, "is"));
-    if (bold) return stripTags(bold[1]);
+    if (bold) return stripTags(bold[1].split(/<br\s*\/?\s*>/iu)[0]);
+    const inline = body.match(new RegExp(`<b[^>]*>\\s*${label}\\s*:?\\s*<\\/b>\\s*:?\\s*([^<]*)`, "is"));
+    if (inline) return stripTags(inline[1]);
     const plain = stripTags(body).match(new RegExp(`${label}\\s*:\\s*([^.;]+[.;]?)`, "i"));
     return plain?.[1]?.trim() ?? "";
   };
@@ -68,6 +72,7 @@ function parseMagicPage(html) {
   const evocacao = labelValue("Evoca(?:ç|&ccedil;|&#231;)ão");
   for (const label of ["Alcance", "Dura(?:ç|&ccedil;|&#231;)ão", "Evoca(?:ç|&ccedil;|&#231;)ão"]) {
     body = body.replace(new RegExp(`<p[^>]*>\\s*<b[^>]*>\\s*${label}\\s*:?\\s*<\\/b>.*?<\\/p>`, "gis"), "");
+    body = body.replace(new RegExp(`<b[^>]*>\\s*${label}\\s*:?\\s*<\\/b>\\s*:?\\s*[^<]*(?:<br\\s*\\/?>)?`, "giu"), "");
   }
   body = body.replace(/<p>\s*<\/p>/gi, "").trim();
   if (officialContentMissing) {
@@ -98,7 +103,9 @@ async function pageHtml(page) {
 const acquisitionPage = pageByName.get(listPage);
 if (!acquisitionPage) throw new Error(`Sincronize a página oficial ${listPage} antes de gerar as magias`);
 const acquisitionHtml = await pageHtml(acquisitionPage);
-const tables = [...acquisitionHtml.matchAll(/<table[^>]*>.*?<\/table>/gis)].map((match) => match[0]);
+const tables = [...acquisitionHtml.matchAll(/<table[^>]*>.*?<\/table>/gis)]
+  .map((match) => match[0])
+  .filter((table) => rowsFromTable(table)[0]?.some((header) => key(header) === "custo"));
 if (tables.length !== routes.length) throw new Error(`Esperadas ${routes.length} tabelas de aquisição; encontradas ${tables.length}`);
 
 const acquisitions = [];
