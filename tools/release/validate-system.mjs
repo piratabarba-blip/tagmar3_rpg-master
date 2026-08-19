@@ -41,7 +41,10 @@ const system = JSON.parse(await readFile(manifestPath, "utf8"));
 if (system.id !== "tagmar_rpg") errors.push(`ID inesperado: ${system.id}`);
 if (String(system.compatibility?.minimum) !== "14") errors.push("Compatibilidade mínima não está em V14");
 if (!String(system.compatibility?.verified ?? "").startsWith("14")) errors.push("Versão verificada não está em V14");
-if (!String(system.manifest ?? "").includes(system.version)) errors.push("URL do manifesto não contém a versão declarada");
+if (!/^https:\/\/raw\.githubusercontent\.com\/[\w.-]+\/[\w.-]+\/refs\/heads\/[\w./-]+\/system\.json$/i.test(String(system.manifest ?? ""))
+  && !String(system.manifest ?? "").includes(system.version)) {
+  errors.push("URL do manifesto não aponta para a ramificação atual nem contém a versão declarada");
+}
 if (!String(system.download ?? "").includes(system.version)) errors.push("URL de download não contém a versão declarada");
 
 for (const path of [...(system.scripts ?? []), ...(system.esmodules ?? []), ...(system.styles ?? [])]) {

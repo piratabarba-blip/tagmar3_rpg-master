@@ -247,6 +247,7 @@ node tools/tagmar-sync/build-preview-terras-defesa.mjs
 node tools/tagmar-sync/build-preview-terras-tecnicas.mjs
 node tools/tagmar-sync/build-preview-terras-magias.mjs
 node tools/tagmar-sync/build-preview-terras-efeitos.mjs
+node tools/tagmar-sync/build-preview-terras-pertences.mjs
 node tools/tagmar-sync/build-preview-terras-pocoes.mjs
 node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
@@ -256,8 +257,11 @@ A primeira etapa contém `01 - RAÇAS` e `02 - PROFISSÕES`: sete raças jogador
 
 O lote seguinte acrescenta `04 - COMBATE TERRAS SELVAGENS`, com as armas específicas do suplemento separadas pelos grupos de combate. Armas básicas que já existem no compêndio principal não são duplicadas. Os números vêm da tabela oficial atual, enquanto imagens, campos internos e casos sem valores próprios publicados preservam a implementação clássica já testada.
 
+Cada uma das 46 armas específicas também possui um objeto independente em `08 - PERTENCES DE TERRAS SELVAGENS`, permitindo separar saber usar a arma de efetivamente possuí-la e carregá-la. Os 37 preços publicados são preservados; nove preços ausentes e todos os pesos usam a base de comércio aprovada pelo projeto, identificada nos metadados como estimativa para não ser confundida com regra oficial.
+
 ```powershell
 node tools/tagmar-sync/build-preview-terras-combate.mjs
+node tools/tagmar-sync/build-preview-terras-pertences.mjs
 node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
 ```

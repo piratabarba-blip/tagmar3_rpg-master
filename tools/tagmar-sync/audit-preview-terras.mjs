@@ -10,7 +10,7 @@ const normalize = (value) => String(value ?? "").normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "")
   .replace(/[^a-z0-9]+/gi, " ").trim().toLocaleLowerCase("pt-BR");
 const writeReport = process.argv.includes("--write");
-const parts = ["terras-personagens", "terras-combate", "terras-defesa", "terras-tecnicas", "terras-magias", "terras-efeitos", "terras-pocoes"];
+const parts = ["terras-personagens", "terras-combate", "terras-defesa", "terras-tecnicas", "terras-magias", "terras-efeitos", "terras-pertences", "terras-pocoes"];
 const items = [];
 const folders = [];
 const byPart = {};
@@ -139,6 +139,14 @@ for (const potion of items.filter((item) => item.flags?.tagmarSync?.category ===
   if (!potion.flags.tagmarSync.recipePath || !Number.isInteger(potion.flags.tagmarSync.recipeLevel)) errors.push(`${potion.name} sem origem da receita`);
   if (potion.flags.tagmarSync.manualPreparation !== true) errors.push(`${potion.name} não preserva o preparo manual`);
 }
+for (const belonging of items.filter((item) => item.flags?.tagmarSync?.category === "terras-pertences")) {
+  if (belonging.type !== "Pertence") errors.push(`${belonging.name} não usa a mecânica de Pertence`);
+  if (!Number.isFinite(belonging.system?.peso) || belonging.system.peso <= 0) errors.push(`${belonging.name} sem peso válido`);
+  if (!String(belonging.system?.preco ?? "").trim()) errors.push(`${belonging.name} sem preço`);
+  if (!belonging.flags.tagmarSync.sourceWeaponId) errors.push(`${belonging.name} sem vínculo com a ficha de combate`);
+  if (!["official", "project-estimate-approved"].includes(belonging.flags.tagmarSync.priceStatus)) errors.push(`${belonging.name} sem origem do preço`);
+  if (belonging.flags.tagmarSync.weightStatus !== "project-estimate-approved") errors.push(`${belonging.name} sem origem do peso`);
+}
 
 const manifest = JSON.parse(await readFile(join(cacheDir, "manifest.json"), "utf8"));
 const report = {
@@ -158,6 +166,7 @@ const report = {
     magicAttacks: items.filter((item) => item.flags?.tagmarSync?.category === "terras-magias-dano").length,
     magicHealing: items.filter((item) => item.flags?.tagmarSync?.category === "terras-magias-cura").length,
     potionRecipes: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pocoes").length,
+    wildernessBelongings: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pertences").length,
     uniqueMagics: new Set(items.filter((item) => item.type === "Magia").map((item) => item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR"))).size
   },
   byPart,
