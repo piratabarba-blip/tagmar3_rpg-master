@@ -143,7 +143,7 @@ for (const belonging of items.filter((item) => item.flags?.tagmarSync?.category 
   if (belonging.type !== "Pertence") errors.push(`${belonging.name} não usa a mecânica de Pertence`);
   if (!Number.isFinite(belonging.system?.peso) || belonging.system.peso <= 0) errors.push(`${belonging.name} sem peso válido`);
   if (!String(belonging.system?.preco ?? "").trim()) errors.push(`${belonging.name} sem preço`);
-  if (!belonging.flags.tagmarSync.sourceWeaponId) errors.push(`${belonging.name} sem vínculo com a ficha de combate`);
+  if (!belonging.flags.tagmarSync.sourceWeaponId && !belonging.flags.tagmarSync.sourceDefenseId) errors.push(`${belonging.name} sem vínculo com a ficha mecânica`);
   if (!["official", "project-estimate-approved"].includes(belonging.flags.tagmarSync.priceStatus)) errors.push(`${belonging.name} sem origem do preço`);
   if (belonging.flags.tagmarSync.weightStatus !== "project-estimate-approved") errors.push(`${belonging.name} sem origem do peso`);
 }
@@ -167,6 +167,8 @@ const report = {
     magicHealing: items.filter((item) => item.flags?.tagmarSync?.category === "terras-magias-cura").length,
     potionRecipes: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pocoes").length,
     wildernessBelongings: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pertences").length,
+    wildernessWeaponBelongings: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pertences" && item.flags.tagmarSync.belongingKind === "weapon").length,
+    wildernessDefenseBelongings: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pertences" && item.flags.tagmarSync.belongingKind === "defense").length,
     uniqueMagics: new Set(items.filter((item) => item.type === "Magia").map((item) => item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR"))).size
   },
   byPart,

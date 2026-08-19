@@ -259,6 +259,8 @@ O lote seguinte acrescenta `04 - COMBATE TERRAS SELVAGENS`, com as armas especí
 
 Cada uma das 46 armas específicas também possui um objeto independente em `08 - PERTENCES DE TERRAS SELVAGENS`, permitindo separar saber usar a arma de efetivamente possuí-la e carregá-la. Os 37 preços publicados são preservados; nove preços ausentes e todos os pesos usam a base de comércio aprovada pelo projeto, identificada nos metadados como estimativa para não ser confundida com regra oficial.
 
+A mesma seção contém 86 objetos defensivos: 39 armaduras, 16 elmos ou capacetes, 28 escudos e três protetores exóticos. Os 75 preços publicados são preservados; 11 preços ausentes e todos os pesos usam estimativas identificadas, mantendo separadas a ficha mecânica de Defesa e a posse física do equipamento.
+
 ```powershell
 node tools/tagmar-sync/build-preview-terras-combate.mjs
 node tools/tagmar-sync/build-preview-terras-pertences.mjs
