@@ -22,3 +22,9 @@ https://github.com/piratabarba-blip/modulos_foundry/tree/v14
 O código e o conteúdo possuem licenciamento por escopo. Consulte [LICENSE.md](LICENSE.md). O material derivado do Tagmar segue a licença oficial CC BY-NC-SA 3.0 Brasil: https://tagmar.com.br/Licenciamento.aspx
 
 Tagmar é um projeto brasileiro de RPG mantido por sua comunidade: https://tagmar.com.br/
+
+## Atualização assistida por inteligência artificial
+
+Esta atualização do sistema Tagmar 3 para Foundry VTT foi desenvolvida e revisada com o auxílio de ferramentas de inteligência artificial da OpenAI, especialmente **ChatGPT** e **Codex**. Essas ferramentas apoiaram a organização do projeto, a análise técnica, a automação de processos, a documentação e a revisão dos compêndios.
+
+As decisões sobre o projeto, os testes no Foundry VTT e a validação final do conteúdo permanecem sob responsabilidade de seus mantenedores humanos.
