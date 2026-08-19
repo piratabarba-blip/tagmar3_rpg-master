@@ -93,8 +93,8 @@ Hooks.once("init", function(){
   // As fichas V1 continuam temporariamente em uso nesta etapa de migração.
   const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig;
   DocumentSheetConfig.registerSheet(Item, "tagmar", tagmarItemSheet, {makeDefault: true});
-  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarActorSheet, {makeDefault: true});
-  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarAltSheet, {makeDefault: false});
+  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarActorSheet, {makeDefault: false});
+  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarAltSheet, {makeDefault: true});
   
   Handlebars.registerHelper('ifeq', function (a, b, options) {
     if (a == b) { return options.fn(this); }

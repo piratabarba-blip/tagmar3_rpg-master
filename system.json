@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.7.0-v14.1-rc.9",
+  "version": "2.7.0-v14.1-rc.10",
   "relationships": {
     "requires": [
       {
@@ -213,6 +213,6 @@
     "units": "m"
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
-  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.7.0-v14.1-rc.9/system.json",
-  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.9"
+  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/codex/compendio-t3er-v14/system.json",
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.10"
 }
