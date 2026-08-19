@@ -23,6 +23,8 @@ O código e o conteúdo possuem licenciamento por escopo. Consulte [LICENSE.md](
 
 Tagmar é um projeto brasileiro de RPG mantido por sua comunidade: https://tagmar.com.br/
 
+Este repositório é uma atualização derivada do sistema original para Foundry VTT desenvolvido por **Marcos Walker**. O projeto original permanece disponível para consulta em: https://github.com/marcoswalker/tagmar_rpg
+
 ## Atualização assistida por inteligência artificial
 
 Esta atualização do sistema Tagmar 3 para Foundry VTT foi desenvolvida e revisada com o auxílio de ferramentas de inteligência artificial da OpenAI, especialmente **ChatGPT** e **Codex**. Essas ferramentas apoiaram a organização do projeto, a análise técnica, a automação de processos, a documentação e a revisão dos compêndios.
