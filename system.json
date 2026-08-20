@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.7.0-v14.1-rc.12",
+  "version": "2.7.0-v14.1-rc.13",
   "relationships": {
     "requires": [
       {
@@ -39,6 +39,11 @@
         "id": "tagmartrade",
         "type": "module",
         "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmartrade/module.json"
+      },
+      {
+        "id": "tagmar-calendario",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json"
       }
     ]
   },
@@ -214,5 +219,5 @@
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
   "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/codex/compendio-t3er-v14/system.json",
-  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.12"
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.13"
 }
