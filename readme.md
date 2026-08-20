@@ -8,11 +8,8 @@ https://apoia.se/vfl
 
 O apoio não representa venda ou licenciamento comercial do conteúdo do Tagmar.
 
-Manifesto estável da V14.1:
-https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.6.0-v14.1/system.json
-
-Manifesto candidato da edição atualizada:
-https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.7.0-v14.1-rc.3/system.json
+Manifesto permanente da V14.1 (use sempre este endereço para instalar e receber atualizações):
+https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v14/system.json
 
 Módulos auxiliares:
 https://github.com/piratabarba-blip/modulos_foundry/tree/v14
