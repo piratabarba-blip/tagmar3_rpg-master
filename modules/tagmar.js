@@ -206,6 +206,30 @@ Hooks.once("init", function(){
   preloadHandlebarsTemplates();
 });
 
+/**
+ * Mantém o estado de derrota dos tokens sincronizado com a Energia Física.
+ * Em Tagmar, apenas valores negativos de EF representam morte; EF 0 continua vivo.
+ */
+Hooks.on("updateActor", async (actor, changes, _options, userId) => {
+  if (userId !== game.user.id || actor.type === "Inventario") return;
+
+  const efPath = actor.type === "NPC" ? "system.ef_npc.value" : "system.ef.value";
+  if (!foundry.utils.hasProperty(changes, efPath)) return;
+
+  const ef = Number(foundry.utils.getProperty(actor, efPath));
+  if (!Number.isFinite(ef)) return;
+
+  const defeatedStatus = CONFIG.specialStatusEffects?.DEFEATED ?? "dead";
+  const active = ef < 0;
+  const tokens = actor.getActiveTokens(false, true);
+
+  for (const token of tokens) {
+    const tokenDocument = token.document ?? token;
+    if (tokenDocument.statuses?.has(defeatedStatus) === active) continue;
+    await tokenDocument.toggleActiveEffect(defeatedStatus, {active, overlay: false});
+  }
+});
+
 Hooks.once("polyglot.init", (LanguageProvider) => {
   class TagmarLanguageProvider extends LanguageProvider {
     languages = {
