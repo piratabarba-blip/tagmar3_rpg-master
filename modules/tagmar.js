@@ -214,20 +214,16 @@ Hooks.on("updateActor", async (actor, changes, _options, userId) => {
   if (userId !== game.user.id || actor.type === "Inventario") return;
 
   const efPath = actor.type === "NPC" ? "system.ef_npc.value" : "system.ef.value";
-  if (!foundry.utils.hasProperty(changes, efPath)) return;
+  const flattenedChanges = foundry.utils.flattenObject(changes);
+  if (!Object.hasOwn(flattenedChanges, efPath)) return;
 
   const ef = Number(foundry.utils.getProperty(actor, efPath));
   if (!Number.isFinite(ef)) return;
 
   const defeatedStatus = CONFIG.specialStatusEffects?.DEFEATED ?? "dead";
   const active = ef < 0;
-  const tokens = actor.getActiveTokens(false, true);
-
-  for (const token of tokens) {
-    const tokenDocument = token.document ?? token;
-    if (tokenDocument.statuses?.has(defeatedStatus) === active) continue;
-    await tokenDocument.toggleActiveEffect(defeatedStatus, {active, overlay: false});
-  }
+  if (actor.statuses.has(defeatedStatus) === active) return;
+  await actor.toggleStatusEffect(defeatedStatus, {active, overlay: false});
 });
 
 Hooks.once("polyglot.init", (LanguageProvider) => {
