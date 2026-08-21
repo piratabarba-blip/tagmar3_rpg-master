@@ -516,6 +516,8 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     async _toJournal(event) { 
+        event.preventDefault();
+        event.stopPropagation();
         let journal = await JournalEntry.create({
             name: this.document.name,
             img: this.document.img,
