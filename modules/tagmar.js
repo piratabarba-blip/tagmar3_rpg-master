@@ -540,6 +540,26 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
 });
 
 Hooks.once("ready", async function () {
+  // Um mundo novo sem cena deixa a interface do Foundry parcialmente indisponível.
+  // Cria uma grade inicial neutra apenas quando o mundo ainda estiver vazio.
+  if (game.user.isGM && game.scenes.size === 0) {
+    const cenaInicial = await Scene.create({
+      name: "Cena Inicial",
+      active: true,
+      navigation: true,
+      width: 4000,
+      height: 3000,
+      padding: 0.25,
+      backgroundColor: "#1b1b1b",
+      grid: {
+        type: CONST.GRID_TYPES.SQUARE,
+        size: 100,
+        color: "#000000",
+        alpha: 0.2
+      }
+    });
+    if (cenaInicial && !cenaInicial.active) await cenaInicial.activate();
+  }
   game.settings.set('core', 'combatTheme', 'tagmar'); // Exclusivo Tagmar XXX
   if (game.user.isGM && game.modules.get('polyglot')?.active) {
     game.settings.set('polyglot', 'allowOOC', 'a');
@@ -1227,7 +1247,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
 });
 
 function tabelaResistencia () {
-  let dialogContent = `<table class="mediaeval" style="text-align:center;">
+  let dialogContent = `<table class="mediaeval tagmar-resistance-layout" style="text-align:center;">
     <tr>
       <td></td>
       <th>FORÇA DE ATAQUE</th>
@@ -1246,6 +1266,7 @@ function tabelaResistencia () {
     content: dialogContent,
     buttons: {},
     render: (html) => {
+      html.closest('.window-app, .application').addClass('tagmar-modern-dialog tagmar-table-window');
       let table_res = html.find('.tableResist');
       let table_lines = "<tr>";
       for (let l = 0; l <= 20; l++) {
@@ -1257,9 +1278,7 @@ function tabelaResistencia () {
       for(let linha of table_resFisMag) {
         table_lines += "<tr>";
         linha.forEach(function (l, index) {
-          let style = "border: 1px solid black;";
-          if (table_resFisMag.indexOf(linha) % 2 == 0) style += "background-color:white;"
-          if ((l == 2 || l == 20) && index != 0) style += "background-color:white; border-width:0;";
+          let style = "";
           if (index == 0) table_lines += `<th style='${style}'>${l}</th>`;
           else table_lines += `<td class="colu-${index} line-${lines}" style='${style}'>${l}</td>`;
         });
@@ -1269,16 +1288,16 @@ function tabelaResistencia () {
       table_res.append(table_lines);
       table_res.find('td').mouseenter(function (event) {
         let classes = $(event.currentTarget).attr('class').split(/\s+/);
-        $('.'+classes[0]).css('color', 'RebeccaPurple');
-        $('.'+classes[1]).css('color', 'RebeccaPurple');
+        $('.'+classes[0]).css('color', '#ffd166');
+        $('.'+classes[1]).css('color', '#ffd166');
         $('.'+classes[0]).css('font-weight', 'bold');
         $('.'+classes[1]).css('font-weight', 'bold');
       });
 
       table_res.find('td').mouseleave(function (event) {
         let classes = $(event.currentTarget).attr('class').split(/\s+/);
-        $('.'+classes[0]).css('color', 'black');
-        $('.'+classes[1]).css('color', 'black');
+        $('.'+classes[0]).css('color', '');
+        $('.'+classes[1]).css('color', '');
         $('.'+classes[0]).css('font-weight', 'normal');
         $('.'+classes[1]).css('font-weight', 'normal');
       });
@@ -1294,6 +1313,7 @@ function tabelaAcoes () {
     content: dialogContent,
     buttons: {},
     render: (html) => {
+      html.closest('.window-app, .application').addClass('tagmar-modern-dialog tagmar-table-window tagmar-action-table-window');
       let tabela = html.find(".tabelaAcoes");
       let table_head = "<tr>";
       let table_body = "";
@@ -1351,6 +1371,7 @@ async function rollDialog() {
       content: data,
       buttons: {},
       render: (html) => {
+        html.closest('.window-app, .application').addClass('tagmar-modern-dialog tagmar-roll-window');
         html.find(".rollResist").click(async function (event) {
           let resist = html.find('.ip_resist').val();
           let f_ataque = html.find(".ip_fAtaque").val();

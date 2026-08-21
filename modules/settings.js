@@ -10,6 +10,7 @@ export const SystemSettings = function() {
         type: String,
         choices: {
           "base": "Sem Imagem (padrão)",
+          "dark": "Tema Escuro — Baixo Brilho (acessibilidade)",
           "tagmar3": "Borda Dos Livros Tagmar 3.0",
           "tagmar3pap": "Borda Dos Livros Tagmar 3.0 + Papiros (Licinio Souza)",
           "tagmar3barda": "Borda Dos Livros Tagmar 3.0 + Barda - Meio-Elfa (Antomio Jironimo Bizerril Neto)",
@@ -32,7 +33,8 @@ export const SystemSettings = function() {
           "tagmar3selfa": "Borda Dos Livros Tagmar 3.0 + Sacerdotisa Elfa Dourada (Licinio Souza)",
           "tagmar3shum1": "Borda Dos Livros Tagmar 3.0 + Sacerdotiza - Humana (Marlon Souza)",
           "tagmar3shum2": "Borda Dos Livros Tagmar 3.0 + Sacerdotiza Humana (Sergio Artigas)"
-        }
+        },
+        onChange: () => location.reload()
       });
       game.settings.register("tagmar_rpg", "autoBars", {
         name: "Barras automaticas (Bar Brawl)",

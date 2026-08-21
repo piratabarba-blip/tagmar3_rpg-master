@@ -16,7 +16,7 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
     get template() {
         let layout = game.settings.get("tagmar_rpg", "sheetTemplate");
-        if (this.document.type == "Personagem" && layout != "base") {
+        if (this.document.type == "Personagem" && !["base", "dark"].includes(layout)) {
             if (layout == 'tagmar3anao') {
                 return 'systems/tagmar_rpg/templates/sheets/personagem-ficha-anao.hbs';
             } else if (layout == 'tagmar3barda') {
@@ -63,9 +63,9 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
                 return 'systems/tagmar_rpg/templates/sheets/personagem-ficha.hbs';
             }
             
-        } else if (this.document.type == "NPC" && layout != "base") {
+        } else if (this.document.type == "NPC" && !["base", "dark"].includes(layout)) {
             return 'systems/tagmar_rpg/templates/sheets/npc-ficha.hbs';
-        } else if (this.document.type == "Inventario" && layout != "base") {
+        } else if (this.document.type == "Inventario" && !["base", "dark"].includes(layout)) {
             return 'systems/tagmar_rpg/templates/sheets/inventario-ficha.hbs';
         } else {
             return 'systems/tagmar_rpg/templates/sheets/'+ this.document.type.toLowerCase() +'-sheet.hbs';
@@ -154,6 +154,7 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     activateListeners(html) {
         super.activateListeners(html);
+        this.element.toggleClass("tagmar-dark-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "dark");
         if (this.document.type != "Inventario") {
             if (!this.options.editable) return;
         }
