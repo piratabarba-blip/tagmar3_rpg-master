@@ -1302,7 +1302,7 @@ function tabelaResistencia () {
         $('.'+classes[1]).css('font-weight', 'normal');
       });
     }
-  },{width:800, height:700});
+  },{width:820, height:750});
   dialog.render(true);
 }
 
@@ -1326,7 +1326,7 @@ function tabelaAcoes () {
         for(let x=0; x < tabela_resol.length; x++) {
           let style = "";
           if (tabela_resol[x][linha] == "verde") style = "style='background-color:#91cf50;text-align:center;border: 1px solid black;'";
-          if (tabela_resol[x][linha] == "branco") style = "style='background-color:white;text-align:center;border: 1px solid black;'";
+          if (tabela_resol[x][linha] == "branco") style = "style='background-color:white;color:#111827;text-align:center;border: 1px solid black;'";
           if (tabela_resol[x][linha] == "amarelo") style = "style='background-color:#ffff00;text-align:center;border: 1px solid black;'";
           if (tabela_resol[x][linha] == "laranja") style = "style='background-color:#ff9900;text-align:center;border: 1px solid black;'";
           if (tabela_resol[x][linha] == "vermelho") style = "style='background-color:#ff0000;text-align:center;color:white;border: 1px solid black;'";
@@ -1349,7 +1349,7 @@ function tabelaAcoes () {
         $('.'+$(event.currentTarget).attr('class')).css('border-color', 'black');
       });
     }
-  },{width:800, height:580});
+  },{width:820, height:620});
   dialog.render(true);
 }
 
