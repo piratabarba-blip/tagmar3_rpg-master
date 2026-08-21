@@ -133,6 +133,10 @@
 .rola_desc {
     font-size: 100%;
 }
+.rola_desc_combate,
+.rola_desc_combate p {
+    font-size: 115% !important;
+}
 .rola_desc b {
     color:rgb(94, 8, 8);
     font-size: 105%;
@@ -326,4 +330,17 @@
     background-image: url('/systems/tagmar_rpg/templates/sheets/img/fundo_items.png');
     background-repeat: no-repeat;
     background-size:cover;
+}
+
+/* Identifica visualmente o compêndio clássico mantido apenas para consulta. */
+.directory-item:is(
+    [data-pack="tagmar_rpg.criando-fichas"],
+    [data-pack="tagmar_rpg.terras-selvagens"],
+    [data-pack="tagmar_rpg.criaturas-e-arquetipos-sem-tecnicas"]
+) > .compendium-banner,
+[data-pack="tagmar_rpg.criando-fichas"] .compendium-banner,
+[data-pack="tagmar_rpg.terras-selvagens"] .compendium-banner,
+[data-pack="tagmar_rpg.criaturas-e-arquetipos-sem-tecnicas"] .compendium-banner {
+    filter: grayscale(100%) brightness(45%) contrast(85%) !important;
+    opacity: 0.72;
 }

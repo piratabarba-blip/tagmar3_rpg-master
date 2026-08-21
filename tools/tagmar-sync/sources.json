@@ -1,0 +1,253 @@
+{
+  "baseUrl": "https://tagmar.com.br/wiki/Default.aspx?PageName=",
+  "restBaseUrl": "https://tagmar.com.br/wiki/rest.aspx?word=true&PageName=",
+  "requestDelayMs": 1000,
+  "categories": [
+    {
+      "id": "habilidades",
+      "label": "Habilidades",
+      "indexPages": [
+        "Livro de Regras - Habilidades"
+      ],
+      "pagePrefixes": [
+        "Habilidades - "
+      ]
+    },
+    {
+      "id": "racas",
+      "label": "Raças",
+      "indexPages": [
+        "Livro de Regras - Características Básicas"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "profissoes",
+      "label": "Profissões",
+      "indexPages": [
+        "Livro de Regras - Características Básicas",
+        "Livro de Regras - Habilidades",
+        "Livro de Regras - Combate"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "tecnicas-combate",
+      "label": "Técnicas de Combate",
+      "indexPages": [
+        "Livro de Regras - Combate"
+      ],
+      "pagePrefixes": [
+        "Técnicas de combate - ",
+        "Técnica de combate - ",
+        "Livro de Regras - Técnicas de combate - "
+      ]
+    },
+    {
+      "id": "combate",
+      "label": "Combate",
+      "indexPages": [
+        "Livro de Regras - Combate"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "defesa",
+      "label": "Defesa",
+      "indexPages": [
+        "Livro de Regras - Combate",
+        "Livro de Regras - Pertences e Afins"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "magias",
+      "label": "Magias",
+      "indexPages": [
+        "Descrição das Magias",
+        "Magias dos Magos",
+        "Magias dos Sacerdotes",
+        "Magias dos Rastreadores",
+        "Magias dos Bardos",
+        "Colégios de Magia",
+        "Colégio das Ilusões",
+        "Colégio Elemental",
+        "Colégio Necromântico",
+        "Colégio Naturalista",
+        "Colégio Alquímico",
+        "Colégio do Conhecimento",
+        "Ordens Sacerdotais",
+        "As Trilhas",
+        "As Confrarias",
+        "Magia - Fanatismo",
+        "Magia - Detecções"
+      ],
+      "pagePrefixes": [
+        "Magia - "
+      ]
+    },
+    {
+      "id": "magias-ancestrais",
+      "label": "Magias Ancestrais",
+      "indexPages": [
+        "Livro das Magias Perdidas - Magias Ancestrais",
+        "Livro das Magias Perdidas - Descrição das Magias Ancestrais"
+      ],
+      "pagePrefixes": [
+        "Magia - "
+      ]
+    },
+    {
+      "id": "magias-perdidas",
+      "label": "Magias Perdidas",
+      "indexPages": [
+        "Livro das Magias Perdidas - Magias Perdidas",
+        "Livro das Magias Perdidas - Descrição das Magias Perdidas"
+      ],
+      "pagePrefixes": [
+        "Magia - "
+      ]
+    },
+    {
+      "id": "terras-selvagens",
+      "label": "Aventuras nas Terras Selvagens",
+      "indexPages": [
+        "Aventuras nas Terras Selvagens",
+        "LATS - LISTA DE MAGIAS",
+        "LATS - Tabelas das Magias das Profissões e Especializações",
+        "Assimilação Verdadeira",
+        "Magia - Enxame de Pragas",
+        "Magia - Escudo Espiritual",
+        "Invocar Espiritos",
+        "Resistência Climática",
+        "Aprimorar Habilidades (Revisão)",
+        "Visão Animal (Revisão)",
+        "Magia - Bestializar",
+        "Penalidades de Combate Aéreo e Aquático",
+        "REVISÃO",
+        "REVISÃO da Confraria dos Encantadores"
+      ],
+      "pagePrefixes": [
+        "1.",
+        "2.",
+        "3.",
+        "4.",
+        "LATS - ",
+        "Terras Selvagens - ",
+        "Magia - ",
+        "Técnicas de combate - ",
+        "Criando Personagens",
+        "Raça Jogadora - "
+      ]
+    },
+    {
+      "id": "reino-de-tagmar",
+      "label": "Reino de Tagmar",
+      "indexPages": [
+        "Livro dos Reinos",
+        "Cronologia dos Reinos do Mundo Conhecido",
+        "Livro dos Reinos - Prólogo",
+        "Levânia",
+        "Ludgrim",
+        "Eredra",
+        "Verrogar",
+        "Dantsem",
+        "Marana",
+        "Luna",
+        "Portis",
+        "Âmiem",
+        "Abadom",
+        "Acordo",
+        "Plana",
+        "Filanti",
+        "Conti",
+        "Azanti",
+        "Calco",
+        "Cidades-Estado",
+        "Porto Livre",
+        "Livro dos Deuses",
+        "Os deuses de Tagmar",
+        "Calendário de Tagmar",
+        "Livro de Ambientação",
+        "As Regiões de Tagmar",
+        "Região dos Reinos",
+        "Região das Terras selvagens",
+        "Região do Império",
+        "Raças para Roleplay",
+        "As Línguas de Tagmar",
+        "Os aventureiros",
+        "Prólogo - Extratos do \"Livro de Maudi\"",
+        "1º Ciclo ou O \"Tempo das Névoas\"",
+        "2º Ciclo ou \"O Tempo dos Filhos\"",
+        "3º Ciclo ou \"Tempo das Mentiras Infernais\"",
+        "Cronologia de Tagmar",
+        "Colégios de Magia",
+        "Ordens Sacerdotais",
+        "As Trilhas",
+        "As Confrarias",
+        "Cosmologia",
+        "Livro de Ambientação - Considerações Finais",
+        "Créditos do Livro de Ambientação",
+        "Livro dos Reinos - Epílogo",
+        "Livro dos Reinos - Créditos"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "o-imperio",
+      "label": "O Império",
+      "indexPages": [
+        "O império"
+      ],
+      "pagePrefixes": [
+        "Império - ",
+        "A Magia no Império - "
+      ],
+      "recursiveDiscovery": true
+    },
+    {
+      "id": "pertences",
+      "label": "Pertences e Afins",
+      "indexPages": [
+        "Livro de Regras - Pertences e Afins"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "tesouros-magicos",
+      "label": "Tesouros Mágicos",
+      "indexPages": [
+        "Livro de Regras - Tesouros",
+        "Manual de regras - Tesouros",
+        "Livro dos Objetos Mágicos - Poções e Elixires"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "objetos-magicos",
+      "label": "Livro dos Objetos Mágicos",
+      "indexPages": [
+        "Livro dos Objetos Mágicos"
+      ],
+      "pagePrefixes": [
+        "Livro dos Objetos Mágicos -"
+      ]
+    },
+    {
+      "id": "venenos-drogas",
+      "label": "Venenos e Drogas",
+      "indexPages": [
+        "Livro de Regras - Regras Complementares"
+      ],
+      "pagePrefixes": []
+    },
+    {
+      "id": "rituais",
+      "label": "Materiais Mágicos e Rituais",
+      "indexPages": [
+        "Livro de Regras - Magia"
+      ],
+      "pagePrefixes": []
+    }
+  ]
+}

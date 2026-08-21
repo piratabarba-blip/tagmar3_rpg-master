@@ -9,6 +9,7 @@ export class tagmarActor extends Actor {
         let eh = this.system.eh.value;
         let eh_max = this.system.eh.max;
         let ef = this.system.ef.value;
+        let ef_max = this.system.ef.max;
         let abs = this.system.absorcao.value;
         let abs_magica = this.system.v_base;
         if (abs_magica > 0) abs_magica = true;
@@ -21,6 +22,7 @@ export class tagmarActor extends Actor {
             eh = this.system.eh_npc.value;
             eh_max = this.system.eh_npc.max;
             ef = this.system.ef_npc.value;
+            ef_max = this.system.ef_npc.max;
         }
         let update = {};
         let olds = {};
@@ -48,6 +50,15 @@ export class tagmarActor extends Actor {
                     update[ef_str] = ef;
                     olds[ef_str] = this.system.ef.value - ef;
                     if (this.type == "NPC") olds[ef_str] = this.system.ef_npc.value - ef;
+                }
+            } else if (dano.curaTipo === 'EF') {
+                if (ef < ef_max) {
+                    ef += dano.valor;
+                    if (ef > ef_max) ef = ef_max;
+                    update[ef_str] = ef;
+                    olds[ef_str] = (this.type == "NPC" ? this.system.ef_npc.value : this.system.ef.value) - ef;
+                } else {
+                    ui.notifications.info('Sua EF atual é igual ou maior que o valor máximo. Nenhum valor alterado.');
                 }
             } else {
                 if (eh < eh_max) {

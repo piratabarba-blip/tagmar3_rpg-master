@@ -5,8 +5,8 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
         this.lastItemsUpdate = [];
         return foundry.utils.mergeObject(super.defaultOptions, {
         classes: ["tagmar", "sheet", "actor"],
-        //width: 900,
-        height: 925,
+        width: 900,
+        height: 950,
         tabs: [{
             navSelector: ".prim-tabs",
             contentSelector: ".sheet-primary",
@@ -16,11 +16,7 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
     get template() {
         let layout = game.settings.get("tagmar_rpg", "sheetTemplate");
-        if (this.document.type == "NPC") {
-            this['options']['height'] = 735;
-            this['position']['height'] = 735;
-        }
-        if (this.document.type == "Personagem" && layout != "base") {
+        if (this.document.type == "Personagem" && !["base", "dark", "foundry"].includes(layout)) {
             if (layout == 'tagmar3anao') {
                 return 'systems/tagmar_rpg/templates/sheets/personagem-ficha-anao.hbs';
             } else if (layout == 'tagmar3barda') {
@@ -67,9 +63,9 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
                 return 'systems/tagmar_rpg/templates/sheets/personagem-ficha.hbs';
             }
             
-        } else if (this.document.type == "NPC" && layout != "base") {
+        } else if (this.document.type == "NPC" && !["base", "dark", "foundry"].includes(layout)) {
             return 'systems/tagmar_rpg/templates/sheets/npc-ficha.hbs';
-        } else if (this.document.type == "Inventario" && layout != "base") {
+        } else if (this.document.type == "Inventario" && !["base", "dark", "foundry"].includes(layout)) {
             return 'systems/tagmar_rpg/templates/sheets/inventario-ficha.hbs';
         } else {
             return 'systems/tagmar_rpg/templates/sheets/'+ this.document.type.toLowerCase() +'-sheet.hbs';
@@ -79,6 +75,11 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
         const data = super.getData(options);
         const actorUtils = await import("./actorUtils.js");
         data.dtypes = ["String", "Number", "Boolean"];
+        const packReference = data.document.pack;
+        const sourcePack = (typeof packReference === "string" ? game.packs.get(packReference) : packReference)
+            ?? data.document.compendium
+            ?? (data.document.collection?.locked !== undefined ? data.document.collection : null);
+        const canPersistUpdates = Boolean(options.editable && !sourcePack?.locked);
          // Prepare items.
         if (data.document.type == "Inventario") {
             this._prepareInventarioItems(data);
@@ -88,14 +89,14 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
             this._prepareCharacterItems(data);
             actorUtils._prepareValorTeste(data, updateNpc);
             actorUtils._attDefesaNPC(data, updateNpc);
-            if (Object.keys(updateNpc).length > 0) {
+            if (Object.keys(updateNpc).length > 0 && canPersistUpdates) {
                 data.document.update(updateNpc);
             }
             actorUtils._updateCombatItems(data,updateItemsNpc);
             actorUtils._updateMagiasItems(data,updateItemsNpc);
             actorUtils._updateTencnicasItems(data,updateItemsNpc);
             actorUtils._updateHabilItems(data, updateItemsNpc);
-            if (updateItemsNpc.length > 0) {
+            if (updateItemsNpc.length > 0 && canPersistUpdates) {
                 data.document.updateEmbeddedDocuments("Item", updateItemsNpc);
             }
         } else if (data.document.type == 'Personagem') {
@@ -123,7 +124,7 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
             if (this.lastUpdate) {
                 if (this.lastUpdate.hasOwnProperty('_id')) delete this.lastUpdate['_id'];
             }
-            if (Object.keys(updatePers).length > 0 && options.editable) {
+            if (Object.keys(updatePers).length > 0 && canPersistUpdates) {
                 if (!this.lastUpdate) {
                     this.lastUpdate = updatePers;
                     data.document.update(updatePers);
@@ -138,7 +139,7 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
             actorUtils._updateCombatItems(data, items_toUpdate);
             actorUtils._updateMagiasItems(data, items_toUpdate);
             actorUtils._updateTencnicasItems(data, items_toUpdate);
-            if (items_toUpdate.length > 0 && options.editable) {
+            if (items_toUpdate.length > 0 && canPersistUpdates) {
                 if (!this.lastItemsUpdate) {
                     this.lastItemsUpdate = items_toUpdate;
                     data.document.updateEmbeddedDocuments("Item", items_toUpdate);
@@ -153,6 +154,8 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     activateListeners(html) {
         super.activateListeners(html);
+        this.element.toggleClass("tagmar-dark-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "dark");
+        this.element.toggleClass("tagmar-foundry-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "foundry");
         if (this.document.type != "Inventario") {
             if (!this.options.editable) return;
         }
@@ -162,6 +165,14 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
             const li = $(ev.currentTarget).parents(".item");
             const item = this.document.items.get(li.data('itemId'));
             const nivel = item.system.nivel;
+            if (["Habilidade", "Tecnica_Combate", "Magia"].includes(item.type) && nivel >= this.document.system.estagio) {
+                ui.notifications.warn(`O nível de ${item.name} não pode ser maior que o estágio do personagem.`);
+                return;
+            }
+            if (item.type === "Tecnica_Combate" && Number(item.system.mecanica) === 0 && nivel >= 10) {
+                ui.notifications.warn(`Técnicas de Bônus de FA, como ${item.name}, não podem ultrapassar o nível 10.`);
+                return;
+            }
             item.update({
                 "system.nivel": nivel+1
             }); 
@@ -517,6 +528,8 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     async _toJournal(event) {
+        event.preventDefault();
+        event.stopPropagation();
         let journal = await JournalEntry.create({
             name: this.document.name,
             img: this.document.img,
@@ -1004,47 +1017,40 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     async _subirEstagio(event) {
-        let estagio_atual = this.document.system.estagio;
-        let r = new Roll('1d10');
-        await r.evaluate();
-        let valord10 = r.total;
-        let nova_eh = 0;
-        let eh_atual = this.document.system.eh.max;
-        let attFIS = this.document.system.atributos.FIS;
-        if (this.profissao) {
-            if (valord10 >= 1 && valord10 <= 2) {
-                nova_eh = this.profissao.system.lista_eh.v1;
-                this.document.update({
-                    "system.eh.max": eh_atual + nova_eh + attFIS,
-                    "system.estagio": estagio_atual + 1
-                });
-                ui.notifications.info("Nova EH calculada. Seu estágio agora é "+(estagio_atual+1)+".");
-            } else if (valord10 >= 3 && valord10 <= 5) {
-                nova_eh = this.profissao.system.lista_eh.v2;
-                this.document.update({
-                    "system.eh.max": eh_atual + nova_eh + attFIS,
-                    "system.estagio": estagio_atual + 1
-                });
-                ui.notifications.info("Nova EH calculada. Seu estágio agora é "+(estagio_atual+1)+".");
-            } else if (valord10 >= 6 && valord10 <= 8) {
-                nova_eh = this.profissao.system.lista_eh.v3;
-                this.document.update({
-                    "system.eh.max": eh_atual + nova_eh + attFIS,
-                    "system.estagio": estagio_atual + 1
-                });
-                ui.notifications.info("Nova EH calculada. Seu estágio agora é "+(estagio_atual+1)+".");
-            } else if (valord10 >= 9 && valord10 <= 10) {
-                nova_eh = this.profissao.system.lista_eh.v4;
-                this.document.update({
-                    "system.eh.max": eh_atual + nova_eh + attFIS,
-                    "system.estagio": estagio_atual + 1
-                });
-                ui.notifications.info("Nova EH calculada. Seu estágio agora é "+(estagio_atual+1)+".");
+        event?.preventDefault();
+        if (this._subindoEstagio) return;
+
+        const estagioAtual = Number(this.document.system.estagio);
+        const experienciaAtual = Number(this.document.system.pontos_estagio.value);
+        const experienciaNecessaria = Number(this.document.system.pontos_estagio.next);
+        if (experienciaAtual < experienciaNecessaria) return ui.notifications.warn("Experiência insuficiente para subir de estágio.");
+        if (!this.profissao) return ui.notifications.warn("Adicione uma profissão à ficha antes de subir de estágio.");
+
+        this._subindoEstagio = true;
+        try {
+            const r = new Roll("1d10");
+            await r.evaluate();
+            const faixa = r.total <= 2 ? "v1" : r.total <= 5 ? "v2" : r.total <= 8 ? "v3" : "v4";
+            const novaEh = Number(this.profissao.system.lista_eh?.[faixa]);
+            const ehAtual = Number(this.document.system.eh.max);
+            const fis = Number(this.document.system.atributos.FIS);
+            if (![novaEh, ehAtual, fis].every(Number.isFinite)) {
+                return ui.notifications.error("Não foi possível calcular a nova EH. Verifique a profissão, a EH e o atributo Físico.");
             }
-            await r.toMessage({user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: this.document }),
-                flavor: ``})
-        } else return;
+
+            await this.document.update({
+                "system.eh.max": ehAtual + novaEh + fis,
+                "system.estagio": estagioAtual + 1
+            });
+            await r.toMessage({
+                user: game.user.id,
+                speaker: ChatMessage.getSpeaker({actor: this.document}),
+                flavor: `Ganho de EH ao alcançar o estágio ${estagioAtual + 1}`
+            });
+            ui.notifications.info(`Nova EH calculada. Seu estágio agora é ${estagioAtual + 1}.`);
+        } finally {
+            this._subindoEstagio = false;
+        }
     }
 
     _addGrupoArmas(event) {

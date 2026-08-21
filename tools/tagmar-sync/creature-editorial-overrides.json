@@ -1,0 +1,30 @@
+{
+  "overrides": [
+    {
+      "creature": "Cão de raça \"Alão\"",
+      "type": "replace-technique",
+      "from": "Carga Aérea",
+      "to": "Carga de Quadrúpede",
+      "value": 4,
+      "reason": "Correção editorial aprovada para adequar a técnica à anatomia quadrúpede da criatura."
+    },
+    {
+      "creature": "Águia Gigante Comum",
+      "type": "add-official-magics",
+      "magics": [
+        { "name": "Fanatismo", "level": 7 },
+        { "name": "Detecções", "level": 10 }
+      ],
+      "reason": "Poderes listados na ficha oficial da Águia Gigante no Livro de Criaturas 3.0."
+    },
+    {
+      "creature": "Águia Gigante Nobre",
+      "type": "add-official-magics",
+      "magics": [
+        { "name": "Fanatismo", "level": 7 },
+        { "name": "Detecções", "level": 10 }
+      ],
+      "reason": "Poderes listados na ficha oficial da Águia Gigante no Livro de Criaturas 3.0."
+    }
+  ]
+}

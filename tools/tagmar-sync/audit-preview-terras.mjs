@@ -1,0 +1,180 @@
+import { readFile, writeFile } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const root = resolve(here, "..", "..");
+const cacheDir = join(root, ".cache", "tagmar-sync");
+const reportPath = join(cacheDir, "audit-terras-report.json");
+const normalize = (value) => String(value ?? "").normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9]+/gi, " ").trim().toLocaleLowerCase("pt-BR");
+const writeReport = process.argv.includes("--write");
+const parts = ["terras-personagens", "terras-combate", "terras-defesa", "terras-tecnicas", "terras-magias", "terras-efeitos", "terras-pertences", "terras-pocoes"];
+const items = [];
+const folders = [];
+const byPart = {};
+for (const part of parts) {
+  const partItems = JSON.parse(await readFile(join(cacheDir, `preview-${part}.json`), "utf8"));
+  const partFolders = JSON.parse(await readFile(join(cacheDir, `preview-${part}-folders.json`), "utf8"));
+  items.push(...partItems);
+  folders.push(...partFolders);
+  byPart[part] = { items: partItems.length, folders: partFolders.length };
+}
+
+const errors = [];
+const warnings = [];
+const duplicateItems = items.reduce((groups, item) => {
+  const key = `${item.folder}:${item.type}:${normalize(item.name)}`;
+  if (!groups.has(key)) groups.set(key, []);
+  groups.get(key).push(item);
+  return groups;
+}, new Map());
+for (const [key, grouped] of duplicateItems) {
+  if (grouped.length > 1) errors.push(`Itens homônimos na mesma pasta/tipo: ${key} (${grouped.length})`);
+}
+const repeated = (values) => [...values.reduce((map, value) => map.set(value, (map.get(value) ?? 0) + 1), new Map())]
+  .filter(([, count]) => count > 1);
+for (const [id] of repeated(items.map((item) => item._id))) errors.push(`ID de item duplicado: ${id}`);
+for (const [id] of repeated(folders.map((folder) => folder._id))) errors.push(`ID de pasta duplicado: ${id}`);
+const folderIds = new Set(folders.map((folder) => folder._id));
+const folderById = new Map(folders.map((folder) => [folder._id, folder]));
+for (const folder of folders) {
+  if (!folder._id || !folder.name || folder.type !== "Item") errors.push(`Pasta inválida: ${folder.name ?? folder._id}`);
+  if (folder.folder && !folderIds.has(folder.folder)) errors.push(`Pasta órfã: ${folder.name}`);
+  let depth = 1;
+  let parent = folder.folder ? folderById.get(folder.folder) : null;
+  while (parent) {
+    depth += 1;
+    parent = parent.folder ? folderById.get(parent.folder) : null;
+  }
+  if (depth > 3) errors.push(`Pasta excede o limite de profundidade do compêndio: ${folder.name} (${depth})`);
+}
+for (const item of items) {
+  const label = `${item.type}: ${item.name}`;
+  if (!item._id || !item.name || !item.type || !item.system) errors.push(`Item incompleto: ${label}`);
+  if (!folderIds.has(item.folder)) errors.push(`Item em pasta inexistente: ${label}`);
+  if (!item.flags?.tagmarSync?.sourceName || !item.flags?.tagmarSync?.sourceUrl) errors.push(`Item sem fonte: ${label}`);
+  if (item.flags?.tagmarSync?.needsReview) warnings.push(`Revisão sinalizada: ${label}`);
+  const description = item.type === "Magia" ? item.system?.efeito : item.system?.descricao;
+  if (!String(description ?? "").trim()) errors.push(`Item sem descrição: ${label}`);
+}
+for (const race of items.filter((item) => item.type === "Raca")) {
+  for (const attribute of ["INT", "AUR", "CAR", "FOR", "FIS", "AGI", "PER"]) {
+    if (!Number.isInteger(race.system?.mod_racial?.[attribute])) errors.push(`${race.name} sem modificador ${attribute}`);
+  }
+  if (!Number.isInteger(race.system?.ef_base) || race.system.ef_base < 1) errors.push(`${race.name} com EF inválida`);
+  if (!Number.isInteger(race.system?.vb) || race.system.vb < 1) errors.push(`${race.name} com VB inválida`);
+}
+for (const profession of items.filter((item) => item.type === "Profissao")) {
+  if (!profession.system?.especializacoes?.endsWith(",")) errors.push(`${profession.name} sem especializações válidas`);
+  if (!Number.isInteger(profession.system?.eh_base) || profession.system.eh_base < 1) errors.push(`${profession.name} com EH inválida`);
+  for (const field of ["p_hab", "p_tec", "p_gra", "p_mag"]) {
+    if (!Number.isInteger(profession.system?.p_aquisicao?.[field])) errors.push(`${profession.name} sem ${field}`);
+  }
+}
+for (const weapon of items.filter((item) => item.type === "Combate"
+  && !["terras-magias-dano", "terras-magias-cura"].includes(item.flags?.tagmarSync?.category))) {
+  for (const field of ["def_l", "def_m", "def_p", "forca_min"]) {
+    if (!Number.isInteger(weapon.system?.[field])) errors.push(`${weapon.name} sem ${field}`);
+  }
+  for (const percentage of [25, 50, 75, 100]) {
+    if (!Number.isInteger(weapon.system?.dano_base?.[`d${percentage}`])) errors.push(`${weapon.name} sem dano ${percentage}%`);
+  }
+  if (!weapon.flags?.tagmarSync?.legacyItemId) errors.push(`${weapon.name} sem referência mecânica clássica`);
+}
+for (const effect of items.filter((item) => ["terras-magias-dano", "terras-magias-cura"].includes(item.flags?.tagmarSync?.category))) {
+  if (effect.type !== "Combate") errors.push(`${effect.name} não usa a mecânica de rolagem existente`);
+  if (!effect.flags.tagmarSync.parentMagicName || !effect.flags.tagmarSync.parentMagicId) errors.push(`${effect.name} sem magia-pai`);
+  if (effect.flags.tagmarSync.category === "terras-magias-dano") {
+    const maximum = Number(effect.flags.tagmarSync.maxDamage);
+    if (!Number.isInteger(maximum) || maximum < 1) errors.push(`${effect.name} com dano máximo inválido`);
+    for (const percentage of [25, 50, 75, 100]) {
+      if (effect.system?.dano_base?.[`d${percentage}`] !== Math.ceil((maximum * percentage) / 100)) {
+        errors.push(`${effect.name} sem arredondamento para cima em ${percentage}%`);
+      }
+    }
+  } else {
+    if (effect.flags.tagmarSync.healingMode !== "fixed") errors.push(`${effect.name} com modo de cura inesperado`);
+    if (!["EF", "EH"].includes(effect.flags.tagmarSync.healTarget)) errors.push(`${effect.name} sem destino de cura`);
+    if (!Number.isInteger(Number(effect.flags.tagmarSync.healAmount)) || Number(effect.flags.tagmarSync.healAmount) < 1) {
+      errors.push(`${effect.name} com valor de cura inválido`);
+    }
+  }
+}
+for (const defense of items.filter((item) => item.type === "Defesa")) {
+  for (const field of ["absorcao", "fis_min", "for_min"]) {
+    if (!Number.isInteger(defense.system?.[field])) errors.push(`${defense.name} sem ${field}`);
+  }
+  if (!Number.isInteger(defense.system?.defesa_base?.valor)) errors.push(`${defense.name} sem valor de defesa base`);
+  if (!defense.flags?.tagmarSync?.legacyItemId) errors.push(`${defense.name} sem referência mecânica clássica`);
+}
+for (const technique of items.filter((item) => item.flags?.tagmarSync?.officialCategory === "Perícia")) {
+  if (technique.type !== "Habilidade") errors.push(`${technique.name} não preserva a categoria oficial Perícia`);
+  if (technique.system?.ajuste?.atributo !== "FIS") errors.push(`${technique.name} sem atributo Físico`);
+  if (technique.system?.nivel !== 0 || technique.system?.total !== -7) errors.push(`${technique.name} sem regra inicial de -7`);
+  if (technique.system?.nao_rolar_sem_nivel !== false) errors.push(`${technique.name} bloqueia teste sem nível`);
+  if (technique.flags?.tagmarSync?.officialAcquisitionCost !== null || technique.flags?.tagmarSync?.manualAcquisition !== true) {
+    errors.push(`${technique.name} inventa ou omite a administração manual do custo não publicado`);
+  }
+}
+for (const magic of items.filter((item) => item.type === "Magia")) {
+  if (!Number.isInteger(magic.system?.custo) || magic.system.custo < 1) errors.push(`${magic.name} com custo inválido`);
+  for (const field of ["alcance", "duracao", "evocacao"]) {
+    if (!String(magic.system?.[field] ?? "").trim()) errors.push(`${magic.name} sem ${field}`);
+  }
+  if (!magic.system?.efeito?.includes("<strong>Alcance:</strong>")
+    || !magic.system?.efeito?.includes("<strong>Duração:</strong>")
+    || !magic.system?.efeito?.includes("<strong>Evocação:</strong>")) {
+    errors.push(`${magic.name} sem cabeçalho visível completo`);
+  }
+  if (!magic.flags?.tagmarSync?.acquisitionList || !magic.flags?.tagmarSync?.acquisitionTableName) {
+    errors.push(`${magic.name} sem origem de aquisição`);
+  }
+}
+for (const potion of items.filter((item) => item.flags?.tagmarSync?.category === "terras-pocoes")) {
+  if (potion.type !== "Pertence") errors.push(`${potion.name} não usa a mecânica de Pertence`);
+  if (!String(potion.img ?? "").startsWith("icons/consumables/potions/")) errors.push(`${potion.name} não usa ícone nativo de poção do Foundry`);
+  if (!potion.flags.tagmarSync.parentMagicName || !potion.flags.tagmarSync.parentMagicId) errors.push(`${potion.name} sem magia criadora`);
+  if (!potion.flags.tagmarSync.recipePath || !Number.isInteger(potion.flags.tagmarSync.recipeLevel)) errors.push(`${potion.name} sem origem da receita`);
+  if (potion.flags.tagmarSync.manualPreparation !== true) errors.push(`${potion.name} não preserva o preparo manual`);
+}
+for (const belonging of items.filter((item) => item.flags?.tagmarSync?.category === "terras-pertences")) {
+  if (belonging.type !== "Pertence") errors.push(`${belonging.name} não usa a mecânica de Pertence`);
+  if (!Number.isFinite(belonging.system?.peso) || belonging.system.peso <= 0) errors.push(`${belonging.name} sem peso válido`);
+  if (!String(belonging.system?.preco ?? "").trim()) errors.push(`${belonging.name} sem preço`);
+  if (!belonging.flags.tagmarSync.sourceWeaponId && !belonging.flags.tagmarSync.sourceDefenseId) errors.push(`${belonging.name} sem vínculo com a ficha mecânica`);
+  if (!["official", "project-estimate-approved"].includes(belonging.flags.tagmarSync.priceStatus)) errors.push(`${belonging.name} sem origem do preço`);
+  if (belonging.flags.tagmarSync.weightStatus !== "project-estimate-approved") errors.push(`${belonging.name} sem origem do peso`);
+}
+
+const manifest = JSON.parse(await readFile(join(cacheDir, "manifest.json"), "utf8"));
+const report = {
+  generatedAt: new Date().toISOString(),
+  sourceManifestGeneratedAt: manifest.generatedAt,
+  status: errors.length ? "error" : warnings.length ? "warning" : "ok",
+  totals: {
+    items: items.length,
+    folders: folders.length,
+    races: items.filter((item) => item.type === "Raca").length,
+    professions: items.filter((item) => item.type === "Profissao").length,
+    weapons: items.filter((item) => item.type === "Combate"
+      && !["terras-magias-dano", "terras-magias-cura"].includes(item.flags?.tagmarSync?.category)).length,
+    defenses: items.filter((item) => item.type === "Defesa").length,
+    wildernessTechniques: items.filter((item) => item.flags?.tagmarSync?.officialCategory === "Perícia").length,
+    magics: items.filter((item) => item.type === "Magia").length,
+    magicAttacks: items.filter((item) => item.flags?.tagmarSync?.category === "terras-magias-dano").length,
+    magicHealing: items.filter((item) => item.flags?.tagmarSync?.category === "terras-magias-cura").length,
+    potionRecipes: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pocoes").length,
+    wildernessBelongings: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pertences").length,
+    wildernessWeaponBelongings: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pertences" && item.flags.tagmarSync.belongingKind === "weapon").length,
+    wildernessDefenseBelongings: items.filter((item) => item.flags?.tagmarSync?.category === "terras-pertences" && item.flags.tagmarSync.belongingKind === "defense").length,
+    uniqueMagics: new Set(items.filter((item) => item.type === "Magia").map((item) => item.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR"))).size
+  },
+  byPart,
+  errors,
+  warnings
+};
+if (writeReport) await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+console.log(JSON.stringify(report, null, 2));
+if (errors.length) process.exitCode = 1;

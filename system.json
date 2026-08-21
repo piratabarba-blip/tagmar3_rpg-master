@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.6.0-v14.1",
+  "version": "2.7.0-v14.1-rc.23",
   "relationships": {
     "requires": [
       {
@@ -39,6 +39,11 @@
         "id": "tagmartrade",
         "type": "module",
         "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmartrade/module.json"
+      },
+      {
+        "id": "tagmar-calendario",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json"
       }
     ]
   },
@@ -60,7 +65,7 @@
   ],
   "compatibility": {
     "minimum": "14",
-    "verified": "14.366",
+    "verified": "14.367",
     "maximum": "14"
   },
   "scripts": [
@@ -70,14 +75,17 @@
   ],
   "styles": [
     "css/bootstrap-grid.css",
-    "css/sheet.css"
+    "css/sheet.css",
+    "css/modern-dialogs.css",
+    "css/dark-sheet.css",
+    "css/foundry-sheet.css"
   ],
   "packs": [
     {
-      "name": "terras-selvagens",
-      "label": "Terras Selvagens",
+      "name": "criando-fichas-t3er",
+      "label": "Tagmar — Criação de Fichas (Edição Sincronizada)",
       "system": "tagmar_rpg",
-      "path": "packs/terras-selvagens",
+      "path": "packs/criando-fichas-t3er",
       "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
@@ -85,13 +93,57 @@
       }
     },
     {
-      "name": "criando-fichas",
-      "label": "Criando Fichas",
+      "name": "reino-de-tagmar-t3er",
+      "label": "Reino de Tagmar — Referências Oficiais (Edição Sincronizada)",
       "system": "tagmar_rpg",
-      "path": "packs/criando-fichas",
+      "path": "packs/reino-de-tagmar-t3er",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "objetos-magicos-t3er",
+      "label": "Objetos Mágicos — Itens Oficiais (Edição Sincronizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/objetos-magicos-t3er",
       "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "objetos-magicos-regras-t3er",
+      "label": "Objetos Mágicos — Guia e Regras (Edição Sincronizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/objetos-magicos-regras-t3er",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "o-imperio-t3er",
+      "label": "O Império — Referências Oficiais (Edição Sincronizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/o-imperio-t3er",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "criaturas-t3er",
+      "label": "Criaturas de Tagmar — Edição Oficial Sincronizada",
+      "system": "tagmar_rpg",
+      "path": "packs/criaturas-t3er",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "NONE",
         "GAMEMASTER": "OWNER"
       }
     },
@@ -107,13 +159,57 @@
       }
     },
     {
+      "name": "terras-selvagens-t3er",
+      "label": "Terras Selvagens — Criação de Fichas (Edição Sincronizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/terras-selvagens-t3er",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "terras-selvagens-regras-t3er",
+      "label": "Terras Selvagens — Regras (Edição Sincronizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/terras-selvagens-regras-t3er",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "criando-fichas",
+      "label": "Tagmar — Criação de Fichas (Edição Antiga — Desatualizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/criando-fichas",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
       "name": "criaturas-e-arquetipos-sem-tecnicas",
-      "label": "Criaturas e Arquetipos Sem Tecnicas",
+      "label": "Criaturas e Arquétipos (Edição Antiga — Desatualizada)",
       "system": "tagmar_rpg",
       "path": "packs/criaturas-e-arquetipos-sem-tecnicas",
       "type": "Actor",
       "ownership": {
         "PLAYER": "NONE",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
+      "name": "terras-selvagens",
+      "label": "Terras Selvagens (Edição Antiga — Desatualizada)",
+      "system": "tagmar_rpg",
+      "path": "packs/terras-selvagens",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
         "GAMEMASTER": "OWNER"
       }
     }
@@ -125,6 +221,6 @@
     "units": "m"
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
-  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.6.0-v14.1/system.json",
-  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.6.0-v14.1"
+  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json",
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.23"
 }

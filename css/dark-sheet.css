@@ -1,0 +1,31 @@
+/* Tema opcional de baixo brilho. A escolha e individual para cada usuario. */
+.tagmar-dark-sheet{--td-bg:#0d1119;--td-panel:#151c28;--td-panel-2:#1b2533;--td-field:#0a0f17;--td-line:#465266;--td-gold:#d5ad5c;--td-text:#e8dfcf;--td-muted:#afa695}
+.tagmar-dark-sheet .window-header{color:var(--td-text)!important;background:linear-gradient(180deg,#141a24,#090d14)!important;border:1px solid #80601f!important;border-bottom-color:var(--td-gold)!important}
+.tagmar-dark-sheet .window-title{color:var(--td-gold)!important;font-weight:700}
+.tagmar-dark-sheet .window-content{color:var(--td-text)!important;background:radial-gradient(circle at 50% 0,rgba(128,96,31,.11),transparent 38%),linear-gradient(145deg,#111722,var(--td-bg))!important;border:1px solid #80601f!important;border-top:0!important}
+.tagmar-dark-sheet form,.tagmar-dark-sheet .form_tagmar,.tagmar-dark-sheet .sheet-primary{color:var(--td-text)!important;background:transparent!important}
+.tagmar-dark-sheet h1,.tagmar-dark-sheet h2,.tagmar-dark-sheet h3,.tagmar-dark-sheet h4,.tagmar-dark-sheet label,.tagmar-dark-sheet p,.tagmar-dark-sheet span,.tagmar-dark-sheet td,.tagmar-dark-sheet th{color:var(--td-text)}
+.tagmar-dark-sheet h1,.tagmar-dark-sheet h2,.tagmar-dark-sheet h3{border-color:#80601f!important}
+.tagmar-dark-sheet a{color:var(--td-gold)!important}
+.tagmar-dark-sheet a:hover{color:#ffe19a!important;text-shadow:0 0 8px rgba(213,173,92,.35)!important}
+.tagmar-dark-sheet input,.tagmar-dark-sheet select,.tagmar-dark-sheet textarea{color:var(--td-text)!important;background:var(--td-field)!important;border:1px solid var(--td-line)!important;border-radius:4px!important;box-shadow:inset 0 1px 3px rgba(0,0,0,.5)!important}
+.tagmar-dark-sheet input::placeholder,.tagmar-dark-sheet textarea::placeholder{color:#817a70!important}
+.tagmar-dark-sheet input:focus,.tagmar-dark-sheet select:focus,.tagmar-dark-sheet textarea:focus{border-color:var(--td-gold)!important;box-shadow:0 0 0 2px rgba(213,173,92,.15)!important}
+.tagmar-dark-sheet .form_tagmar input:read-only{color:#c9c0b2!important;background:#111823!important;border:1px solid #303b4c!important}
+.tagmar-dark-sheet option{color:var(--td-text)!important;background:#111722!important}
+.tagmar-dark-sheet nav,.tagmar-dark-sheet .tabs{background:#0a0f17!important;border:1px solid #80601f!important;border-radius:5px}
+.tagmar-dark-sheet nav a,.tagmar-dark-sheet .tabs a{color:var(--td-muted)!important;border-right:1px solid #384354}
+.tagmar-dark-sheet nav a.active,.tagmar-dark-sheet .tabs a.active{color:#fff2c7!important;background:#5e4517!important;text-shadow:none!important}
+.tagmar-dark-sheet table{color:var(--td-text)!important;background:rgba(10,15,23,.42)!important;border-color:#384354!important}
+.tagmar-dark-sheet table thead,.tagmar-dark-sheet table th{background:#101722!important;color:var(--td-gold)!important;border-color:#465266!important}
+.tagmar-dark-sheet table tr:nth-child(even){background:rgba(35,46,62,.45)!important}
+.tagmar-dark-sheet table tr:nth-child(odd){background:rgba(18,26,38,.38)!important}
+.tagmar-dark-sheet table td{border-color:#384354!important}
+.tagmar-dark-sheet button{color:var(--td-text)!important;background:linear-gradient(180deg,#273246,#151c28)!important;border:1px solid #80601f!important;border-radius:5px!important}
+.tagmar-dark-sheet button:hover{border-color:var(--td-gold)!important;box-shadow:0 0 7px rgba(213,173,92,.25)!important}
+.tagmar-dark-sheet .container_dados,.tagmar-dark-sheet .dados-dir,.tagmar-dark-sheet .cont-dir{color:var(--td-text)!important;background:rgba(15,22,33,.72)!important;border-color:#465266!important;border-image:none!important;border-radius:6px}
+.tagmar-dark-sheet .editor,.tagmar-dark-sheet .editor-content,.tagmar-dark-sheet prose-mirror{color:var(--td-text)!important;background:#101722!important;border-color:#465266!important}
+.tagmar-dark-sheet .editor strong,.tagmar-dark-sheet .editor b,.tagmar-dark-sheet .Negrito,.tagmar-dark-sheet .rola_desc strong,.tagmar-dark-sheet .rola_desc b,.tagmar-dark-sheet .rola_desc u{color:#e3bc70!important}
+.tagmar-dark-sheet .item-list .item,.tagmar-dark-sheet .items-list .item{background:rgba(20,28,40,.78)!important;border-color:#384354!important}
+.tagmar-dark-sheet .creditos{color:#918a80!important}
+.tagmar-dark-sheet img:not(.itemImg):not(.imgItem):not(.profile-img){filter:brightness(.88)}

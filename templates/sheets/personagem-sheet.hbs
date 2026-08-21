@@ -343,12 +343,12 @@
                             </div>
                             <div class="col-md-2">
                                 {{#ifge data.system.pontos_estagio.value data.system.pontos_estagio.next}}
-                                <table class='table_novaEH'>
-                                    <caption class="mediaeval">Subir Nível</caption>
-                                    <tr style="text-align: center;height:66px;">
-                                        <th class="mediaeval"><a class="subir_estagio" title="Subir Estágio"><i class="fas fa-arrow-up fa-2x"></i></a></th>
-                                    </tr>
-                                </table>
+                                    <table class='table_novaEH'>
+                                        <caption class="mediaeval">Subir Nível</caption>
+                                        <tr style="text-align: center;height:66px;">
+                                            <th class="mediaeval"><a class="subir_estagio" title="Subir Estágio"><i class="fas fa-arrow-up fa-2x"></i></a></th>
+                                        </tr>
+                                    </table>
                                 {{/ifge}}
                             </div>
                             <div class="col-md-3">
@@ -497,6 +497,7 @@
                     </div>
                     <div class="col-md-4 col-6">
                         <select class="mediaeval" name="system.hab_nata" type="text" data-dtype="String" value="{{data.system.hab_nata}}" height="30" title="Selecione sua Habilidade Nata."/>
+                            <option value=""></option>
                             {{#selectOptions actor.habilidades selected=data.system.hab_nata valueAttr="name"}}
                             {{/selectOptions}}
                         </select>

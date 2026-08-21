@@ -9,7 +9,7 @@
                     <h1 class="fairyDust" style="text-align: center; padding-top:20px;">{{actor.type}}</h1>
                 </div>
                 <div class="col-md-2 col-2">
-                    <button class="toJournal" title="Criar Journal de NPC"><i class="fas fa-book-open"></i>Journal</button>
+                    <button type="button" class="toJournal" title="Criar Journal de NPC"><i class="fas fa-book-open"></i>Journal</button>
                 </div>
             </div>
             <div class="row container_dados">
@@ -311,6 +311,7 @@
                     </div>
                     <div class="col-md-4 hiddenT">
                         <select class="mediaeval" name="system.hab_nata" type="text" data-dtype="String" value="{{data.system.hab_nata}}" height="30" title="Selecione sua Habilidade Nata."/>
+                            <option value=""></option>
                             {{#selectOptions actor.habilidades selected=data.system.hab_nata valueAttr="name"}}
                             {{/selectOptions}}
                         </select>
