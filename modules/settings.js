@@ -11,6 +11,7 @@ export const SystemSettings = function() {
         choices: {
           "base": "Sem Imagem (padrão)",
           "dark": "Tema Escuro — Baixo Brilho (acessibilidade)",
+          "foundry": "Tema Foundry — Interface Nativa",
           "tagmar3": "Borda Dos Livros Tagmar 3.0",
           "tagmar3pap": "Borda Dos Livros Tagmar 3.0 + Papiros (Licinio Souza)",
           "tagmar3barda": "Borda Dos Livros Tagmar 3.0 + Barda - Meio-Elfa (Antomio Jironimo Bizerril Neto)",

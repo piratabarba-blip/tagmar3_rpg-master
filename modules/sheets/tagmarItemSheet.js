@@ -36,7 +36,7 @@ export default class tagmarItemSheet extends foundry.appv1.sheets.ItemSheet {
             this['options']['height'] = 605;
             this['position']['height'] = 605;
         }
-        if (!["base", "dark"].includes(layout)) {
+        if (!["base", "dark", "foundry"].includes(layout)) {
             return 'systems/tagmar_rpg/templates/sheets/'+ this.object.type.toLowerCase() +'-ficha.hbs';
         } else {
             return 'systems/tagmar_rpg/templates/sheets/'+ this.object.type.toLowerCase() +'-sheet.hbs';
@@ -116,6 +116,7 @@ export default class tagmarItemSheet extends foundry.appv1.sheets.ItemSheet {
     activateListeners(html) {
         super.activateListeners(html);
         this.element.toggleClass("tagmar-dark-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "dark");
+        this.element.toggleClass("tagmar-foundry-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "foundry");
         if (!this.options.editable) return;
 
         html.find(".dano25").change(event => {

@@ -18,7 +18,7 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
     get template() {
         let gameSystem = game.system.id;
         let layout = game.settings.get(gameSystem, "sheetTemplate");
-        if (this.document.type == "Personagem" && !["base", "dark"].includes(layout)) {
+        if (this.document.type == "Personagem" && !["base", "dark", "foundry"].includes(layout)) {
             if (layout == 'tagmar3anao') {
                 return 'systems/tagmar_rpg/templates/sheetsPoints/personagem-ficha-anao.hbs';
             } else if (layout == 'tagmar3barda') {
@@ -65,11 +65,11 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
                 return 'systems/tagmar_rpg/templates/sheetsPoints/personagem-ficha.hbs';
             }
             
-        } else if (this.document.type == "Personagem" && ["base", "dark"].includes(layout)) {
+        } else if (this.document.type == "Personagem" && ["base", "dark", "foundry"].includes(layout)) {
             return 'systems/tagmar_rpg/templates/sheetsPoints/personagem-sheet.hbs';
-        } else if (this.document.type == "NPC" && !["base", "dark"].includes(layout)) {
+        } else if (this.document.type == "NPC" && !["base", "dark", "foundry"].includes(layout)) {
             return 'systems/tagmar_rpg/templates/sheets/npc-ficha.hbs';
-        } else if (this.document.type == "Inventario" && !["base", "dark"].includes(layout)) {
+        } else if (this.document.type == "Inventario" && !["base", "dark", "foundry"].includes(layout)) {
             return 'systems/tagmar_rpg/templates/sheets/inventario-ficha.hbs';
         } else {
             return 'systems/tagmar_rpg/templates/sheets/'+ this.document.type.toLowerCase() +'-sheet.hbs';
@@ -159,6 +159,7 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
     activateListeners(html) {
         super.activateListeners(html);
         this.element.toggleClass("tagmar-dark-sheet", game.settings.get(game.system.id, "sheetTemplate") === "dark");
+        this.element.toggleClass("tagmar-foundry-sheet", game.settings.get(game.system.id, "sheetTemplate") === "foundry");
         if (this.document.type != "Inventario") {
             if (!this.options.editable) return;
         }
