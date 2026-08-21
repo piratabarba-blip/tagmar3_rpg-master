@@ -1,5 +1,6 @@
 /* Janelas auxiliares com a identidade visual escura do Tagmar. */
-.tagmar-modern-dialog{--tm-panel:#101722;--tm-soft:#18212e;--tm-line:#9b6a16;--tm-gold:#e8bd62;--tm-text:#f4ead1}
+.tagmar-modern-dialog{--tm-panel:#101722;--tm-soft:#18212e;--tm-line:#9b6a16;--tm-gold:#e8bd62;--tm-text:#f4ead1;font-family:var(--font-primary,"Signika",sans-serif)!important}
+.tagmar-modern-dialog .mediaeval,.tagmar-modern-dialog input,.tagmar-modern-dialog button,.tagmar-modern-dialog select,.tagmar-modern-dialog textarea{font-family:var(--font-primary,"Signika",sans-serif)!important}
 .tagmar-modern-dialog .window-header{color:var(--tm-text)!important;background:linear-gradient(180deg,#151d29,#0b1018)!important;border:1px solid var(--tm-line)!important;border-bottom-color:#d49a2c!important}
 .tagmar-modern-dialog .window-title{color:var(--tm-gold)!important;font-weight:700;letter-spacing:.02em}
 .tagmar-modern-dialog .window-content{color:var(--tm-text)!important;background:radial-gradient(circle at top,rgba(155,106,22,.12),transparent 42%),linear-gradient(145deg,#151d29,#0b1018)!important;border:1px solid var(--tm-line)!important;border-top:0!important}
