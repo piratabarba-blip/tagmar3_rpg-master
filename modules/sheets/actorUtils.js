@@ -585,11 +585,20 @@ export function _attEfEhVB(data, updatePers) {
 
 export function _attProximoEstag(data, updatePers) {
     if (!data.options.editable) return;
-    let estagio_atual = data.document.system.estagio;
-    let prox_est = [0, 11, 21, 31, 46, 61, 76, 96, 116, 136, 166, 196, 226 , 266, 306, 346, 386, 436, 486, 536, 586, 646, 706, 766, 826, 896, 966, 1036, 1106, 1186, 1266, 
+    const estagio_atual = Number(data.document.system.estagio);
+    const prox_est = [0, 11, 21, 31, 46, 61, 76, 96, 116, 136, 166, 196, 226, 266, 306, 346, 386, 436, 486, 536, 586, 646, 706, 766, 826, 896, 966, 1036, 1106, 1186, 1266,
         1346, 1426, 1516, 1606, 1696, 1786, 1886, 1986, 2086];
-    if (estagio_atual < 40 && data.document.system.pontos_estagio.next != prox_est[estagio_atual]) {
-        updatePers["system.pontos_estagio.next"] = prox_est[estagio_atual];
+    let proximoEstagio = prox_est[estagio_atual];
+    if (estagio_atual >= 40) {
+        proximoEstagio = 2186;
+        for (let estagio = 41; estagio <= estagio_atual; estagio++) {
+            const faixa = 40 + (Math.floor((estagio - 13) / 4) * 10);
+            proximoEstagio += faixa;
+        }
+    }
+    if (!Number.isFinite(proximoEstagio)) return;
+    if (data.document.system.pontos_estagio.next != proximoEstagio) {
+        updatePers["system.pontos_estagio.next"] = proximoEstagio;
     }
 }
 

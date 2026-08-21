@@ -1198,47 +1198,40 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     async _subirEstagio(event) {
-        let estagio_atual = this.document.system.estagio;
-        let r = new Roll('1d10');
-        await r.evaluate();
-        let valord10 = r.total;
-        let nova_eh = 0;
-        let eh_atual = this.document.system.eh.max;
-        let attFIS = this.document.system.atributos.FIS;
-        if (this.profissao) {
-            if (valord10 >= 1 && valord10 <= 2) {
-                nova_eh = this.profissao.system.lista_eh.v1;
-                this.document.update({
-                    "system.eh.max": eh_atual + nova_eh + attFIS,
-                    "system.estagio": estagio_atual + 1
-                });
-                ui.notifications.info("Nova EH calculada. Seu estágio agora é "+(estagio_atual+1)+".");
-            } else if (valord10 >= 3 && valord10 <= 5) {
-                nova_eh = this.profissao.system.lista_eh.v2;
-                this.document.update({
-                    "system.eh.max": eh_atual + nova_eh + attFIS,
-                    "system.estagio": estagio_atual + 1
-                });
-                ui.notifications.info("Nova EH calculada. Seu estágio agora é "+(estagio_atual+1)+".");
-            } else if (valord10 >= 6 && valord10 <= 8) {
-                nova_eh = this.profissao.system.lista_eh.v3;
-                this.document.update({
-                    "system.eh.max": eh_atual + nova_eh + attFIS,
-                    "system.estagio": estagio_atual + 1
-                });
-                ui.notifications.info("Nova EH calculada. Seu estágio agora é "+(estagio_atual+1)+".");
-            } else if (valord10 >= 9 && valord10 <= 10) {
-                nova_eh = this.profissao.system.lista_eh.v4;
-                this.document.update({
-                    "system.eh.max": eh_atual + nova_eh + attFIS,
-                    "system.estagio": estagio_atual + 1
-                });
-                ui.notifications.info("Nova EH calculada. Seu estágio agora é "+(estagio_atual+1)+".");
+        event?.preventDefault();
+        if (this._subindoEstagio) return;
+
+        const estagioAtual = Number(this.document.system.estagio);
+        const experienciaAtual = Number(this.document.system.pontos_estagio.value);
+        const experienciaNecessaria = Number(this.document.system.pontos_estagio.next);
+        if (experienciaAtual < experienciaNecessaria) return ui.notifications.warn("Experiência insuficiente para subir de estágio.");
+        if (!this.profissao) return ui.notifications.warn("Adicione uma profissão à ficha antes de subir de estágio.");
+
+        this._subindoEstagio = true;
+        try {
+            const r = new Roll("1d10");
+            await r.evaluate();
+            const faixa = r.total <= 2 ? "v1" : r.total <= 5 ? "v2" : r.total <= 8 ? "v3" : "v4";
+            const novaEh = Number(this.profissao.system.lista_eh?.[faixa]);
+            const ehAtual = Number(this.document.system.eh.max);
+            const fis = Number(this.document.system.atributos.FIS);
+            if (![novaEh, ehAtual, fis].every(Number.isFinite)) {
+                return ui.notifications.error("Não foi possível calcular a nova EH. Verifique a profissão, a EH e o atributo Físico.");
             }
-            await r.toMessage({user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: this.document }),
-                flavor: ``})
-        } else return;
+
+            await this.document.update({
+                "system.eh.max": ehAtual + novaEh + fis,
+                "system.estagio": estagioAtual + 1
+            });
+            await r.toMessage({
+                user: game.user.id,
+                speaker: ChatMessage.getSpeaker({actor: this.document}),
+                flavor: `Ganho de EH ao alcançar o estágio ${estagioAtual + 1}`
+            });
+            ui.notifications.info(`Nova EH calculada. Seu estágio agora é ${estagioAtual + 1}.`);
+        } finally {
+            this._subindoEstagio = false;
+        }
     }
 
     _ativaEfeito(event) {
