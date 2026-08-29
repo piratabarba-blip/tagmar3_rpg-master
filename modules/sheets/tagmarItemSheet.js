@@ -117,6 +117,7 @@ export default class tagmarItemSheet extends foundry.appv1.sheets.ItemSheet {
         super.activateListeners(html);
         this.element.toggleClass("tagmar-dark-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "dark");
         this.element.toggleClass("tagmar-foundry-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "foundry");
+        this._activateTreasureMagicLinks(html);
         this._renderTreasureSecrets(html);
         if (!this.options.editable) return;
 
@@ -183,6 +184,29 @@ export default class tagmarItemSheet extends foundry.appv1.sheets.ItemSheet {
             }
         });
         html.find('.abs_magica').click(this._abs_magica.bind(this));
+    }
+
+    _activateTreasureMagicLinks(html) {
+        if (!this.object.flags?.tagmarTreasure) return;
+        html.find('a.content-link[data-uuid]')
+            .off('click.tagmarTreasure')
+            .on('click.tagmarTreasure', async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const uuid = event.currentTarget.dataset.uuid;
+                if (!uuid) return;
+                try {
+                    const linkedDocument = await fromUuid(uuid);
+                    if (!linkedDocument) {
+                        ui.notifications.warn("A magia vinculada não está mais disponível no compêndio.");
+                        return;
+                    }
+                    linkedDocument.sheet?.render(true);
+                } catch (error) {
+                    console.error("Tagmar | Falha ao abrir magia vinculada", error);
+                    ui.notifications.error("Não foi possível abrir a magia vinculada.");
+                }
+            });
     }
 
     _renderTreasureSecrets(html) {

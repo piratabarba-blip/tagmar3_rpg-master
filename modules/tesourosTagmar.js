@@ -1435,9 +1435,9 @@ export class TesourosTagmarApp extends FormApplication {
     });
     const magicPowers = magicUsage.map((magic) => magic.powerLabel);
     const linkedMagicPowers = magicUsage.map((magic) => {
-      const label = `${magic.name} ${magic.level}`.replaceAll("]", "").replaceAll("}", "");
+      const label = `${magic.name} ${magic.level}`.replace(/[\[\]{}]/g, "");
       const linkedLabel = magic.uuid
-        ? `<a class="content-link" draggable="true" data-link data-uuid="${escapeHtml(magic.uuid)}"><i class="fas fa-book-open"></i>${escapeHtml(label)}</a>`
+        ? `@UUID[${magic.uuid}]{${label}}`
         : escapeHtml(label);
       return `${linkedLabel} (${escapeHtml(magic.usageLabel)})`;
     });
