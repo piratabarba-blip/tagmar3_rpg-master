@@ -117,6 +117,7 @@ export default class tagmarItemSheet extends foundry.appv1.sheets.ItemSheet {
         super.activateListeners(html);
         this.element.toggleClass("tagmar-dark-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "dark");
         this.element.toggleClass("tagmar-foundry-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "foundry");
+        this._renderTreasureSecrets(html);
         if (!this.options.editable) return;
 
         html.find(".dano25").change(event => {
@@ -182,6 +183,122 @@ export default class tagmarItemSheet extends foundry.appv1.sheets.ItemSheet {
             }
         });
         html.find('.abs_magica').click(this._abs_magica.bind(this));
+    }
+
+    _renderTreasureSecrets(html) {
+        if (!game.user?.isGM) return;
+        const treasure = this.object.flags?.tagmarTreasure;
+        if (!treasure?.lore && !treasure?.curse) return;
+        const hiddenLore = treasure.lore && !treasure.revealHistory;
+        const hiddenCurse = treasure.curse && !treasure.revealCurse;
+        if (!hiddenLore && !hiddenCurse) return;
+        const root = html?.[0] || this.element?.[0];
+        const target = root?.querySelector?.(".sheet-primary") || root?.querySelector?.("form") || root;
+        if (!target || target.querySelector(".tagmar-treasure-item-secrets")) return;
+        const panel = document.createElement("section");
+        panel.className = "tagmar-treasure-item-secrets";
+        const title = document.createElement("h3");
+        title.textContent = "Segredos do tesouro — somente Mestre";
+        panel.append(title);
+        const addParagraph = (label, value) => {
+            if (!value) return;
+            const paragraph = document.createElement("p");
+            const strong = document.createElement("strong");
+            strong.textContent = `${label}: `;
+            paragraph.append(strong, document.createTextNode(value));
+            panel.append(paragraph);
+        };
+        if (hiddenLore) {
+            addParagraph("Nome verdadeiro", treasure.trueName || treasure.lore.trueName);
+            addParagraph("História", treasure.lore.text);
+            addParagraph("Situação", "história ainda oculta dos jogadores");
+        }
+        if (hiddenCurse) {
+            addParagraph("Natureza", treasure.curseMode === "only" ? "somente amaldiçoado" : "item mágico amaldiçoado");
+            addParagraph(treasure.curse.name || "Maldição", treasure.curse.effect);
+            addParagraph("Tempo de afastamento", treasure.curse.separationTime);
+            addParagraph("Vínculo com o item", treasure.curse.binding
+                ? `${treasure.curse.binding.label} — ${treasure.curse.binding.detail}`
+                : "");
+            addParagraph("Como se libertar", treasure.curse.binding?.release);
+            if (treasure.curse.hasNarrative) {
+                addParagraph("Vertente infernal", treasure.curse.patronLabel);
+                addParagraph("Fachada profanada", treasure.curse.facade?.order);
+                addParagraph("Sinal de heresia", treasure.curse.heresy);
+                addParagraph("Reconhecimento", treasure.curse.recognition);
+            }
+            addParagraph("Situação", "maldição ainda oculta dos jogadores");
+            if (treasure.curse.source) {
+                const link = document.createElement("a");
+                link.href = treasure.curse.source;
+                link.target = "_blank";
+                link.rel = "noopener";
+                link.textContent = "Consultar a magia oficial Maldições";
+                panel.append(link);
+            }
+            if (treasure.curse.hasNarrative && treasure.curse.infernalSource) {
+                const link = document.createElement("a");
+                link.href = treasure.curse.infernalSource;
+                link.target = "_blank";
+                link.rel = "noopener";
+                link.textContent = "Consultar Senhores das Profundezas";
+                panel.append(link);
+            }
+        }
+        const actions = document.createElement("div");
+        actions.className = "tagmar-treasure-secret-actions";
+        const addRevealButton = (kind, label) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.innerHTML = `<i class="fas fa-eye"></i> ${label}`;
+            button.addEventListener("click", () => this._revealTreasureSecret(kind));
+            actions.append(button);
+        };
+        if (hiddenLore) addRevealButton("history", "Revelar história aos jogadores");
+        if (hiddenCurse) addRevealButton("curse", "Revelar maldição aos jogadores");
+        if (actions.childElementCount) panel.append(actions);
+        target.prepend(panel);
+    }
+
+    async _revealTreasureSecret(kind) {
+        if (!game.user?.isGM) return;
+        const treasure = this.object.flags?.tagmarTreasure;
+        const isHistory = kind === "history";
+        const secret = isHistory ? treasure?.lore : treasure?.curse;
+        if (!secret) return;
+        const flagKey = isHistory ? "revealHistory" : "revealCurse";
+        if (treasure?.[flagKey]) return;
+        const escapeHtml = (value) => String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        const heading = isHistory ? "História revelada" : (secret.name || "Maldição revelada");
+        const detail = isHistory ? secret.text : secret.effect;
+        const curseNature = !isHistory
+            ? `<p><strong>Natureza:</strong> ${treasure.curseMode === "only" ? "somente amaldiçoado" : "item mágico amaldiçoado"}</p>`
+            : "";
+        const curseBinding = !isHistory && secret.binding
+            ? `<p><strong>Tempo de afastamento:</strong> ${escapeHtml(secret.separationTime)}</p><p><strong>Vínculo com o item:</strong> ${escapeHtml(secret.binding.label)} — ${escapeHtml(secret.binding.detail)}.</p><p><strong>Como se libertar:</strong> ${escapeHtml(secret.binding.release)}.</p>`
+            : "";
+        const curseNarrative = !isHistory && secret.hasNarrative
+            ? `<p><strong>Vertente infernal:</strong> ${escapeHtml(secret.patronLabel)}</p><p><strong>Fachada profanada:</strong> ${escapeHtml(secret.facade?.order)}</p><p><strong>Sinal de heresia:</strong> ${escapeHtml(secret.heresy)}</p><p><em>${escapeHtml(secret.recognition)}</em></p>`
+            : "";
+        const infernalSourceLink = !isHistory && secret.hasNarrative && secret.infernalSource
+            ? `<p><a href="${escapeHtml(secret.infernalSource)}" target="_blank" rel="noopener">Consultar Senhores das Profundezas</a></p>`
+            : "";
+        const descriptionBlock = `<section class="tagmar-treasure-revealed"><h3>${escapeHtml(heading)}</h3>${curseNature}<p>${escapeHtml(detail)}</p>${curseBinding}${curseNarrative}${infernalSourceLink}</section>`;
+        const updates = {
+            "system.descricao": `${this.object.system?.descricao || ""}${descriptionBlock}`,
+            [`flags.tagmarTreasure.${flagKey}`]: true
+        };
+        await this.object.update(updates);
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker(),
+            content: `<section class="tagmar-treasure-chat"><h3><i class="fas fa-eye"></i> ${escapeHtml(heading)}</h3><p><strong>${escapeHtml(this.object.name)}</strong></p>${curseNature}<p>${escapeHtml(detail)}</p>${curseBinding}${curseNarrative}${infernalSourceLink}</section>`
+        });
+        ui.notifications.info(isHistory ? "História revelada aos jogadores." : "Maldição revelada aos jogadores.");
     }
 
     _abs_magica(event) {

@@ -1,0 +1,248 @@
+<form class="tesouros-tagmar-form">
+  <nav class="tesouro-tabs tabs" data-group="primary">
+    <a class="item" data-tab="propriedades"><i class="fas fa-sliders"></i> Propriedades</a>
+    <a class="item" data-tab="gerar"><i class="fas fa-gem"></i> Gerar tesouro</a>
+  </nav>
+
+  <section class="tesouro-body">
+    <div class="tab" data-group="primary" data-tab="propriedades">
+      <p class="notes tesouro-intro-note">Somente as propriedades marcadas podem participar da geração. Matrizes e usos são definidos automaticamente pelo tipo do objeto.</p>
+      <div class="tesouro-property-grid">
+        {{#each properties}}
+        <label class="tesouro-property-option">
+          <span><input type="checkbox" data-property value="{{key}}" {{#if enabled}}checked{{/if}}> <strong>{{label}}</strong></span>
+          <small>{{compatibility}}</small>
+        </label>
+        {{/each}}
+      </div>
+      <div class="tesouro-callout">
+        <p class="notes">Cada propriedade automática faz seu próprio teste de existência. Propriedades incompatíveis com o objeto são ignoradas.</p>
+        <p class="notes"><strong>Chance por Tipo:</strong> 1: 15% · 2: 22% · 3: 30% · 4: 39% · 5: 49% · 6: 60% · 7: 71% · 8: 81% · 9: 90% · 10: 97%.</p>
+        <p class="notes">A Absorção acompanha o Tipo de 1 a 100: Tipo 1 gera 1–10, Tipo 2 gera 11–20, seguindo até o Tipo 10 com 91–100.</p>
+      </div>
+      <button type="button" class="tesouro-primary" data-action="save-properties"><i class="fas fa-floppy-disk"></i> Salvar propriedades</button>
+    </div>
+
+    <div class="tab" data-group="primary" data-tab="gerar">
+      <div class="tesouro-generator-grid">
+        <fieldset class="tesouro-classification-options">
+          <legend>Classificação do tesouro</legend>
+          <label>Modo
+            <select name="generationMode">
+              <option value="quick">Rápido</option>
+              <option value="specific">Personalizado</option>
+            </select>
+          </label>
+          <label>Tipo do tesouro
+            <select name="treasureType">
+              <option value="1">Tipo 1 — muito modesto</option>
+              <option value="2">Tipo 2</option>
+              <option value="3">Tipo 3 — modesto</option>
+              <option value="4">Tipo 4</option>
+              <option value="5" selected>Tipo 5 — médio</option>
+              <option value="6">Tipo 6</option>
+              <option value="7">Tipo 7 — abundante</option>
+              <option value="8">Tipo 8</option>
+              <option value="9">Tipo 9 — vasto</option>
+              <option value="10">Tipo 10 — excepcional</option>
+            </select>
+          </label>
+          <label>Região consultada
+            <select name="contentSource">
+              <option value="all">Reinos Conhecidos + Terras Selvagens</option>
+              <option value="reinos">Somente Reinos Conhecidos</option>
+              <option value="terras">Somente Terras Selvagens</option>
+            </select>
+          </label>
+          <div class="tesouro-quick-options">
+            <p class="notes">A quantidade será sorteada com 1d20. Mesmo um tesouro pode não conter item mágico.</p>
+          </div>
+          <div class="tesouro-specific-options">
+            <label>Quantidade de itens <input type="number" name="itemCount" value="1" min="1" title="A quantidade informada será criada exatamente"></label>
+            <label>Bônus mágico <input type="number" name="magicBonus" value="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
+            <div class="tesouro-inline-fields">
+              <label data-magic-option>Magias por item <input type="number" name="magicCount" value="0" min="0" title="0 usa a regra automática; outro valor gera essa quantidade de magias diferentes"></label>
+              <label>Focus <input type="number" name="focus" value="0" min="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
+              <label data-magic-option>Vezes por dia <input type="number" name="uses" value="0" min="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
+            </div>
+            <div class="tesouro-callout">
+              <p class="notes"><strong>Regra do modo Personalizado:</strong> 0 usa o sorteio automático; qualquer outro valor informado é aplicado exatamente, independentemente do Tipo.</p>
+              <p class="notes">As magias de um mesmo item nunca se repetem. Focus 0 soma a base Tipo × 10 com 1d(Tipo × 10).</p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="tesouro-object-options">
+          <legend>Objeto</legend>
+          <label>Tipo
+            <select name="itemKind">
+              <option value="random">Aleatório</option>
+              <option value="pool">Seleção múltipla personalizada</option>
+              <option value="weapon">Arma</option>
+              <option value="defense">Armadura, elmo ou escudo</option>
+              <option value="ring">Joia</option>
+              <option value="staff">Cetro ou cajado</option>
+              <option value="potion">Poção, óleo, elixir ou unguento</option>
+            </select>
+          </label>
+          <label>Objeto específico
+            <select name="itemSpecific">
+              <option value="">Aleatório dentro do tipo</option>
+              {{#each objectChoices}}<option value="{{value}}" data-kind="{{kind}}" data-realms="{{realms}}">{{label}}</option>{{/each}}
+            </select>
+          </label>
+          <div class="tesouro-object-pool">
+            <input type="search" data-object-pool-search placeholder="Pesquisar espada, anel, elmo...">
+            <div class="tesouro-object-pool-list">
+              {{#each objectPoolChoices}}
+              <label data-kind="{{kind}}" data-realms="{{realms}}" data-search="{{groupLabel}} {{label}}">
+                <input type="checkbox" name="itemPool" value="{{poolValue}}">
+                <span><strong>{{groupLabel}}</strong> — {{label}}</span>
+              </label>
+              {{/each}}
+            </div>
+            <div class="tesouro-object-pool-footer">
+              <p class="notes"><strong data-object-pool-count>0 objetos selecionados.</strong> Cada opção será usada uma vez antes de começar a repetir.</p>
+              <button type="button" data-action="clear-object-pool"><i class="fas fa-eraser"></i> Limpar seleção</button>
+            </div>
+          </div>
+          <p class="notes">Um objeto específico ou uma seleção múltipla sempre será criado; somente suas propriedades e seus poderes continuarão sendo sorteados.</p>
+        </fieldset>
+
+        <fieldset class="tesouro-money-options">
+          <legend>Tesouro monetário</legend>
+          <label class="tesouro-check-line"><input type="checkbox" name="includeMoney" value="true" checked> Incluir MO, MP e MC</label>
+          <p class="notes">As três quantidades serão sorteadas separadamente conforme o Tipo do tesouro.</p>
+          <div class="tesouro-money-additions">
+            <strong>Somar ao tesouro monetário:</strong>
+            <div>
+              <label>MO <input type="number" name="moneyMoBonus" value="0" min="0" step="1"></label>
+              <label>MP <input type="number" name="moneyMpBonus" value="0" min="0" step="1"></label>
+              <label>MC <input type="number" name="moneyMcBonus" value="0" min="0" step="1"></label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="tesouro-magic-options">
+          <legend>Magia</legend>
+          <label>Magias
+            <select name="magicMode">
+              <option value="random" selected>Com magia</option>
+              <option value="none">Sem magia</option>
+            </select>
+          </label>
+          <label data-magic-option>Família
+            <select name="magicTradition">
+              <option value="all">Todas as famílias</option>
+              <option value="basic">Básicas de qualquer profissão</option>
+              <option value="mage">Magos</option>
+              <option value="ranger">Rastreadores</option>
+              <option value="bard">Bardos</option>
+              <option value="priest">Sacerdotes</option>
+            </select>
+          </label>
+          <label data-magic-option>Repertório
+            <select name="magicRepertoire">
+              <option value="all">Atual + ancestral + perdida</option>
+              <option value="core">Atual</option>
+              <option value="ancestral">Ancestral</option>
+              <option value="lost">Perdida</option>
+            </select>
+          </label>
+          <label data-magic-option>Escola/origem
+            <select name="magicOrigin">
+              <option value="">Aleatória entre todas</option>
+              {{#each origins}}<option value="{{name}}" data-realms="{{realms}}" data-traditions="{{traditions}}" data-repertoires="{{repertoires}}">{{name}}</option>{{/each}}
+            </select>
+          </label>
+          <label data-magic-option>Magia específica
+            <select name="specificMagic">
+              <option value="">Aleatória dentro da escola/origem</option>
+              {{#each magics}}<option value="{{key}}" data-realms="{{realms}}" data-origins="{{originValues}}" data-traditions="{{traditionValues}}" data-repertoires="{{repertoireValues}}">{{name}}{{repertoireSuffix}}</option>{{/each}}
+            </select>
+          </label>
+          <div class="tesouro-callout" data-magic-option>
+            <p class="notes">Magias comuns acompanham o Tipo de 1 a 10. Magias ancestrais usam os limites 11, 13, 15, 17, 19, 20, 23, 25, 27 e 30.</p>
+            <p class="notes">No sorteio automático, “Com magia” permite que a propriedade participe do teste de existência; uma magia específica ou quantidade personalizada maior que 0 garante sua inclusão.</p>
+            <p class="notes">Cetros e cajados recebem uma magia diferente em cada matriz de poder, independentemente do limite comum de duas magias.</p>
+          </div>
+          <div class="tesouro-edit-note"><i class="fas fa-pen-to-square"></i> O Mestre de Jogo pode modificar o que precisar no item depois que ele estiver pronto.</div>
+        </fieldset>
+
+        <fieldset class="tesouro-lore-options">
+          <legend>História, identidade e maldição</legend>
+          <div class="tesouro-lore-grid">
+            <label class="tesouro-check-card"><span><input type="checkbox" name="includeHistory" value="true"> Criar história para o item</span><small>Gera um nome verdadeiro e uma lenda coerente com a origem das magias.</small></label>
+            <label class="tesouro-check-card"><span><input type="checkbox" name="revealHistory" value="true" disabled> Revelar história aos jogadores</span><small>Desmarcado: o Mestre recebe a história, mas o jogador vê somente o nome físico do objeto.</small></label>
+            <label class="tesouro-check-card"><span><input type="checkbox" name="includeCurse" value="true"> Adicionar uma maldição</span><small>Aplica uma maldição compatível com a vertente infernal, limitada pelo Tipo do tesouro, com vínculo e tempo de afastamento próprios.</small></label>
+            <label class="tesouro-check-card"><span><input type="checkbox" name="revealCurse" value="true" disabled> Revelar maldição aos jogadores</span><small>Desmarcado: a maldição permanece como segredo exclusivo do Mestre.</small></label>
+            <label class="tesouro-check-card tesouro-curse-nature is-disabled">
+              <span><i class="fas fa-skull"></i> Natureza do item amaldiçoado</span>
+              <select name="curseNature" disabled>
+                <option value="automatic">Automática</option>
+                <option value="magic">Item mágico amaldiçoado</option>
+                <option value="only">Somente amaldiçoado</option>
+              </select>
+              <small>Automática alterna entre objetos úteis corrompidos e objetos que oferecem somente a maldição.</small>
+            </label>
+          </div>
+          <div class="tesouro-callout">
+            <p class="notes">História e maldição têm visibilidade independente. O Mestre sempre recebe a versão completa.</p>
+            <p class="notes">Histórias geradas são inspiradas nas referências oficiais, mas não transformam o novo objeto em artefato canônico publicado.</p>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="tesouro-generation-actions">
+        <button type="button" class="tesouro-primary" data-action="generate-preview"><i class="fas fa-dice"></i> Gerar prévia</button>
+        <button type="button" class="tesouro-primary tesouro-chat-roll" data-action="send-roll-to-chat"><i class="fas fa-comments"></i> Enviar rolagem aos jogadores</button>
+      </div>
+
+      {{#if hasRoll}}
+      <section class="tesouro-preview">
+        <h3>Resultado da rodada</h3>
+        <p class="tesouro-roll-summary"><strong>Tipo {{lastRoll.type}}</strong> · 1d20 = <strong>{{lastRoll.die}}</strong> · {{lastRoll.count}} item(ns)</p>
+        {{#if hasPreview}}
+        {{#each preview}}
+        <article>
+          <i class="{{icon}}"></i>
+          <div>
+            <strong>{{name}}</strong>
+            <small>{{kindLabel}} · {{powerSummary}}</small>
+            {{#if matrixSummary}}<small><i class="fas fa-gem"></i> {{matrixSummary}}</small>{{/if}}
+            {{#if magics}}
+            <div class="tesouro-preview-magics">
+              <i class="fas fa-book-open"></i>
+              {{#each magics}}<a href="#" data-magic-uuid="{{uuid}}" title="Abrir {{name}} no compêndio">{{name}} {{effect}}</a>{{#unless @last}} · {{/unless}}{{/each}}
+            </div>
+            {{/if}}
+            {{#if lore}}
+            <div class="tesouro-preview-secret"><strong><i class="fas fa-scroll"></i> História {{#unless revealHistory}}— oculta dos jogadores{{/unless}}</strong><p>{{lore.text}}</p></div>
+            {{/if}}
+            {{#if curse}}
+            <div class="tesouro-preview-secret tesouro-preview-curse">
+              <strong><i class="fas fa-skull"></i> {{curse.name}} {{#unless revealCurse}}— oculta dos jogadores{{/unless}}</strong>
+              <p>{{curse.effect}}</p>
+              <p><strong>Tempo de afastamento:</strong> {{curse.separationTime}}</p>
+              <p><strong>Vínculo com o item:</strong> {{curse.binding.label}} — {{curse.binding.detail}}</p>
+              <p><strong>Como se libertar:</strong> {{curse.binding.release}}</p>
+              {{#if curse.hasNarrative}}
+              <p><strong>Vertente infernal:</strong> {{curse.patronLabel}}</p>
+              <p><strong>Fachada profanada:</strong> {{curse.facade.order}}</p>
+              <p><strong>Sinal de heresia:</strong> {{curse.heresy}}</p>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+        </article>
+        {{/each}}
+        <p class="notes tesouro-create-note">Ao confirmar, o Foundry criará uma subpasta exclusiva dentro de “Tesouros em Tagmar”.</p>
+        <button type="button" class="tesouro-create" data-action="create-treasure"><i class="fas fa-folder-plus"></i> Criar este tesouro no Foundry</button>
+        {{else}}
+        <div class="tesouro-empty-result"><i class="fas fa-box-open"></i> Esta rodada não encontrou nenhum item mágico. Você pode rolar novamente.</div>
+        {{/if}}
+      </section>
+      {{/if}}
+    </div>
+  </section>
+</form>

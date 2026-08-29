@@ -1,5 +1,9 @@
+import { registerTesourosTagmarSettings } from "./tesourosTagmar.js";
+
 /*Classe para configurar opções do sistema*/
 export const SystemSettings = function() {
+
+    registerTesourosTagmarSettings();
 
     game.settings.register("tagmar_rpg", "sheetTemplate", {
         name: "Ficha",

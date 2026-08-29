@@ -24,3 +24,285 @@
 .tagmar-roll-panel h4{margin:0;color:var(--tm-text)!important}
 .tagmar-roll-panel a{display:grid;width:34px;height:34px;place-items:center;color:var(--tm-gold)!important;background:#0b111a;border:1px solid var(--tm-line);border-radius:50%}
 .tagmar-roll-panel a:hover{color:#fff!important;border-color:var(--tm-gold);box-shadow:0 0 10px rgba(232,189,98,.32)}
+/* Tesouros em Tagmar ----------------------------------------------------- */
+#tesouros-tagmar .window-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.tesouros-tagmar-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  --tesouro-ink: #f0dfba;
+  --tesouro-gold: #d3a84c;
+  color: var(--tesouro-ink) !important;
+  background: radial-gradient(circle at 50% 0, #182331 0, #10171f 52%, #0b1016 100%);
+}
+
+.tesouros-tagmar-form label,
+.tesouros-tagmar-form p,
+.tesouros-tagmar-form strong,
+.tesouros-tagmar-form small,
+.tesouros-tagmar-form h3,
+.tesouros-tagmar-form legend,
+.tesouros-tagmar-form span {
+  color: var(--tesouro-ink) !important;
+}
+
+.tesouros-tagmar-form input,
+.tesouros-tagmar-form select,
+.tesouros-tagmar-form textarea {
+  border: 1px solid #526274 !important;
+  border-radius: 4px !important;
+  background: #0a1017 !important;
+  color: #fff0c9 !important;
+  opacity: 1 !important;
+}
+
+.tesouros-tagmar-form input::placeholder { color: #9c927e !important; }
+.tesouros-tagmar-form select option,
+.tesouros-tagmar-form select optgroup {
+  background: #080c12 !important;
+  color: #f5e4bd !important;
+}
+.tesouros-tagmar-form input:disabled,
+.tesouros-tagmar-form select:disabled { color: #87909b !important; background: #151b22 !important; }
+
+.tesouros-tagmar-form button {
+  border: 1px solid #9b7939 !important;
+  border-radius: 5px !important;
+  background: linear-gradient(#332a1c, #18140e) !important;
+  color: #f2dda8 !important;
+}
+
+.tesouros-tagmar-form button:hover {
+  border-color: #efbd57 !important;
+  color: #fff !important;
+  box-shadow: 0 0 7px #d8a84a66 !important;
+}
+
+.tesouro-tabs {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  border-bottom: 1px solid #b98518;
+  background: #070b10;
+}
+
+.tesouro-tabs .item {
+  padding: 12px 8px;
+  text-align: center;
+  color: #d8c7ad;
+}
+
+.tesouro-tabs .item.active {
+  color: #ffd36a;
+  background: #192536;
+  text-shadow: 0 0 8px #a96f00;
+}
+
+.tesouro-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tesouro-body > .tab {
+  height: 100%;
+  padding: 14px;
+  overflow: auto;
+}
+
+.tesouro-body > .tab[data-tab="magias"].active {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tesouro-toolbar,
+.tesouro-inline-fields {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tesouro-toolbar { flex-wrap: wrap; }
+.tesouro-toolbar input[type="search"] {
+  flex: 1 1 280px !important;
+  width: auto !important;
+  min-width: 220px !important;
+  min-height: 32px !important;
+  padding: 5px 9px !important;
+}
+.tesouro-toolbar button { flex: 0 0 auto; width: auto; padding-inline: 12px; }
+
+.tesouro-magic-list {
+  flex: 1 1 auto;
+  min-height: 280px;
+  margin: 12px 0;
+  border: 1px solid #34465c;
+  overflow: auto;
+}
+
+.tesouro-magic-head,
+.tesouro-magic-row {
+  display: grid;
+  grid-template-columns: 55px minmax(220px, 1fr) minmax(330px, 1.3fr);
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+}
+
+.tesouro-magic-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  color: #e6b94e;
+  font-weight: 700;
+  background: #0a1018;
+}
+
+.tesouro-magic-row:nth-child(odd) { background: #151f2c; }
+.tesouro-magic-row small { display: block; color: #9fb0c5; margin-top: 3px; }
+.tesouro-category-checks { display: flex; flex-wrap: wrap; gap: 5px 12px; }
+.tesouro-category-head { color: #f2d58a; font-weight: 700; }
+.tesouro-category-head label { white-space: nowrap; }
+
+.tesouro-property-grid,
+.tesouro-generator-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.tesouro-property-grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+.tesouro-property-grid label,
+.tesouro-callout,
+.tesouro-preview {
+  padding: 14px;
+  border: 1px solid #34465c;
+  border-radius: 5px;
+  background: #151f2c;
+}
+.tesouro-property-option span { display: flex; align-items: center; gap: 7px; }
+.tesouro-property-option small { display: block; margin-top: 6px; color: #9fb0c5; }
+
+.tesouro-body { container-type: inline-size; }
+.tesouro-body > .tab { overflow-x: hidden; }
+.tesouro-generator-grid {
+  grid-template-columns: minmax(0, 3fr) minmax(320px, 2fr);
+  grid-template-areas:
+    "classification object"
+    "magic lore"
+    "money lore";
+  align-items: stretch;
+}
+.tesouro-classification-options { grid-area: classification; }
+.tesouro-object-options { grid-area: object; }
+.tesouro-magic-options { grid-area: magic; }
+.tesouro-money-options { grid-area: money; }
+.tesouro-lore-options { grid-area: lore; }
+.tesouro-generator-grid fieldset { min-width: 0; border: 1px solid #3b4d63; border-radius: 5px; }
+.tesouro-generator-grid legend { color: #e6b94e; font-weight: 700; }
+.tesouro-generator-grid fieldset > label { display: grid; grid-template-columns: 145px minmax(0, 1fr); align-items: center; margin: 7px 0; }
+.tesouro-generator-grid select,
+.tesouro-generator-grid input { min-width: 0; }
+.tesouro-generator-grid fieldset > label.tesouro-check-line {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+.tesouro-object-pool { display: none; margin-top: 10px; padding: 9px; border: 1px solid #34465c; border-radius: 5px; background: #101923; }
+.tesouro-object-pool > input { width: 100%; margin-bottom: 7px; }
+.tesouro-object-pool-list { max-height: 230px; overflow-y: auto; border: 1px solid #27384b; border-radius: 4px; background: #0b121b; }
+.tesouro-object-pool-list label { display: flex; gap: 8px; align-items: center; padding: 6px 8px; border-bottom: 1px solid #1f2d3d; cursor: pointer; }
+.tesouro-object-pool-list label:last-child { border-bottom: 0; }
+.tesouro-object-pool-list label:hover { background: #182538; }
+.tesouro-object-pool-list input { flex: 0 0 auto; }
+.tesouro-object-pool-list strong { color: #e6b94e; }
+.tesouro-object-pool .notes { margin: 8px 2px 0; }
+.tesouro-object-pool-footer { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.tesouro-object-pool-footer button { width: auto; min-height: 30px; margin-top: 8px; padding: 3px 10px; white-space: nowrap; border-color: #8b6730; }
+.tesouro-check-line input[type="checkbox"] { flex: 0 0 auto; }
+.tesouro-money-additions,
+.tesouro-edit-note { margin: 12px 8px 4px; padding: 12px 16px; border: 1px solid #9a7440; border-radius: 18px; background: #101923; }
+.tesouro-money-additions > strong { display: block; margin-bottom: 9px; color: #f1dda1; font-size: 16px; font-weight: 500; }
+.tesouro-money-additions > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.tesouro-money-additions label { display: grid; grid-template-columns: auto minmax(55px, 1fr); gap: 8px; align-items: center; color: #ead394; }
+.tesouro-money-additions input { width: 100%; text-align: center; }
+.tesouro-edit-note { color: #eaa13a; font-size: 16px; line-height: 1.2; text-align: center; }
+.tesouro-edit-note i { margin-right: 5px; }
+.tesouro-inline-fields label { flex: 1; }
+.tesouro-lore-grid { display: grid; grid-template-columns: 1fr; gap: 9px; }
+.tesouro-check-card { display: block; padding: 10px; border: 1px solid #34465c; border-radius: 5px; background: #101923; }
+.tesouro-check-card span { display: flex; gap: 8px; align-items: center; font-weight: 700; }
+.tesouro-check-card small { display: block; margin: 6px 0 0 25px; color: #aebbd0 !important; }
+.tesouro-curse-nature { grid-column: 1 / -1; }
+.tesouro-curse-nature select { width: calc(100% - 25px); margin: 8px 0 0 25px; }
+.tesouro-generation-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.tesouro-chat-roll { border-color: #657da0 !important; background: linear-gradient(#25374e, #111a27) !important; }
+
+.tesouro-primary,
+.tesouro-create {
+  margin-top: 14px;
+  min-height: 38px;
+  border-color: #b98518;
+}
+
+.tesouro-create { background: #5d3b06; color: #fff2cf; }
+.tesouro-intro-note { font-size: 15px; font-weight: 600; line-height: 1.35; }
+.tesouro-callout { margin: 14px 0; border-color: #86631e; text-align: center; }
+.tesouro-callout .notes { margin: 0; }
+.tesouro-callout .notes + .notes { margin-top: 6px; }
+.tesouro-preview { margin-top: 14px; }
+.tesouro-preview,
+.tesouro-preview * { user-select: text; }
+.tesouro-preview article { display: flex; gap: 10px; align-items: flex-start; padding: 11px 9px; border-bottom: 1px solid #34465c; }
+.tesouro-preview article > div { min-width: 0; flex: 1; }
+.tesouro-preview article i { color: #e6b94e; }
+.tesouro-preview article small { display: block; margin-top: 2px; color: #b7c5d8; font-size: 14px; line-height: 1.35; }
+.tesouro-preview-magics { margin-top: 5px; font-size: 13px; }
+.tesouro-preview-magics a { color: #e8bd62; text-decoration: underline; text-underline-offset: 2px; }
+.tesouro-preview-magics a:hover { color: #fff2ca; }
+.tesouro-preview-secret { margin-top: 8px; padding: 8px 10px; border-left: 3px solid #8c6a2c; background: #0e1620; }
+.tesouro-preview-secret p { margin: 4px 0 0; line-height: 1.35; }
+.tesouro-preview-curse { border-left-color: #9b3a3a; background: #211315; }
+.tesouro-create-note { margin: 13px 0 8px; text-align: center; font-size: 15px; font-weight: 600; }
+.tesouro-roll-summary { padding: 7px 9px; border: 1px solid #765b2d; border-radius: 4px; background: #201a11; }
+.tesouro-empty-result { padding: 18px; text-align: center; color: #d5c6a8; }
+.tesouro-empty-result i { margin-right: 7px; color: #d3a84c; }
+.tesouro-specific-options { display: none; }
+.tesouro-body .is-disabled { opacity: .45; }
+
+.tagmar-treasure-chat { padding: 10px; border: 1px solid #8c6a22; border-radius: 6px; background: #131c27; color: #f0dfba; user-select: text; }
+.tagmar-treasure-chat h3 { margin: 0 0 8px; color: #e8bd62; }
+.tagmar-treasure-chat ul { margin: 8px 0; padding-left: 20px; }
+.tagmar-treasure-chat li { margin: 8px 0; }
+.tagmar-treasure-chat li > div { margin-left: 18px; color: #c9d2de; }
+.tagmar-treasure-chat .tesouro-chat-magics { margin-top: 4px; color: #e8bd62; }
+.tagmar-treasure-invitation { text-align: center; }
+.tagmar-treasure-invitation button { width: 100%; min-height: 36px; border: 1px solid #a77c25; background: #2b2111; color: #f5dfaa; }
+.tagmar-treasure-item-secrets { margin: 8px; padding: 10px 12px; border: 2px solid #8d6320; border-radius: 6px; background: #211713; color: #f2dfb9; user-select: text; }
+.tagmar-treasure-item-secrets h3 { margin: 0 0 7px; color: #efbd57; text-align: center; }
+.tagmar-treasure-item-secrets p { margin: 5px 0; line-height: 1.35; }
+.tagmar-treasure-item-secrets a { color: #efbd57; text-decoration: underline; }
+.tagmar-treasure-secret-actions { display: grid; gap: 7px; margin-top: 10px; }
+.tagmar-treasure-secret-actions button { min-height: 32px; border: 1px solid #a77c25; background: #2b2111; color: #f5dfaa; }
+
+@container (max-width: 820px) {
+  .tesouro-generator-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "classification"
+      "object"
+      "magic"
+      "money"
+      "lore";
+  }
+  .tesouro-generation-actions { grid-template-columns: 1fr; }
+  .tesouro-money-additions > div { grid-template-columns: 1fr; }
+  .tesouro-magic-head,
+  .tesouro-magic-row { grid-template-columns: 45px 1fr; }
+  .tesouro-category-checks { grid-column: 2; }
+}
