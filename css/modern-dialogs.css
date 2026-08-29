@@ -281,6 +281,26 @@
 .tagmar-treasure-chat li { margin: 8px 0; }
 .tagmar-treasure-chat li > div { margin-left: 18px; color: #c9d2de; }
 .tagmar-treasure-chat .tesouro-chat-magics { margin-top: 4px; color: #e8bd62; }
+.form_tagmar a.content-link,
+.tagmar-treasure-chat a.content-link,
+.tagmar-treasure-revealed a.content-link {
+  padding: 0 2px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #e8bd62 !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.form_tagmar a.content-link i,
+.tagmar-treasure-chat a.content-link i,
+.tagmar-treasure-revealed a.content-link i { color: #e8bd62 !important; }
+.form_tagmar a.content-link:hover,
+.tagmar-treasure-chat a.content-link:hover,
+.tagmar-treasure-revealed a.content-link:hover {
+  color: #fff0bd !important;
+  text-shadow: 0 0 5px rgba(232, 189, 98, .65);
+}
 .tagmar-treasure-invitation { text-align: center; }
 .tagmar-treasure-invitation button { width: 100%; min-height: 36px; border: 1px solid #a77c25; background: #2b2111; color: #f5dfaa; }
 .tagmar-treasure-item-secrets { margin: 8px; padding: 10px 12px; border: 2px solid #8d6320; border-radius: 6px; background: #211713; color: #f2dfb9; user-select: text; }
