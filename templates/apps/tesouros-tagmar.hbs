@@ -214,7 +214,7 @@
             {{#if magics}}
             <div class="tesouro-preview-magics">
               <i class="fas fa-book-open"></i>
-              {{#each magics}}<a href="#" data-magic-uuid="{{uuid}}" title="Abrir {{name}} no compêndio">{{name}} {{effect}}</a>{{#unless @last}} · {{/unless}}{{/each}}
+              {{#each magics}}<button type="button" class="tesouro-magic-link" data-magic-uuid="{{uuid}}" title="Abrir {{name}} no compêndio">{{name}} {{effect}}</button>{{#unless @last}} · {{/unless}}{{/each}}
             </div>
             {{/if}}
             {{#if lore}}

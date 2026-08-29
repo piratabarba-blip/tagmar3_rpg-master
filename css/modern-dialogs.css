@@ -263,8 +263,23 @@
 .tesouro-preview article i { color: #e6b94e; }
 .tesouro-preview article small { display: block; margin-top: 2px; color: #b7c5d8; font-size: 14px; line-height: 1.35; }
 .tesouro-preview-magics { margin-top: 5px; font-size: 13px; }
-.tesouro-preview-magics a { color: #e8bd62; text-decoration: underline; text-underline-offset: 2px; }
-.tesouro-preview-magics a:hover { color: #fff2ca; }
+.tesouro-preview-magics .tesouro-magic-link {
+  display: inline;
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #e8bd62;
+  font: inherit;
+  line-height: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.tesouro-preview-magics .tesouro-magic-link:hover,
+.tesouro-preview-magics .tesouro-magic-link:focus-visible { color: #fff2ca; box-shadow: none; }
 .tesouro-preview-secret { margin-top: 8px; padding: 8px 10px; border-left: 3px solid #8c6a2c; background: #0e1620; }
 .tesouro-preview-secret p { margin: 4px 0 0; line-height: 1.35; }
 .tesouro-preview-curse { border-left-color: #9b3a3a; background: #211315; }

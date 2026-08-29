@@ -659,6 +659,8 @@ export class TesourosTagmarApp extends FormApplication {
     html.find("[data-action='send-roll-to-chat']").on("click", () => this._sendRollToChat(html));
     html.find("[data-magic-uuid]").on("click", async (event) => {
       event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
       if (!game.user?.isGM) return;
       const magic = await fromUuid(event.currentTarget.dataset.magicUuid);
       if (!magic) return ui.notifications.warn("A magia não foi encontrada no compêndio atual.");
