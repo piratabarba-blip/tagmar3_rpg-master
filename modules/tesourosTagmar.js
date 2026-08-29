@@ -2,7 +2,7 @@ import {
   DIVINE_ORDERS, HISTORICAL_FRAMES, INFERNAL_CURSES, INFERNAL_PATRONS, INFERNAL_SOURCE_URL, WILDERNESS_REGIONS
 } from "./treasureLore.js";
 
-const SYSTEM_ID = game.system.id;
+const SYSTEM_ID = import.meta.url.match(/\/systems\/([^/]+)\//)?.[1] || "tagmar_rpg";
 const ROOT_FOLDER_NAME = "Tesouros em Tagmar";
 const ANCESTRAL_MAGIC_LIMITS = [11, 13, 15, 17, 19, 20, 23, 25, 27, 30];
 const PROPERTY_EXISTENCE_CHANCES = [15, 22, 30, 39, 49, 60, 71, 81, 90, 97];
