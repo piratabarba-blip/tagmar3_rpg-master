@@ -50,7 +50,9 @@ function magicTraditions(route = "") {
   const traditions = [];
   if (/(^|\/)\s*basica\s*($|\/)/.test(value)) traditions.push("basic");
   if (/(^|\/)\s*mago\s*($|\/)/.test(value)) traditions.push("mage");
+  if (/(^|\/)\s*feiticeiros?\s*($|\/)/.test(value)) traditions.push("sorcerer");
   if (/(^|\/)\s*rastreador\s*($|\/)/.test(value)) traditions.push("ranger");
+  if (/(^|\/)\s*berserkers?\s*($|\/)/.test(value)) traditions.push("berserker");
   if (/(^|\/)\s*bardos?\s*($|\/)/.test(value)) traditions.push("bard");
   if (/(^|\/)\s*sacerdote\s*($|\/)/.test(value)) traditions.push("priest");
   return traditions;
