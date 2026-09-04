@@ -186,8 +186,24 @@ export default class tagmarItemSheet extends foundry.appv1.sheets.ItemSheet {
         html.find('.abs_magica').click(this._abs_magica.bind(this));
     }
 
-    _activateTreasureMagicLinks(html) {
+    async _activateTreasureMagicLinks(html) {
         if (!this.object.flags?.tagmarTreasure) return;
+        const root = html?.[0] || this.element?.[0];
+        const textEditor = foundry.applications?.ux?.TextEditor?.implementation || globalThis.TextEditor;
+        if (root && textEditor?.enrichHTML) {
+            for (const content of root.querySelectorAll(".editor-content")) {
+                if (!content.innerHTML.includes("@UUID[")) continue;
+                try {
+                    content.innerHTML = await textEditor.enrichHTML(content.innerHTML, {
+                        async: true,
+                        secrets: this.object.isOwner,
+                        relativeTo: this.object
+                    });
+                } catch (error) {
+                    console.error("Tagmar | Falha ao enriquecer vínculos de magia do tesouro", error);
+                }
+            }
+        }
         html.find('a.content-link[data-uuid]')
             .off('click.tagmarTreasure')
             .on('click.tagmarTreasure', async (event) => {
