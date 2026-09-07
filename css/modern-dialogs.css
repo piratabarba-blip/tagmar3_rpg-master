@@ -199,6 +199,22 @@
   align-items: stretch;
 }
 .tesouro-classification-options { grid-area: classification; }
+/* Seções recolhíveis: fechar não desativa nem limpa seus campos. */
+#tesouros-tagmar .tesouro-compact-generator { display:flex; flex-direction:column; gap:8px; }
+#tesouros-tagmar [hidden] { display:none !important; }
+#tesouros-tagmar .tesouro-classification-options { order:0; }
+#tesouros-tagmar .tesouro-section-money { order:1; }
+#tesouros-tagmar .tesouro-section-object { order:2; }
+#tesouros-tagmar .tesouro-section-magic { order:3; }
+#tesouros-tagmar .tesouro-section-lore { order:4; }
+#tesouros-tagmar .tesouro-section { border:1px solid #3b4d63; border-radius:5px; background:#101820; }
+#tesouros-tagmar .tesouro-section > summary { padding:10px 12px; cursor:pointer; color:#e6b94e; font-weight:700; }
+#tesouros-tagmar .tesouro-section > summary:focus-visible { outline:2px solid #e6b94e; outline-offset:-2px; }
+#tesouros-tagmar .tesouro-section > fieldset { margin:0 8px 8px; border:0; }
+#tesouros-tagmar .tesouro-section > fieldset > legend { display:none; }
+#tesouros-tagmar .tesouro-section .tesouro-lore-grid { grid-template-columns:1fr; }
+#tesouros-tagmar { max-width:calc(100vw - 24px); max-height:calc(100vh - 24px); }
+#tesouros-tagmar .tesouro-generation-actions { position:sticky; bottom:0; z-index:2; padding:8px 0; background:#101820; }
 .tesouro-object-options { grid-area: object; }
 .tesouro-magic-options { grid-area: magic; }
 .tesouro-money-options { grid-area: money; }

@@ -24,10 +24,27 @@
     </div>
 
     <div class="tab" data-group="primary" data-tab="gerar">
-      <div class="tesouro-generator-grid">
+      <div class="tesouro-generator-grid tesouro-compact-generator">
         <fieldset class="tesouro-classification-options">
           <legend>Classificação do tesouro</legend>
-          <label>Modo
+          <label>O que gerar
+            <select name="treasureMode">
+              <option value="mixed">Tesouro misto</option>
+              <option value="coins">Somente moedas</option>
+              <option value="mundane">Somente itens mundanos</option>
+              <option value="magical">Somente itens mágicos</option>
+            </select>
+          </label>
+          <p class="notes" data-treasure-mode-note></p>
+          <label data-mundane-option>Qualidade de fabricação
+            <select name="mundaneQuality">
+              <option value="">Padrão do objeto</option>
+              <option value="Boa fabricação">Boa fabricação</option>
+              <option value="Excelente fabricação">Excelente fabricação</option>
+            </select>
+          </label>
+          <p class="notes" data-mundane-option>A qualidade é descritiva: não concede bônus mágico nem altera valores de combate.</p>
+          <label data-item-option>Modo
             <select name="generationMode">
               <option value="quick">Rápido</option>
               <option value="specific">Personalizado</option>
@@ -47,7 +64,7 @@
               <option value="10">Tipo 10 — excepcional</option>
             </select>
           </label>
-          <label>Região consultada
+          <label data-item-option>Região consultada
             <select name="contentSource">
               <option value="all">Reinos Conhecidos + Terras Selvagens</option>
               <option value="reinos">Somente Reinos Conhecidos</option>
@@ -55,17 +72,17 @@
             </select>
           </label>
           <div class="tesouro-quick-options">
-            <p class="notes">A quantidade será sorteada com 1d20. Mesmo um tesouro pode não conter item mágico.</p>
+            <p class="notes" data-item-option>A quantidade de objetos será sorteada com 1d20; as moedas têm sorteios próprios.</p>
           </div>
           <div class="tesouro-specific-options">
-            <label>Quantidade de itens <input type="number" name="itemCount" value="1" min="1" title="A quantidade informada será criada exatamente"></label>
-            <label>Bônus mágico <input type="number" name="magicBonus" value="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
-            <div class="tesouro-inline-fields">
+            <label data-item-option>Quantidade de itens <input type="number" name="itemCount" value="1" min="1" title="A quantidade informada será criada exatamente"></label>
+            <label data-powered-option>Bônus mágico <input type="number" name="magicBonus" value="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
+            <div class="tesouro-inline-fields" data-powered-option>
               <label data-magic-option>Magias por item <input type="number" name="magicCount" value="0" min="0" title="0 usa a regra automática; outro valor gera essa quantidade de magias diferentes"></label>
               <label>Focus <input type="number" name="focus" value="0" min="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
               <label data-magic-option>Vezes por dia <input type="number" name="uses" value="0" min="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
             </div>
-            <div class="tesouro-callout">
+            <div class="tesouro-callout" data-powered-option>
               <p class="notes"><strong>Regra do modo Personalizado:</strong> 0 usa o sorteio automático; qualquer outro valor informado é aplicado exatamente, independentemente do Tipo.</p>
               <p class="notes">As magias de um mesmo item nunca se repetem. Focus 0 soma a base Tipo × 10 com 1d(Tipo × 10).</p>
               <p class="notes"><strong>Magias por item</strong> exige essa quantidade de magias diferentes compatíveis com os filtros; se não houver opções suficientes, a geração será interrompida.</p>
@@ -73,6 +90,8 @@
           </div>
         </fieldset>
 
+        <details class="tesouro-section tesouro-section-object" data-treasure-section="object">
+          <summary>Objeto</summary>
         <fieldset class="tesouro-object-options">
           <legend>Objeto</legend>
           <label>Tipo
@@ -109,7 +128,10 @@
           </div>
           <p class="notes">Um objeto específico ou uma seleção múltipla sempre será criado; somente suas propriedades e seus poderes continuarão sendo sorteados.</p>
         </fieldset>
+        </details>
 
+        <details class="tesouro-section tesouro-section-money" data-treasure-section="money">
+          <summary>Tesouro monetário</summary>
         <fieldset class="tesouro-money-options">
           <legend>Tesouro monetário</legend>
           <label class="tesouro-check-line"><input type="checkbox" name="includeMoney" value="true" checked> Incluir MO, MP e MC</label>
@@ -123,7 +145,10 @@
             </div>
           </div>
         </fieldset>
+        </details>
 
+        <details class="tesouro-section tesouro-section-magic" data-treasure-section="magic">
+          <summary>Magias</summary>
         <fieldset class="tesouro-magic-options">
           <legend>Magia</legend>
           <label>Magias
@@ -171,7 +196,10 @@
           </div>
           <div class="tesouro-edit-note"><i class="fas fa-pen-to-square"></i> O Mestre de Jogo pode modificar o que precisar no item depois que ele estiver pronto.</div>
         </fieldset>
+        </details>
 
+        <details class="tesouro-section tesouro-section-lore" data-treasure-section="lore">
+          <summary>História, identidade e maldição</summary>
         <fieldset class="tesouro-lore-options">
           <legend>História, identidade e maldição</legend>
           <div class="tesouro-lore-grid">
@@ -194,6 +222,7 @@
             <p class="notes">Histórias geradas são inspiradas nas referências oficiais, mas não transformam o novo objeto em artefato canônico publicado.</p>
           </div>
         </fieldset>
+        </details>
       </div>
 
       <div class="tesouro-generation-actions">
@@ -204,7 +233,7 @@
       {{#if hasRoll}}
       <section class="tesouro-preview">
         <h3>Resultado da rodada</h3>
-        <p class="tesouro-roll-summary"><strong>Tipo {{lastRoll.type}}</strong> · 1d20 = <strong>{{lastRoll.die}}</strong> · {{lastRoll.count}} item(ns)</p>
+        <p class="tesouro-roll-summary"><strong>Tipo {{lastRoll.type}}</strong> {{#if lastRoll.moneyOnly}} · Somente moedas{{else}} · 1d20 = <strong>{{lastRoll.die}}</strong> · {{lastRoll.count}} item(ns){{/if}}</p>
         {{#if hasPreview}}
         {{#each preview}}
         <article>
