@@ -185,9 +185,79 @@ export function _calculaAjuste(sheetData, updatePers) {
     } 
 }
 
-export function _prepareValorTeste(sheetData, updatePers){
+const ATRIBUTOS_BASICOS = ["INT", "AUR", "CAR", "FOR", "FIS", "AGI", "PER"];
+
+function _formataNumeroEfeito(valor) {
+    const arredondado = Math.round(valor * 100) / 100;
+    return Number.isInteger(arredondado) ? String(arredondado) : String(arredondado).replace(".", ",");
+}
+
+export function _preparaEfeitosAtributos(sheetData) {
+    const actorData = sheetData.document;
+    const atributos = actorData.system.atributos;
+    const efeitosAtivos = actorData.items.filter(item =>
+        item.type == "Efeito"
+        && item.system.ativo
+        && ATRIBUTOS_BASICOS.includes(item.system.atributo)
+    );
+    const detalhes = {};
+    const efetivos = {};
+
+    ATRIBUTOS_BASICOS.forEach(atributo => {
+        const base = Number(atributos[atributo]) || 0;
+        let efetivo = base;
+        const origens = [];
+
+        efeitosAtivos
+            .filter(item => item.system.atributo == atributo)
+            .forEach(item => {
+                const valor = Number(item.system.valor);
+                if (!Number.isFinite(valor)) return;
+
+                const operador = item.system.tipo;
+                if (operador == "+") efetivo += valor;
+                else if (operador == "-") efetivo -= valor;
+                else if (operador == "*") efetivo *= valor;
+                else if (operador == "/" && valor != 0) efetivo /= valor;
+                else return;
+
+                const simbolo = operador == "*" ? "×" : operador == "/" ? "÷" : operador;
+                origens.push(`${item.name}: ${simbolo}${_formataNumeroEfeito(valor)}`);
+            });
+
+        const modificador = efetivo - base;
+        const temEfeito = origens.length > 0;
+        detalhes[atributo] = {
+            exibicao: temEfeito
+                ? `${modificador > 0 ? "+" : ""}${_formataNumeroEfeito(modificador)}`
+                : "—",
+            classe: modificador > 0
+                ? "efeito-atributo-positivo"
+                : modificador < 0
+                    ? "efeito-atributo-negativo"
+                    : "efeito-atributo-neutro",
+            descricao: temEfeito ? origens.join(" • ") : "Nenhum efeito ativo.",
+            valor: modificador,
+            efetivo
+        };
+        efetivos[atributo] = efetivo;
+    });
+
+    return {detalhes, efetivos};
+}
+
+export function _prepareValorTeste(sheetData, updatePers, atributosEfetivos = null){
     if (!sheetData.options.editable) return;
     const actorData = sheetData.document.system;
+    if (atributosEfetivos) {
+        ATRIBUTOS_BASICOS.forEach(atributo => {
+            const valorTeste = atributosEfetivos[atributo] * 4;
+            if (actorData.valor_teste[atributo] != valorTeste) {
+                updatePers[`system.valor_teste.${atributo}`] = valorTeste;
+            }
+        });
+        return;
+    }
     if (actorData.valor_teste.INT != actorData.atributos.INT*4 || actorData.valor_teste.AUR != actorData.atributos.AUR*4 || actorData.valor_teste.CAR != actorData.atributos.CAR*4 || actorData.valor_teste.FOR != actorData.atributos.FOR*4 || actorData.valor_teste.FIS != actorData.atributos.FIS*4 || actorData.valor_teste.AGI != actorData.atributos.AGI*4 || actorData.valor_teste.PER != actorData.atributos.PER*4) {
         updatePers["system.valor_teste.INT"] = actorData.atributos.INT*4;
         updatePers["system.valor_teste.AUR"] = actorData.atributos.AUR*4;

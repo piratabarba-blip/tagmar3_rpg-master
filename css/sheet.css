@@ -344,3 +344,19 @@
     filter: grayscale(100%) brightness(45%) contrast(85%) !important;
     opacity: 0.72;
 }
+.efeito-atributo-valor {
+  font-weight: 700;
+  text-align: center;
+}
+
+.efeito-atributo-positivo {
+  color: #2e9d52 !important;
+}
+
+.efeito-atributo-negativo {
+  color: #d9534f !important;
+}
+
+.efeito-atributo-neutro {
+  opacity: 0.72;
+}

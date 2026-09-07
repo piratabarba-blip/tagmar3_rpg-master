@@ -75,13 +75,7 @@ export default class tagmarItemSheet extends foundry.appv1.sheets.ItemSheet {
         const atrib_bas = [{key : "INT"}, {key : "AUR"}, {key : "CAR"}, {key : "FOR"}, {key : "FIS"}, {key : "AGI"}, {key : "PER"}];
         const atrib_res = [{key : "EF"}, {key : "ABS"}, {key : "DEF"}, {key : "KMA"}, {key : "VB"}, {key : "RFIS"}, {key : "RMAG"}, {key : "PHAB"}, {key : "PTEC"}, {key : "PARM"}, {key : "PMAG"}];
         itemData.efeitos_tipos = atrib_bas.concat(atrib_res);
-        const actor = game.actors.find(a => a.items.find(i => i.id == itemData._id));
         itemData.tecnicas = [{name : ""}];
-        if (typeof actor != 'undefined') {
-            if (actor.ficha != "Sorteio") {
-                itemData.efeitos_tipos = atrib_res;
-            } 
-        }
         const tecnicas = this.revemoDupTec(game.items.filter(e => e.type == "Tecnica_Combate" && e.system.complemento == "Sim"));
         if (tecnicas.length > 0) itemData.tecnicas = [{name : ""}].concat(tecnicas);
         itemData.efeitos_oper = [{key : "+"}, {key : "-"}, {key : "/"}, {key : "*"}];

@@ -91,7 +91,9 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
             this._prepareCharacterItems(data);
             const gameSystem = game.system.id;
             if (!game.settings.get(gameSystem, 'ajusteManual')) actorUtils._setPontosRaca(data, updatePers); // pontos = actor.system.carac_final.INT
-            actorUtils._prepareValorTeste(data, updatePers);
+            const efeitosAtributos = actorUtils._preparaEfeitosAtributos(data);
+            data.efeitos_atributos = efeitosAtributos.detalhes;
+            actorUtils._prepareValorTeste(data, updatePers, efeitosAtributos.efetivos);
             if (data.document.raca) {
                 actorUtils._preparaCaracRaciais(data, updatePers);
             }
