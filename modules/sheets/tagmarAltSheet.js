@@ -124,9 +124,10 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
                     //ui.notifications.info("Ficha atualizada.");
                 }
             }
-            actorUtils._updateCombatItems(data, items_toUpdate);
-            actorUtils._updateMagiasItems(data, items_toUpdate);
-            actorUtils._updateTencnicasItems(data, items_toUpdate);
+            actorUtils._updateCombatItems(data, items_toUpdate, efeitosAtributos.efetivos);
+            actorUtils._updateMagiasItems(data, items_toUpdate, efeitosAtributos.efetivos);
+            actorUtils._updateTencnicasItems(data, items_toUpdate, efeitosAtributos.efetivos);
+            actorUtils._updateHabilItems(data, items_toUpdate, efeitosAtributos.efetivos);
             if (items_toUpdate.length > 0 && canPersistUpdates) {
                 if (!this.lastItemsUpdate) {
                     this.lastItemsUpdate = items_toUpdate;

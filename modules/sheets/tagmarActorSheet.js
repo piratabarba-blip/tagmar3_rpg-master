@@ -139,6 +139,7 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
             actorUtils._updateCombatItems(data, items_toUpdate);
             actorUtils._updateMagiasItems(data, items_toUpdate);
             actorUtils._updateTencnicasItems(data, items_toUpdate);
+            actorUtils._updateHabilItems(data, items_toUpdate);
             if (items_toUpdate.length > 0 && canPersistUpdates) {
                 if (!this.lastItemsUpdate) {
                     this.lastItemsUpdate = items_toUpdate;

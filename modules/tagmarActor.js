@@ -435,6 +435,8 @@ export class tagmarActor extends Actor {
             habil = actorData.atributos.PER;
             valor_teste = actorData.valor_teste.PER;
         }
+        const atributoEfetivo = valor_teste / 4;
+        if (Number.isFinite(atributoEfetivo)) habil = atributoEfetivo;
         if (valor_teste < -7) valor_teste = -7;
         if (valor_teste <= 20) {
             let r = await new Roll("1d20").evaluate();

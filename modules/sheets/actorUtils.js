@@ -749,9 +749,10 @@ export function _attRF(data, updatePers) {
     } 
 }
 
-export function _updateHabilItems(sheetData, updateItemsNpc) {
+export function _updateHabilItems(sheetData, updateItemsNpc, atributosEfetivos = null) {
     if (!sheetData.options.editable) return;
     const actorData = sheetData.document.system;
+    const atributos = atributosEfetivos ?? actorData.atributos;
     const habilidades = sheetData.document.items.filter(item => item.type == "Habilidade");
     for (let habilidade of habilidades) {
         let hab = habilidade;
@@ -763,13 +764,13 @@ export function _updateHabilItems(sheetData, updateItemsNpc) {
         if (hab.system.penalidade) hab_penal = hab.system.penalidade;
         if (hab.system.bonus) hab_bonus = hab.system.bonus;
         let valor_atrib = 0;
-        if (atributo == "INT") valor_atrib = actorData.atributos.INT;
-        else if (atributo == "AUR") valor_atrib = actorData.atributos.AUR;
-        else if (atributo == "CAR") valor_atrib = actorData.atributos.CAR;
-        else if (atributo == "FOR") valor_atrib = actorData.atributos.FOR;
-        else if (atributo == "FIS") valor_atrib = actorData.atributos.FIS;
-        else if (atributo == "AGI") valor_atrib = actorData.atributos.AGI;
-        else if (atributo == "PER") valor_atrib = actorData.atributos.PER;
+        if (atributo == "INT") valor_atrib = atributos.INT;
+        else if (atributo == "AUR") valor_atrib = atributos.AUR;
+        else if (atributo == "CAR") valor_atrib = atributos.CAR;
+        else if (atributo == "FOR") valor_atrib = atributos.FOR;
+        else if (atributo == "FIS") valor_atrib = atributos.FIS;
+        else if (atributo == "AGI") valor_atrib = atributos.AGI;
+        else if (atributo == "PER") valor_atrib = atributos.PER;
         let total = 0;
         if (hab_nivel > 0) {
             total = parseInt(valor_atrib) + parseInt(hab_nivel) + parseInt(hab_penal) + parseInt(hab_bonus);
@@ -786,9 +787,10 @@ export function _updateHabilItems(sheetData, updateItemsNpc) {
     }
 }
 
-export function _updateTencnicasItems(sheetData, items_toUpdate) {
+export function _updateTencnicasItems(sheetData, items_toUpdate, atributosEfetivos = null) {
     if (!sheetData.options.editable) return;
     const actorData = sheetData.document.system;
+    const atributos = atributosEfetivos ?? actorData.atributos;
     const tecnicas = sheetData.document.items.filter(item => item.type == "Tecnica_Combate");
     //let update_tecnicas = [];
     tecnicas.forEach(function(tecnica) {
@@ -796,13 +798,13 @@ export function _updateTencnicasItems(sheetData, items_toUpdate) {
         const ajusteTecnica = tec.ajuste;
         const nivel_tecnica = tec.nivel;
         let total = 0;
-        if (ajusteTecnica.atributo == "INT") total = actorData.atributos.INT + nivel_tecnica;
-        else if (ajusteTecnica.atributo == "CAR") total = actorData.atributos.CAR + nivel_tecnica;
-        else if (ajusteTecnica.atributo == "AUR") total = actorData.atributos.AUR + nivel_tecnica;
-        else if (ajusteTecnica.atributo == "FOR") total = actorData.atributos.FOR + nivel_tecnica;
-        else if (ajusteTecnica.atributo == "FIS") total = actorData.atributos.FIS + nivel_tecnica;
-        else if (ajusteTecnica.atributo == "AGI") total = actorData.atributos.AGI + nivel_tecnica;
-        else if (ajusteTecnica.atributo == "PER") total = actorData.atributos.PER + nivel_tecnica;
+        if (ajusteTecnica.atributo == "INT") total = atributos.INT + nivel_tecnica;
+        else if (ajusteTecnica.atributo == "CAR") total = atributos.CAR + nivel_tecnica;
+        else if (ajusteTecnica.atributo == "AUR") total = atributos.AUR + nivel_tecnica;
+        else if (ajusteTecnica.atributo == "FOR") total = atributos.FOR + nivel_tecnica;
+        else if (ajusteTecnica.atributo == "FIS") total = atributos.FIS + nivel_tecnica;
+        else if (ajusteTecnica.atributo == "AGI") total = atributos.AGI + nivel_tecnica;
+        else if (ajusteTecnica.atributo == "PER") total = atributos.PER + nivel_tecnica;
         else total = nivel_tecnica;
         total += ajusteTecnica.valor;
         total += tec.bonus;
@@ -816,14 +818,15 @@ export function _updateTencnicasItems(sheetData, items_toUpdate) {
 
 }
 
-export function _updateMagiasItems(sheetData, items_toUpdate) {
+export function _updateMagiasItems(sheetData, items_toUpdate, atributosEfetivos = null) {
     if (!sheetData.options.editable) return;
     const actorData = sheetData.document.system;
+    const atributos = atributosEfetivos ?? actorData.atributos;
     const magias = sheetData.document.items.filter(item => item.type == "Magia");
     //let update_magias = [];
     magias.forEach(function (magia) {
         let mag = magia.system;
-        const aura = actorData.atributos.AUR;
+        const aura = atributos.AUR;
         const m_nivel = mag.nivel;
         const m_karma = mag.total.valorKarma;
         let total = aura + m_nivel + m_karma;
@@ -837,9 +840,10 @@ export function _updateMagiasItems(sheetData, items_toUpdate) {
 
 }
 
-export function _updateCombatItems(sheetData, items_toUpdate) {
+export function _updateCombatItems(sheetData, items_toUpdate, atributosEfetivos = null) {
     if (!sheetData.options.editable) return;
     const actorData = sheetData.document.system;
+    const atributos = atributosEfetivos ?? actorData.atributos;
     const combates = sheetData.document.items.filter(item => item.type == "Combate");
     //let comb_updates = [];
     combates.forEach(function (combs) {
@@ -851,14 +855,14 @@ export function _updateCombatItems(sheetData, items_toUpdate) {
         const bonus = comb.bonus;
         let bonus_normal = 0;
         let bonus_valor = 0;
-        if (bonus_dano == "AUR") bonus_valor = actorData.atributos.AUR;
-        else if (bonus_dano == "FOR") bonus_valor = actorData.atributos.FOR;
-        else if (bonus_dano == "AGI") bonus_valor = actorData.atributos.AGI;
-        else if (bonus_dano == "PER") bonus_valor = actorData.atributos.PER;
-        if (bonus == "AUR") bonus_normal = actorData.atributos.AUR;
-        else if (bonus == "FOR") bonus_normal = actorData.atributos.FOR;
-        else if (bonus == "AGI") bonus_normal = actorData.atributos.AGI;
-        else if (bonus == "PER") bonus_normal = actorData.atributos.PER;
+        if (bonus_dano == "AUR") bonus_valor = atributos.AUR;
+        else if (bonus_dano == "FOR") bonus_valor = atributos.FOR;
+        else if (bonus_dano == "AGI") bonus_valor = atributos.AGI;
+        else if (bonus_dano == "PER") bonus_valor = atributos.PER;
+        if (bonus == "AUR") bonus_normal = atributos.AUR;
+        else if (bonus == "FOR") bonus_normal = atributos.FOR;
+        else if (bonus == "AGI") bonus_normal = atributos.AGI;
+        else if (bonus == "PER") bonus_normal = atributos.PER;
         const p_25 = comb.dano_base.d25;
         const p_50 = comb.dano_base.d50;
         const p_75 = comb.dano_base.d75;
