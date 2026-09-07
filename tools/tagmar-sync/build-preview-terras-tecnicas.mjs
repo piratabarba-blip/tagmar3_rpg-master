@@ -56,22 +56,22 @@ for (const spec of specs) {
   items.push({
     _id: stableId("tagmar-terras-tecnicas", `${groupRoute}:${spec.name}`),
     name: spec.name,
-    type: "Habilidade",
+    type: "Tecnica_Combate",
     img: spec.img,
     folder: groupId,
     system: {
       custo: 0,
       nivel: 0,
       ajuste: { atributo: "FIS", valor: 0 },
-      penalidade: 0,
       bonus: 0,
-      total: -7,
-      tipo: "manobra",
-      custoAdd: { profissao: "", valor: 0 },
-      hab_nata: false,
-      descricao: description,
-      tarefAperf: "Personagens aprimorados nesta perícia não precisam efetuar testes, independentemente da dificuldade.",
-      nao_rolar_sem_nivel: false
+      fa: -7,
+      mecanica: 2,
+      duracao: { valor: 0, tipo: "Ataque(s)" },
+      teste: "Não",
+      restricao: "Conforme a descrição da técnica.",
+      pre_requisito: { valor: "Não", tecnica: "" },
+      complemento: "Não",
+      descricao: description
     },
     flags: { tagmarSync: {
       edition,
@@ -83,6 +83,7 @@ for (const spec of specs) {
       transport: source.transport ?? "default",
       sourceHash: source.hash,
       officialCategory: "Perícia",
+      environmentalTechnique: true,
       officialAttribute: "Físico",
       officialAcquisitionCost: null,
       manualAcquisition: true,
@@ -94,4 +95,4 @@ for (const spec of specs) {
 await mkdir(cacheDir, { recursive: true });
 await writeFile(join(cacheDir, "preview-terras-tecnicas.json"), `${JSON.stringify(items, null, 2)}\n`, "utf8");
 await writeFile(join(cacheDir, "preview-terras-tecnicas-folders.json"), `${JSON.stringify(folders, null, 2)}\n`, "utf8");
-console.log(JSON.stringify({ items: items.length, folders: folders.length, type: "Habilidade", untrainedTotal: -7 }, null, 2));
+console.log(JSON.stringify({ items: items.length, folders: folders.length, type: "Tecnica_Combate", untrainedTotal: -7 }, null, 2));

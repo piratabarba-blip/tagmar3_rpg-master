@@ -394,14 +394,15 @@ export class tagmarItem extends Item {
     }
 
     async rollTecnica_Combate() {
-        if (Number(this.system.nivel) <= 0) {
+        const semNivelAmbiental = this.flags?.tagmarSync?.environmentalTechnique === true && Number(this.system.nivel) <= 0;
+        if (Number(this.system.nivel) <= 0 && !semNivelAmbiental) {
             ui.notifications.warn(`É necessário possuir nível em ${this.name} para usar esta Técnica de Combate.`);
             return;
         }
         const tabela_resol = game.tagmar.tabela_resol;
         let mecanica = this.system.mecanica;
         if (mecanica == 2) { // Rolar dados
-            let fa = this.system.fa;
+            let fa = semNivelAmbiental ? -7 : this.system.fa;
             if (fa < -7) fa = -7;
             if (fa <= 20) {
                 let r = new Roll('1d20');

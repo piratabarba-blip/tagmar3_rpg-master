@@ -867,6 +867,7 @@ export function _updateTencnicasItems(sheetData, items_toUpdate, atributosEfetiv
         else total = nivel_tecnica;
         total += ajusteTecnica.valor;
         total += tec.bonus;
+        if (tecnica.flags?.tagmarSync?.environmentalTechnique === true && Number(nivel_tecnica) <= 0) total = -7;
         if (tec.fa != total) {
             items_toUpdate.push({
                 "_id": tecnica.id,

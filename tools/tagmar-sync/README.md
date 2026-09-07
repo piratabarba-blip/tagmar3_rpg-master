@@ -276,7 +276,7 @@ node tools/tagmar-sync/audit-preview-terras.mjs --write
 node tools/tagmar-sync/write-preview-terras-pack.mjs
 ```
 
-As perícias **Combate Aéreo** e **Combate Aquático** ficam em `06 - TÉCNICAS DE COMBATE TERRAS SELVAGENS / PERÍCIAS AMBIENTAIS`. Como a fonte oficial as classifica como Perícia e determina teste em -7 quando não há nível, os documentos usam a mecânica já existente de `Habilidade`, com atributo Físico e nível inicial zero. O site não publica custo de aquisição para elas; o compêndio registra essa ausência e deixa a aquisição sob administração manual, sem inventar regra ou criar automação nova.
+As perícias **Combate Aéreo** e **Combate Aquático** ficam em `06 - TÉCNICAS DE COMBATE TERRAS SELVAGENS / PERÍCIAS AMBIENTAIS`, como `Tecnica_Combate`, com atributo Físico e nível inicial zero. A marca `flags.tagmarSync.environmentalTechnique` permite exclusivamente nesses registros o teste em -7 sem nível, preservando a regra oficial sem tratá-las como habilidades. Os IDs anteriores são mantidos. O site não publica custo de aquisição para elas; o compêndio registra essa ausência e deixa a aquisição sob administração manual. Cópias anteriormente importadas em mundos são independentes e não são apagadas pela atualização do compêndio.
 
 ```powershell
 node tools/tagmar-sync/build-preview-terras-tecnicas.mjs
