@@ -660,6 +660,7 @@ export class TesourosTagmarApp extends FormApplication {
     html.find("[data-action='generate-preview']").on("click", () => this._generatePreview(html));
     html.find("[data-action='create-treasure']").on("click", () => this._createTreasure());
     html.find("[data-action='send-roll-to-chat']").on("click", () => this._sendRollToChat(html));
+    html.find("[data-action='reset-defaults']").on("click", () => this._resetDefaults());
     html.find("[data-magic-uuid]").on("click", async (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -822,6 +823,25 @@ export class TesourosTagmarApp extends FormApplication {
       section.addEventListener("toggle", () => { this._sectionState[section.dataset.treasureSection] = section.open; });
     });
     updateTreasureMode();
+  }
+
+  async _resetDefaults() {
+    const confirmed = await Dialog.confirm({
+      title: "Restaurar padrão",
+      content: "<p>Voltar as opções de geração ao padrão, limpar a seleção de objetos, os acréscimos de moedas e a prévia?</p><p>História e maldição serão desmarcadas e as seções recolhidas. Tesouros já criados e propriedades salvas não serão alterados.</p>",
+      defaultYes: false
+    });
+    if (!confirmed) return false;
+    // Persist first: a failed save must not discard the current form or preview.
+    await game.settings.set(SYSTEM_ID, "tesourosObjetosSelecionados", { items: [] });
+    this._formState = null;
+    this._objectSelections = {};
+    this._objectPoolSelections = new Set();
+    this._sectionState = {};
+    this._preview = [];
+    this._lastRoll = null;
+    this.render(false);
+    return true;
   }
 
   async _saveProperties(html) {

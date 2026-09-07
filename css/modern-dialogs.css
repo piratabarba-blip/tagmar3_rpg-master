@@ -257,6 +257,7 @@
 .tesouro-curse-nature { grid-column: 1 / -1; }
 .tesouro-curse-nature select { width: calc(100% - 25px); margin: 8px 0 0 25px; }
 .tesouro-generation-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.tesouro-reset-defaults { grid-column: 1 / -1; }
 .tesouro-chat-roll { border-color: #657da0 !important; background: linear-gradient(#25374e, #111a27) !important; }
 
 .tesouro-primary,
