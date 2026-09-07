@@ -123,6 +123,7 @@ function derive(actor) {
     utils._attKarmaMax(data, actorUpdates, effective);
     utils._attRM(data, actorUpdates, effective);
     utils._attRF(data, actorUpdates, effective);
+    utils._attEhTemporaria(data, actorUpdates);
     utils._updateCombatItems(data, itemUpdates, effective);
     utils._updateMagiasItems(data, itemUpdates, effective);
     utils._updateTencnicasItems(data, itemUpdates, effective);
@@ -176,7 +177,8 @@ function checkTotals(actor, modifier, withProfession = true) {
         assert.equal(actor.system.ef.max, 9 + (modifier * 2), "EF máxima usa Força e Físico efetivos");
         assert.equal(actor.system.vb, 5 + modifier, "VB usa Físico efetivo");
     }
-    assert.equal(actor.system.eh.max, 15, "EH permanece independente do efeito temporário");
+    assert.equal(actor.system.eh.max, 15 + modifier * 5, "EH acompanha a diferença de Físico por estágio");
+    assert.equal(actor.system.eh.value, 15 + modifier * 5, "EH atual acompanha o modificador");
     assert.equal(actor.system.iniciativa, 4, "Iniciativa permanece manual");
 }
 
@@ -260,4 +262,119 @@ const integrationActor = fixture();
 await exercise(integrationActor, integrationRunner(integrationActor));
 const noProfessionActor = fixture(false);
 await exercise(noProfessionActor, integrationRunner(noProfessionActor), false);
-console.log(`OK: efeitos, habilidades, técnicas, magias, combate, pontos e estabilidade de getData (${repository})`);
+function ehFixture(stage = 10, maximum = 50, current = 40) {
+    const actor = fixture();
+    Object.assign(actor.system, {estagio: stage, eh: {max: maximum, value: current}});
+    getItem(actor, "physicalEffect").system.valor = 8;
+    return actor;
+}
+
+function settleEh(actor, sorteio = false) {
+    const changes = {};
+    utils._attEhTemporaria(sheetData(actor), changes, sorteio);
+    apply(actor, changes);
+    const repeated = {};
+    utils._attEhTemporaria(sheetData(actor), repeated, sorteio);
+    assert.deepEqual(repeated, {}, "EH deve estabilizar no primeiro passe e após reabrir");
+}
+
+function assertEh(actor, current, maximum, bonus) {
+    assert.equal(actor.system.eh.value, current, "EH atual");
+    assert.equal(actor.system.eh.max, maximum, "EH máxima");
+    assert.equal(actor.system.eh.bonusFis ?? 0, bonus, "Bônus temporário separado");
+}
+
+const heroic = ehFixture();
+getItem(heroic, "physicalEffect").system.ativo = true;
+settleEh(heroic);
+assertEh(heroic, 120, 130, 80);
+heroic.system.eh.value -= 30;
+settleEh(heroic);
+assertEh(heroic, 90, 130, 80);
+getItem(heroic, "physicalEffect").system.ativo = false;
+settleEh(heroic);
+assertEh(heroic, 10, 50, 0);
+getItem(heroic, "physicalEffect").system.ativo = true;
+settleEh(heroic);
+heroic.system.eh.value += 15; // Cura real durante o efeito deve permanecer.
+heroic.items = heroic.items.filter(entry => entry.id !== "physicalEffect");
+settleEh(heroic);
+assertEh(heroic, 25, 50, 0);
+
+const penalty = ehFixture(10, 50, 3);
+Object.assign(getItem(penalty, "physicalEffect").system, {ativo: true, tipo: "-", valor: 1});
+settleEh(penalty);
+assertEh(penalty, 0, 40, -10);
+getItem(penalty, "physicalEffect").system.ativo = false;
+settleEh(penalty);
+assertEh(penalty, 3, 50, 0);
+Object.assign(getItem(penalty, "physicalEffect").system, {ativo: true, valor: 100});
+settleEh(penalty);
+assertEh(penalty, 0, 0, -50);
+getItem(penalty, "physicalEffect").system.ativo = false;
+settleEh(penalty);
+assertEh(penalty, 3, 50, 0);
+
+const exhausted = ehFixture();
+getItem(exhausted, "physicalEffect").system.ativo = true;
+settleEh(exhausted);
+exhausted.system.eh.value = 20;
+getItem(exhausted, "physicalEffect").system.ativo = false;
+settleEh(exhausted);
+assertEh(exhausted, 0, 50, 0);
+
+const stacked = ehFixture();
+getItem(stacked, "physicalEffect").system.ativo = true;
+stacked.items.push(item("multiplyFis", "Efeito", "Físico dobrado", {ativo: true, atributo: "FIS", tipo: "*", valor: 2}));
+settleEh(stacked);
+assertEh(stacked, 220, 230, 180);
+getItem(stacked, "physicalEffect").system.ativo = false;
+settleEh(stacked);
+assertEh(stacked, 60, 70, 20);
+getItem(stacked, "multiplyFis").system.ativo = false;
+settleEh(stacked);
+assertEh(stacked, 40, 50, 0);
+
+const firstStage = ehFixture(1, 9, 6);
+getItem(firstStage, "physicalEffect").system.ativo = true;
+await integrationRunner(firstStage)();
+assertEh(firstStage, 14, 17, 8);
+getItem(firstStage, "physicalEffect").system.ativo = false;
+await integrationRunner(firstStage)();
+assertEh(firstStage, 6, 9, 0);
+
+const {default: RolledSheet} = await import(pathToFileURL(path.join(repository, "modules/sheets/tagmarActorSheet.js")));
+globalThis.Roll = class {
+    constructor() { this.total = 1; }
+    async evaluate() { return this; }
+    async toMessage() {}
+};
+globalThis.ChatMessage = {getSpeaker: () => ({})};
+game.user = {id: "test-gm"};
+globalThis.ui = {notifications: {info() {}, warn(message) {throw new Error(message);}, error(message) {throw new Error(message);}}};
+for (const [Sheet, rolled] of [[PointsSheet, false], [RolledSheet, true]]) {
+    const growing = ehFixture();
+    growing.system.carac_final.FIS = 16; // FIS-base 2 na ficha por sorteio.
+    growing.system.pontos_estagio = {value: 10000, next: 1};
+    growing.update = async changes => {apply(growing, changes);};
+    const profession = getItem(growing, "profession");
+    profession.system.lista_eh.v1 = 3;
+    getItem(growing, "physicalEffect").system.ativo = true;
+    settleEh(growing, rolled);
+    const growingSheet = new Sheet(growing);
+    growingSheet.profissao = profession;
+    await growingSheet._subirEstagio();
+    assert.equal(growing.system.estagio, 11);
+    assertEh(growing, 128, 143, 88); // Permanente: 50 + tabela 3 + FIS-base 2.
+    settleEh(growing, rolled);
+    getItem(growing, "physicalEffect").system.ativo = false;
+    settleEh(growing, rolled);
+    assertEh(growing, 40, 55, 0);
+}
+
+const readOnly = ehFixture();
+getItem(readOnly, "physicalEffect").system.ativo = true;
+const readOnlyChanges = {};
+utils._attEhTemporaria({...sheetData(readOnly), options: {editable: false}}, readOnlyChanges);
+assert.deepEqual(readOnlyChanges, {});
+console.log(`OK: atributos, recursos, EH temporária, dano/cura, penalidades, evolução e estabilidade da ficha (${repository})`);

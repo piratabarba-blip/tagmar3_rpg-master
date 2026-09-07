@@ -29,7 +29,9 @@
         "eh": {
           "value": 0,
           "min": 0,
-          "max": 0
+          "max": 0,
+          "bonusFis": 0,
+          "deficitFis": 0
         },
         "absorcao": {
           "value": 0,

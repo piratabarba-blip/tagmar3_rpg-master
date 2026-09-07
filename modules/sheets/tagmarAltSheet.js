@@ -107,6 +107,7 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
                 actorUtils._attEfEhVB(data, updatePers, efeitosAtributos.efetivos);
             }
             actorUtils._attProximoEstag(data, updatePers);
+            actorUtils._attEhTemporaria(data, updatePers);
             actorUtils._attKarmaMax(data, updatePers, efeitosAtributos.efetivos);
             actorUtils._attRM(data, updatePers, efeitosAtributos.efetivos);
             actorUtils._attRF(data, updatePers, efeitosAtributos.efetivos);
@@ -461,11 +462,12 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
                             changes = {
                                 'system.ef.value': this.document.system.ef.max,
                                 'system.eh.value': this.document.system.eh.max,
+                                'system.eh.deficitFis': 0,
                                 'system.karma.value': this.document.system.karma.max
                             };
                         } else if (descanso === "meio") {
                             let efAtual = this.document.system.ef.value;
-                            let ehAtual = this.document.system.eh.value;
+                            let ehAtual = this.document.system.eh.value - Number(this.document.system.eh.deficitFis ?? 0);
                             let karmaAtual = this.document.system.karma.value;
                             let efMax = this.document.system.ef.max;
                             let ehMax = this.document.system.eh.max;
@@ -483,7 +485,8 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
                                 ehNovo = ehAtual + ehMax/2;
                                 if (ehNovo > ehMax) ehNovo = ehMax;
                                 dif_eh = ehNovo - ehAtual;
-                                changes['system.eh.value'] = parseInt(ehNovo)
+                                changes['system.eh.value'] = Math.max(0, parseInt(ehNovo));
+                                changes['system.eh.deficitFis'] = Math.max(0, -parseInt(ehNovo));
                             }
                             if (karmaAtual < karmaMax) {
                                 karmaNovo = karmaAtual + karmaMax/2;
@@ -1218,13 +1221,16 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
             const faixa = r.total <= 2 ? "v1" : r.total <= 5 ? "v2" : r.total <= 8 ? "v3" : "v4";
             const novaEh = Number(this.profissao.system.lista_eh?.[faixa]);
             const ehAtual = Number(this.document.system.eh.max);
-            const fis = Number(this.document.system.atributos.FIS);
+            const actorUtils = await import("./actorUtils.js");
+            const fisico = actorUtils._fisicoParaEh({document: this.document, options: this.options});
+            const fis = fisico.base;
             if (![novaEh, ehAtual, fis].every(Number.isFinite)) {
                 return ui.notifications.error("Não foi possível calcular a nova EH. Verifique a profissão, a EH e o atributo Físico.");
             }
 
             await this.document.update({
-                "system.eh.max": ehAtual + novaEh + fis,
+                ...actorUtils._calculaEhTemporaria(this.document, fisico, estagioAtual + 1,
+                    ehAtual - Number(this.document.system.eh.bonusFis ?? 0) + novaEh + fis),
                 "system.estagio": estagioAtual + 1
             });
             await r.toMessage({

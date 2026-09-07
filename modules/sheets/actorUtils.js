@@ -183,6 +183,7 @@ export function _calculaAjuste(sheetData, updatePers) {
     if (actorData.atributos.PER != somaPER) {
         updatePers["system.atributos.PER"] = somaPER;
     } 
+    return {base: valores[carac_finalFIS], efetivo: somaFIS};
 }
 
 const ATRIBUTOS_BASICOS = ["INT", "AUR", "CAR", "FOR", "FIS", "AGI", "PER"];
@@ -607,16 +608,65 @@ export function _attCargaAbsorcaoDefesa(data, updatePers, atributosEfetivos = nu
     }
 }
 
+// O modificador aplicado é salvo junto da EH para que reabrir a ficha não o some novamente.
+export function _calculaEhTemporaria(actor, fisico, estagio = actor.system.estagio, maximoBase = null) {
+    const eh = actor.system.eh;
+    const anterior = Number(eh.bonusFis ?? 0);
+    const base = maximoBase ?? (Number(eh.max) - anterior);
+    const solicitado = (Number(fisico.efetivo) - Number(fisico.base)) * Number(estagio);
+    if (![anterior, base, solicitado, Number(eh.value)].every(Number.isFinite)) {
+        throw new Error("Não foi possível calcular a EH temporária. Verifique EH, Físico e estágio.");
+    }
+    const maximo = Math.max(0, base + solicitado);
+    const bonus = maximo - base;
+    // Conserva a parcela abaixo de zero enquanto houver efeito, permitindo desfazer
+    // penalidades sem recuperar EH que já estava gasta.
+    const valorSemLimite = Number(eh.value) - Number(eh.deficitFis ?? 0) + bonus - anterior;
+    return {
+        "system.eh.max": maximo,
+        "system.eh.value": Math.max(0, Math.min(maximo, valorSemLimite)),
+        "system.eh.bonusFis": bonus,
+        "system.eh.deficitFis": bonus === 0 ? 0 : Math.max(0, -valorSemLimite)
+    };
+}
+
+export function _fisicoParaEh(data, sorteio = false) {
+    if (sorteio) {
+        if (!game.settings.get(game.system.id, "ajusteManual") &&
+            data.document.items.some(item => item.type == "Raca")) {
+            return _calculaAjuste(data, {});
+        }
+        const base = Number(data.document.system.atributos.FIS);
+        return {base, efetivo: base};
+    }
+    return {
+        base: Number(data.document.system.atributos.FIS),
+        efetivo: _preparaEfeitosAtributos(data).efetivos.FIS
+    };
+}
+
+export function _attEhTemporaria(data, updatePers, sorteio = false) {
+    if (!data.options.editable) return;
+    const actor = data.document;
+    const fisico = _fisicoParaEh(data, sorteio);
+    const profissao = actor.items.find(item => item.type == "Profissao");
+    const temRaca = actor.items.some(item => item.type == "Raca");
+    const baseInicial = Number(actor.system.estagio) === 1 && profissao && temRaca
+        ? Number(profissao.system.eh_base) + fisico.base : null;
+    const changes = _calculaEhTemporaria(actor, fisico, actor.system.estagio, baseInicial);
+    for (const [key, value] of Object.entries(changes)) {
+        const field = key.split(".")[2];
+        if (Number(actor.system.eh[field] ?? 0) !== value) updatePers[key] = value;
+    }
+}
+
 export function _attEfEhVB(data, updatePers, atributosEfetivos = null) {
     if (!data.options.editable) return;
     let ef_base = 0;
     let vb_base = 0;
-    let eh_base = 0;
     const racaP = data.document.items.filter(item => item.type == "Raca")[0];
-    const profP = data.document.items.filter(item => item.type == "Profissao")[0];
     ef_base = racaP.system.ef_base;
     vb_base = racaP.system.vb;
-    eh_base = profP.system.eh_base;
     const fisicoBase = updatePers.hasOwnProperty('system.atributos.FIS')
         ? updatePers['system.atributos.FIS']
         : data.document.system.atributos.FIS;
@@ -656,12 +706,6 @@ export function _attEfEhVB(data, updatePers, atributosEfetivos = null) {
     }
     if (data.document.system.ef.value > efMax) {
         updatePers["system.ef.value"] = efMax;
-    }
-    if (data.document.system.estagio == 1){
-        let ehMax = eh_base + fisicoBase;
-        if (data.document.system.eh.max != ehMax) {
-            updatePers["system.eh.max"] = ehMax;
-        }
     }
 }
 
