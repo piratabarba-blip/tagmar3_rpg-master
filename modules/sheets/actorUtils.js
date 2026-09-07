@@ -277,7 +277,7 @@ export function _prepareValorTeste(sheetData, updatePers, atributosEfetivos = nu
     
 }
 
-export function _attProfissao(sheetData, updatePers, items_toUpdate) {
+export function _attProfissao(sheetData, updatePers, items_toUpdate, atributosEfetivos = null) {
     if (!sheetData.options.editable) return;
     const actorData = sheetData.document;
     const actorSheetData = sheetData.document.system;
@@ -428,6 +428,10 @@ export function _attProfissao(sheetData, updatePers, items_toUpdate) {
             else if (atributo == "FIS") valor_atrib = fisico;
             else if (atributo == "AGI") valor_atrib = agilid;
             else if (atributo == "PER") valor_atrib = peric;
+            // Efeitos alteram o total da habilidade, não os pontos de aquisição.
+            if (atributosEfetivos && ATRIBUTOS_BASICOS.includes(atributo)) {
+                valor_atrib = atributosEfetivos[atributo];
+            }
             let total = 0;
             if (hab_nivel > 0) {
                 total = parseInt(valor_atrib) + parseInt(hab_nivel) + parseInt(hab_penal) + parseInt(hab_bonus);
@@ -808,7 +812,7 @@ export function _updateTencnicasItems(sheetData, items_toUpdate, atributosEfetiv
         else total = nivel_tecnica;
         total += ajusteTecnica.valor;
         total += tec.bonus;
-        if (tec.total != total) {
+        if (tec.fa != total) {
             items_toUpdate.push({
                 "_id": tecnica.id,
                 "system.fa": total

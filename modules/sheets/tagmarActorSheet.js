@@ -111,6 +111,8 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
             if (data.document.items.filter(item => item.type == "Profissao")[0]) {
                 actorUtils._attProfissao(data, updatePers, items_toUpdate);
+            } else {
+                actorUtils._updateHabilItems(data, items_toUpdate);
             }
             actorUtils._attCargaAbsorcaoDefesa(data, updatePers);
             if (data.document.raca && data.document.profissao) {
@@ -139,7 +141,6 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
             actorUtils._updateCombatItems(data, items_toUpdate);
             actorUtils._updateMagiasItems(data, items_toUpdate);
             actorUtils._updateTencnicasItems(data, items_toUpdate);
-            actorUtils._updateHabilItems(data, items_toUpdate);
             if (items_toUpdate.length > 0 && canPersistUpdates) {
                 if (!this.lastItemsUpdate) {
                     this.lastItemsUpdate = items_toUpdate;
