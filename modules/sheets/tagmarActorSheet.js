@@ -1363,13 +1363,15 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
             return a.name.localeCompare(b.name);
         });
         if (magias.length > 1) magias.sort(function (a, b) {
-            return a.name.localeCompare(b.name);
+            const grupo = Number(Number(b.system.nivel) > 0) - Number(Number(a.system.nivel) > 0);
+            return grupo || a.name.localeCompare(b.name, "pt-BR");
         });
         if (combate.length > 1) combate.sort(function (a, b) {
             return a.name.localeCompare(b.name);
         });
         if (tecnicas.length > 1) tecnicas.sort(function (a, b) {
-            return a.name.localeCompare(b.name);
+            const grupo = Number(Number(b.system.nivel) > 0) - Number(Number(a.system.nivel) > 0);
+            return grupo || a.name.localeCompare(b.name, "pt-BR");
         });
         if (defesas.length > 1) defesas.sort(function (a, b) {
             return a.name.localeCompare(b.name);
