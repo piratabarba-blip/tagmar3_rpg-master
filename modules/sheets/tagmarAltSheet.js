@@ -102,14 +102,14 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
             } else {
                 actorUtils._updateHabilItems(data, items_toUpdate, efeitosAtributos.efetivos);
             }
-            actorUtils._attCargaAbsorcaoDefesa(data, updatePers);
+            actorUtils._attCargaAbsorcaoDefesa(data, updatePers, efeitosAtributos.efetivos);
             if (data.document.raca && data.document.profissao) {
-                actorUtils._attEfEhVB(data, updatePers); 
+                actorUtils._attEfEhVB(data, updatePers, efeitosAtributos.efetivos);
             }
             actorUtils._attProximoEstag(data, updatePers);
-            actorUtils._attKarmaMax(data, updatePers);
-            actorUtils._attRM(data, updatePers);
-            actorUtils._attRF(data, updatePers);
+            actorUtils._attKarmaMax(data, updatePers, efeitosAtributos.efetivos);
+            actorUtils._attRM(data, updatePers, efeitosAtributos.efetivos);
+            actorUtils._attRF(data, updatePers, efeitosAtributos.efetivos);
             if (updatePers.hasOwnProperty('_id')) delete updatePers['_id'];
             if (this.lastUpdate) {
                 if (this.lastUpdate.hasOwnProperty('_id')) delete this.lastUpdate['_id'];

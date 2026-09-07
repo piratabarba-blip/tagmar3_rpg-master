@@ -38,8 +38,13 @@ function fixture(withProfession = true) {
         type: "Personagem",
         system: systemFor("Actor", "Personagem", {
             estagio: 5,
-            atributos: {FOR: 2, AUR: 2},
-            hab_nata: withProfession ? "Habilidade nata" : ""
+            atributos: {FOR: 2, AUR: 2, FIS: 2, AGI: 2},
+            hab_nata: withProfession ? "Habilidade nata" : "",
+            ef: {value: 8, max: 0},
+            eh: {value: 15, max: 15},
+            karma: {value: 17, max: 0},
+            iniciativa: 4,
+            carga: {value: 70, max: 0}
         }),
         items: [
             item("trained", "Habilidade", "Escalar", {tipo: "geral", nivel: 3, custo: 1, ajuste: {atributo: "FOR"}}),
@@ -49,12 +54,20 @@ function fixture(withProfession = true) {
             item("spell", "Magia", "Magia de teste", {nivel: 3, custo: 1, total: {valorKarma: 1}}),
             item("combat", "Combate", "Ataque de teste", {nivel: 2, bonus: "FOR", bonus_dano: "FOR", peso: 1,
                 dano_base: Object.fromEntries(Array.from({length: 12}, (_, index) => [`d${(index + 1) * 25}`, index + 1]))}),
+            item("armor", "Defesa", "Armadura de teste", {
+                equipado: true, absorcao: 2, peso: 0, defesa_base: {valor: 3, tipo: "L"}
+            }),
+            item("load", "Pertence", "Carga de teste", {quant: 1, peso: 70}),
+            item("race", "Raca", "Raça de teste", {ef_base: 5, vb: 3}),
             item("strengthEffect", "Efeito", "Força temporária", {atributo: "FOR", tipo: "+", valor: 1, ativo: false}),
-            item("auraEffect", "Efeito", "Aura temporária", {atributo: "AUR", tipo: "+", valor: 1, ativo: false})
+            item("auraEffect", "Efeito", "Aura temporária", {atributo: "AUR", tipo: "+", valor: 1, ativo: false}),
+            item("physicalEffect", "Efeito", "Físico temporário", {atributo: "FIS", tipo: "+", valor: 1, ativo: false}),
+            item("agilityEffect", "Efeito", "Agilidade temporária", {atributo: "AGI", tipo: "+", valor: 1, ativo: false})
         ]
     };
     if (withProfession) actor.items.push(item("profession", "Profissao", "Profissão de teste", {
-        grupo_pen: "conhecimento", atrib_mag: "AUR", p_aquisicao: {p_hab: 10, p_tec: 5, p_gra: 5}
+        grupo_pen: "conhecimento", atrib_mag: "AUR", eh_base: 7,
+        p_aquisicao: {p_hab: 10, p_tec: 5, p_gra: 5}
     }));
     return actor;
 }
@@ -86,6 +99,10 @@ function applyItems(actor, updates) {
 }
 
 function sheetData(actor) {
+    actor.defesas = actor.items.filter(entry => entry.type === "Defesa");
+    actor.pertences = actor.items.filter(entry => entry.type === "Pertence" && !entry.system.inTransport);
+    actor.pertences_transporte = actor.items.filter(entry => entry.type === "Pertence" && entry.system.inTransport);
+    actor.transportes = actor.items.filter(entry => entry.type === "Transporte");
     return {document: actor, actor, items: actor.items, options: {editable: true}};
 }
 
@@ -99,6 +116,13 @@ function derive(actor) {
     if (actor.items.some(entry => entry.type === "Profissao")) {
         utils._attProfissao(data, actorUpdates, itemUpdates, effective);
     } else utils._updateHabilItems(data, itemUpdates, effective);
+    utils._attCargaAbsorcaoDefesa(data, actorUpdates, effective);
+    if (actor.items.some(entry => entry.type === "Raca") && actor.items.some(entry => entry.type === "Profissao")) {
+        utils._attEfEhVB(data, actorUpdates, effective);
+    }
+    utils._attKarmaMax(data, actorUpdates, effective);
+    utils._attRM(data, actorUpdates, effective);
+    utils._attRF(data, actorUpdates, effective);
     utils._updateCombatItems(data, itemUpdates, effective);
     utils._updateMagiasItems(data, itemUpdates, effective);
     utils._updateTencnicasItems(data, itemUpdates, effective);
@@ -125,24 +149,40 @@ function pointSnapshot(actor) {
     });
 }
 
-function checkTotals(actor, forModifier, auraModifier, withProfession = true) {
-    assert.equal(getItem(actor, "trained").system.total, 5 + forModifier, "Total da habilidade treinada");
+function checkTotals(actor, modifier, withProfession = true) {
+    assert.equal(getItem(actor, "trained").system.total, 5 + modifier, "Total da habilidade treinada");
     assert.equal(getItem(actor, "untrained").system.total, -7, "Habilidade não aprendida permanece -7");
     assert.equal(getItem(actor, "innate").system.nivel, withProfession ? 5 : 1, "Estágio da habilidade nata");
-    assert.equal(getItem(actor, "innate").system.total, (withProfession ? 7 : 3) + forModifier);
-    assert.equal(getItem(actor, "technique").system.fa, 7 + forModifier, "FA da técnica");
-    assert.equal(getItem(actor, "spell").system.total.valor, 6 + auraModifier, "Total da magia usa Aura efetiva");
-    assert.equal(getItem(actor, "combat").system.custo, 2 + forModifier, "Bônus do combate usa Força efetiva");
+    assert.equal(getItem(actor, "innate").system.total, (withProfession ? 7 : 3) + modifier);
+    assert.equal(getItem(actor, "technique").system.fa, 7 + modifier, "FA da técnica");
+    assert.equal(getItem(actor, "spell").system.total.valor, 6 + modifier, "Total da magia usa Aura efetiva");
+    assert.equal(getItem(actor, "combat").system.custo, 2 + modifier, "Bônus do combate usa Força efetiva");
     for (let index = 1; index <= 12; index++) {
-        assert.equal(getItem(actor, "combat").system.dano[`d${index * 25}`], index + 3 + forModifier, "Dano do combate");
+        assert.equal(getItem(actor, "combat").system.dano[`d${index * 25}`], index + 3 + modifier, "Dano do combate");
     }
-    assert.equal(actor.system.valor_teste.FOR, (2 + forModifier) * 4);
-    assert.equal(actor.system.valor_teste.AUR, (2 + auraModifier) * 4);
+    assert.equal(actor.system.valor_teste.FOR, (2 + modifier) * 4);
+    assert.equal(actor.system.valor_teste.AUR, (2 + modifier) * 4);
+    assert.equal(actor.system.valor_teste.FIS, (2 + modifier) * 4);
+    assert.equal(actor.system.valor_teste.AGI, (2 + modifier) * 4);
+    assert.equal(actor.system.karma.max, 18 + (modifier * 6), "Karma máximo usa Aura efetiva");
+    assert.equal(actor.system.rm, 7 + modifier, "RM usa Aura efetiva");
+    assert.equal(actor.system.rf, 7 + modifier, "RF usa Físico efetivo");
+    assert.equal(actor.system.d_passiva.valor, 3, "Defesa Passiva não usa Agilidade");
+    assert.equal(actor.system.d_ativa.valor, 5 + modifier, "Defesa Ativa usa Agilidade efetiva");
+    assert.equal(actor.system.carga.max, 60 + (modifier * 20), "Carga máxima usa Força efetiva");
+    assert.equal(actor.system.carga.sobrecarga, modifier !== 1, "Sobrecarga acompanha a Força efetiva");
+    assert.equal(actor.system.carga.valor_s, modifier === 1 ? 0 : 10 - (modifier * 20));
+    if (withProfession) {
+        assert.equal(actor.system.ef.max, 9 + (modifier * 2), "EF máxima usa Força e Físico efetivos");
+        assert.equal(actor.system.vb, 5 + modifier, "VB usa Físico efetivo");
+    }
+    assert.equal(actor.system.eh.max, 15, "EH permanece independente do efeito temporário");
+    assert.equal(actor.system.iniciativa, 4, "Iniciativa permanece manual");
 }
 
 async function exercise(actor, settle, withProfession = true) {
     await settle(actor);
-    checkTotals(actor, 0, 0, withProfession);
+    checkTotals(actor, 0, withProfession);
     const originalPoints = pointSnapshot(actor);
     if (withProfession) {
         assert.equal(originalPoints.habilidades, 47, "Habilidade nata não consome pontos");
@@ -150,6 +190,8 @@ async function exercise(actor, settle, withProfession = true) {
     }
     const strength = getItem(actor, "strengthEffect").system;
     const aura = getItem(actor, "auraEffect").system;
+    const physical = getItem(actor, "physicalEffect").system;
+    const agility = getItem(actor, "agilityEffect").system;
     for (const step of [
         {active: true, operator: "+", modifier: 1},
         {active: false, operator: "+", modifier: 0},
@@ -158,8 +200,18 @@ async function exercise(actor, settle, withProfession = true) {
     ]) {
         Object.assign(strength, {ativo: step.active, tipo: step.operator});
         Object.assign(aura, {ativo: step.active, tipo: step.operator});
+        Object.assign(physical, {ativo: step.active, tipo: step.operator});
+        Object.assign(agility, {ativo: step.active, tipo: step.operator});
         await settle(actor);
-        checkTotals(actor, step.modifier, step.modifier, withProfession);
+        checkTotals(actor, step.modifier, withProfession);
+        if (step.modifier === -1) {
+            if (withProfession) assert.equal(actor.system.ef.value, 7, "EF atual respeita a redução do máximo");
+            assert.equal(actor.system.karma.value, 12, "Karma atual respeita a redução do máximo");
+        }
+        if (!step.active && step.operator === "-") {
+            if (withProfession) assert.equal(actor.system.ef.value, 7, "Remover o efeito não cura EF");
+            assert.equal(actor.system.karma.value, 12, "Remover o efeito não recupera Karma gasto");
+        }
         assert.deepEqual(pointSnapshot(actor), originalPoints, "Efeitos temporários alteraram atributos-base ou pontos");
     }
 }

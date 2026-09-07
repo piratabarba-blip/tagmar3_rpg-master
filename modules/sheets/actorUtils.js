@@ -474,7 +474,7 @@ export function _attProfissao(sheetData, updatePers, items_toUpdate, atributosEf
     }
 }
 
-export function _attCargaAbsorcaoDefesa(data, updatePers) {
+export function _attCargaAbsorcaoDefesa(data, updatePers, atributosEfetivos = null) {
     if (!data.options.editable) return;
     const actorSheet = data.document;
     var actor_carga = 0;    // Atualiza Carga e verifica Sobrecarga
@@ -516,8 +516,8 @@ export function _attCargaAbsorcaoDefesa(data, updatePers) {
             cap_usada += itemData.system.peso * itemData.system.quant;
         });
     }
-    let agilidade = data.document.system.atributos.AGI;
-    if (updatePers.hasOwnProperty('system.atributos.AGI')) agilidade = updatePers['system.atributos.AGI'];
+    let agilidade = atributosEfetivos?.AGI ?? data.document.system.atributos.AGI;
+    if (!atributosEfetivos && updatePers.hasOwnProperty('system.atributos.AGI')) agilidade = updatePers['system.atributos.AGI'];
     var def_atiVal = def_pasVal + agilidade;
     const efeitos = data.document.items.filter(e => e.type == "Efeito" && ((e.system.atributo == "DEF" || e.system.atributo == "ABS") && e.system.ativo));
     efeitos.forEach(function (efeit){
@@ -573,8 +573,8 @@ export function _attCargaAbsorcaoDefesa(data, updatePers) {
         }
     }
     let carga_max = 0;
-    let forca = actorSheetData.atributos.FOR;
-    if (updatePers.hasOwnProperty('system.atributos.FOR')) forca = updatePers['system.atributos.FOR'];
+    let forca = atributosEfetivos?.FOR ?? actorSheetData.atributos.FOR;
+    if (!atributosEfetivos && updatePers.hasOwnProperty('system.atributos.FOR')) forca = updatePers['system.atributos.FOR'];
     if (forca >= 1) {
         carga_max = (forca * 20) + 20;
         if (actorSheetData.carga.value > carga_max) {
@@ -602,9 +602,12 @@ export function _attCargaAbsorcaoDefesa(data, updatePers) {
             }
         }
     }
+    if (actorData.carga.max != carga_max) {
+        updatePers["system.carga.max"] = carga_max;
+    }
 }
 
-export function _attEfEhVB(data, updatePers) {
+export function _attEfEhVB(data, updatePers, atributosEfetivos = null) {
     if (!data.options.editable) return;
     let ef_base = 0;
     let vb_base = 0;
@@ -614,10 +617,12 @@ export function _attEfEhVB(data, updatePers) {
     ef_base = racaP.system.ef_base;
     vb_base = racaP.system.vb;
     eh_base = profP.system.eh_base;
-    let forca = data.document.system.atributos.FOR;
-    let fisico = data.document.system.atributos.FIS;
-    if (updatePers.hasOwnProperty("system.atributos.FOR")) forca = updatePers['system.atributos.FOR'];
-    if (updatePers.hasOwnProperty('system.atributos.FIS')) fisico = updatePers['system.atributos.FIS'];
+    const fisicoBase = updatePers.hasOwnProperty('system.atributos.FIS')
+        ? updatePers['system.atributos.FIS']
+        : data.document.system.atributos.FIS;
+    let forca = atributosEfetivos?.FOR ?? data.document.system.atributos.FOR;
+    let fisico = atributosEfetivos?.FIS ?? fisicoBase;
+    if (!atributosEfetivos && updatePers.hasOwnProperty("system.atributos.FOR")) forca = updatePers['system.atributos.FOR'];
     let efMax = forca + fisico + ef_base;
     let vbTotal = fisico + vb_base;
     const efeitos = data.document.items.filter(e => e.type == "Efeito" && ((e.system.atributo == "VB" || e.system.atributo == "EF") && e.system.ativo));
@@ -649,8 +654,11 @@ export function _attEfEhVB(data, updatePers) {
         updatePers["system.ef.max"] = efMax;
         updatePers["system.vb"] = vbTotal
     }
+    if (data.document.system.ef.value > efMax) {
+        updatePers["system.ef.value"] = efMax;
+    }
     if (data.document.system.estagio == 1){
-        let ehMax = eh_base + fisico;
+        let ehMax = eh_base + fisicoBase;
         if (data.document.system.eh.max != ehMax) {
             updatePers["system.eh.max"] = ehMax;
         }
@@ -676,10 +684,10 @@ export function _attProximoEstag(data, updatePers) {
     }
 }
 
-export function _attKarmaMax(data, updatePers) {
+export function _attKarmaMax(data, updatePers, atributosEfetivos = null) {
     if (!data.options.editable) return;
-    let aura = data.document.system.atributos.AUR;
-    if (updatePers.hasOwnProperty('system.atributos.AUR')) aura = updatePers['system.atributos.AUR'];
+    let aura = atributosEfetivos?.AUR ?? data.document.system.atributos.AUR;
+    if (!atributosEfetivos && updatePers.hasOwnProperty('system.atributos.AUR')) aura = updatePers['system.atributos.AUR'];
     let karma = ((aura) + 1 ) * ((data.document.system.estagio) + 1);
     if (karma < 0) karma = 0;
     const profissoes = data.items.filter(item => item.type == "Profissao");
@@ -705,12 +713,15 @@ export function _attKarmaMax(data, updatePers) {
     if (data.document.system.karma.max != karma) {
         updatePers["system.karma.max"] = karma;
     }
+    if (data.document.system.karma.value > karma) {
+        updatePers["system.karma.value"] = karma;
+    }
 }
 
-export function _attRM(data, updatePers) {
+export function _attRM(data, updatePers, atributosEfetivos = null) {
     if (!data.options.editable) return;
-    let aura = data.document.system.atributos.AUR;
-    if (updatePers.hasOwnProperty('system.atributos.AUR')) aura = updatePers["system.atributos.AUR"];
+    let aura = atributosEfetivos?.AUR ?? data.document.system.atributos.AUR;
+    if (!atributosEfetivos && updatePers.hasOwnProperty('system.atributos.AUR')) aura = updatePers["system.atributos.AUR"];
     let rm = data.document.system.estagio + aura;
     const efeitos = data.document.items.filter(e => e.type == "Efeito" && (e.system.atributo == "RMAG" && e.system.ativo));
     efeitos.forEach(function(efeit) {
@@ -730,10 +741,10 @@ export function _attRM(data, updatePers) {
     }
 }
 
-export function _attRF(data, updatePers) {
+export function _attRF(data, updatePers, atributosEfetivos = null) {
     if (!data.options.editable) return;
-    let fisico = data.document.system.atributos.FIS;
-    if (updatePers.hasOwnProperty('system.atributos.FIS')) fisico = updatePers['system.atributos.FIS'];
+    let fisico = atributosEfetivos?.FIS ?? data.document.system.atributos.FIS;
+    if (!atributosEfetivos && updatePers.hasOwnProperty('system.atributos.FIS')) fisico = updatePers['system.atributos.FIS'];
     let rf = data.document.system.estagio + fisico;
     const efeitos = data.document.items.filter(e => e.type == "Efeito" && (e.system.atributo == "RFIS" && e.system.ativo));
     efeitos.forEach(function(efeit) {
