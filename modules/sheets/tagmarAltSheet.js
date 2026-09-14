@@ -1292,12 +1292,15 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
         item.rollTagmarItem();
     }
 
-    _duplicateItem(event) {
+    async _duplicateItem(event) {
+        event.preventDefault();
         const li = $(event.currentTarget).parents(".item");
         const item = this.document.items.get(li.data("itemId"));
-        let dupi = duplicate(item);
-        dupi.name = dupi.name + "(Cópia)";
-        this.document.createEmbeddedDocuments("Item", [dupi]);
+        if (!item) return ui.notifications.warn("Item não encontrado para duplicação.");
+        const copy = item.toObject();
+        delete copy._id;
+        copy.name = `${item.name} (Cópia)`;
+        await this.document.createEmbeddedDocuments("Item", [copy]);
     }
 
     _prepareCharacterItems(sheetData) {
