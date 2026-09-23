@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { elvenWeaponDamageAttribute } from "./elven-weapon-damage.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..", "..");
@@ -213,7 +214,7 @@ const items = weapons.map((weapon) => {
       nivel: 0,
       forca_min: weapon.forcaMin,
       bonus: weapon.bonus,
-      bonus_dano: legacyItem?.system?.bonus_dano ?? "",
+      bonus_dano: elvenWeaponDamageAttribute(weapon.name, legacyItem?.system?.bonus_dano ?? ""),
       peso: 0,
       preco: "",
       bonus_magico: 0,
