@@ -1,6 +1,12 @@
-/** Retratos animados da ficha; não altera a imagem do token nem dados de regras. */
+/** Retratos animados da ficha; mantém Actor.img restrito a imagens. */
 export function isVideoPortrait(src) {
     return typeof src === "string" && /\.(?:webm|mp4|m4v|ogv)(?:[?#].*)?$/i.test(src.trim());
+}
+
+export function getPortraitData(actor) {
+    const video = actor.flags?.[game.system.id]?.portraitVideo;
+    const portraitIsVideo = isVideoPortrait(video);
+    return {portraitIsVideo, portraitSrc: portraitIsVideo ? video : actor.img};
 }
 
 export function activatePortraitListeners(sheet, html) {
@@ -23,21 +29,21 @@ export function activatePortraitListeners(sheet, html) {
 export function editPortrait(sheet, event) {
     if (!sheet.isEditable) return;
     event.preventDefault();
-    const media = event.currentTarget;
     const {img} = sheet.document.constructor.getDefaultArtwork?.(sheet.document.toObject()) ?? {};
     const picker = new foundry.applications.apps.FilePicker.implementation({
         type: "imagevideo",
-        current: sheet.document.img,
+        current: getPortraitData(sheet.document).portraitSrc,
         document: sheet.document,
         redirectToRoot: img ? [img] : [],
         callback: path => {
             if (!sheet.isEditable || !path) return;
-            // O campo oculto preserva o retrato de vídeo nos próximos envios do formulário.
-            const field = sheet.form?.querySelector('input[name="img"]');
-            if (field) field.value = path;
-            media.setAttribute("src", path);
-            // Salva junto com os demais campos; o novo render escolhe img ou video.
-            return sheet._onSubmit(event, {updateData: {img: path}, preventClose: true});
+            const flagPath = `flags.${game.system.id}.portraitVideo`;
+            const updateData = isVideoPortrait(path)
+                ? {[flagPath]: path}
+                : {img: path, [flagPath]: null};
+            // Não modifica src/campos antes de salvar: uma rejeição não corrompe a prévia.
+            // O render após o update lê a flag; Actor.img continua sendo uma imagem.
+            return sheet._onSubmit(event, {updateData, preventClose: true});
         },
         position: {top: sheet.position.top + 40, left: sheet.position.left + 10}
     });

@@ -14,9 +14,8 @@
             </div>
             <div class="row container_dados tagmar-identity">
                 <div class="tagmar-portrait-cell">
-                    <input type="hidden" name="img" value="{{actor.img}}"/>
                     {{#if portraitIsVideo}}
-                    <video class="tagmar-portrait" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" aria-label="{{actor.name}}" height="140" width="140" autoplay loop muted playsinline preload="metadata" {{#if editable}}role="button" tabindex="0"{{/if}}></video>
+                    <video class="tagmar-portrait" src="{{portraitSrc}}" title="{{actor.name}}" aria-label="{{actor.name}}" height="140" width="140" autoplay loop muted playsinline preload="metadata" {{#if editable}}role="button" tabindex="0"{{/if}}></video>
                     {{else}}
                     <img class="tagmar-portrait" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" alt="{{actor.name}}" height="140" width="140" {{#if editable}}role="button" tabindex="0"{{/if}}/>
                     {{/if}}

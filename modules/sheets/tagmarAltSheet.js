@@ -1,4 +1,4 @@
-import {isVideoPortrait, activatePortraitListeners, editPortrait} from "./portrait.js";
+import {getPortraitData, activatePortraitListeners, editPortrait} from "./portrait.js";
 
 export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
 
@@ -80,7 +80,7 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
 
     async getData(options) {
         const data = super.getData(options);
-        data.portraitIsVideo = isVideoPortrait(this.document.img);
+        Object.assign(data, getPortraitData(this.document));
         const actorUtils = await import("./actorUtils.js");
         data.dtypes = ["String", "Number", "Boolean"];
         const packReference = data.document.pack;
