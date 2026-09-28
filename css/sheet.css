@@ -25,6 +25,13 @@
     margin: 0;
     border-radius: 8px;
 }
+:is(#form_persona, #form_npc) .tagmar-portrait[role="button"] {
+    cursor: pointer;
+}
+:is(#form_persona, #form_npc) .tagmar-portrait:focus-visible {
+    outline: 2px solid #e9a343;
+    outline-offset: 2px;
+}
 :is(#form_persona, #form_npc) .tagmar-identity .fairyDust {
     margin: 0;
 }

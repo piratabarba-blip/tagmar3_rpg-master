@@ -1,3 +1,5 @@
+import {isVideoPortrait, activatePortraitListeners, editPortrait} from "./portrait.js";
+
 export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
 
     static get defaultOptions() {
@@ -78,6 +80,7 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
 
     async getData(options) {
         const data = super.getData(options);
+        data.portraitIsVideo = isVideoPortrait(this.document.img);
         const actorUtils = await import("./actorUtils.js");
         data.dtypes = ["String", "Number", "Boolean"];
         const packReference = data.document.pack;
@@ -161,8 +164,14 @@ export default class tagmarAltSheet extends foundry.appv1.sheets.ActorSheet {
         return data;
     }
 
+    _onEditImage(event) {
+        if (event.currentTarget.classList.contains("tagmar-portrait")) return editPortrait(this, event);
+        return super._onEditImage(event);
+    }
+
     activateListeners(html) {
         super.activateListeners(html);
+        activatePortraitListeners(this, html);
         this.element.toggleClass("tagmar-dark-sheet", game.settings.get(game.system.id, "sheetTemplate") === "dark");
         this.element.toggleClass("tagmar-foundry-sheet", game.settings.get(game.system.id, "sheetTemplate") === "foundry");
         if (this.document.type != "Inventario") {
