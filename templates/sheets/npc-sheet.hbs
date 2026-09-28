@@ -12,17 +12,17 @@
                     <button type="button" class="toJournal" title="Criar Journal de NPC"><i class="fas fa-book-open"></i>Journal</button>
                 </div>
             </div>
-            <div class="row container_dados">
-                <div class="col-md-2 col-4" style="padding-top: 3px;">
-                    <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="64" width="64" style="border-radius: 8px;"/>
+            <div class="row container_dados tagmar-identity">
+                <div class="tagmar-portrait-cell">
+                    <img class="tagmar-portrait" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" alt="{{actor.name}}" height="140" width="140"/>
                 </div>
-                <div class="col-md-6 col-8">
+                <div class="tagmar-name">
                     <h1 class="fairyDust"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
                 </div>
-                <div class="col-md-2 col-4" style="text-align: center;">
-                    <label><h1 class="fairyDust" style="padding-top: 15px;">Estágio:</h1></label>
+                <div class="tagmar-stage-label">
+                    <h1 class="fairyDust">Estágio:</h1>
                 </div>
-                <div class="col-md-2 col-8">
+                <div class="tagmar-stage-value">
                     <h1 class="fairyDust"><input class="ipEstagio" name="system.estagio" type="number" value="{{data.system.estagio}}" style="text-align: center";/></h1>
                 </div>  
             </div>
