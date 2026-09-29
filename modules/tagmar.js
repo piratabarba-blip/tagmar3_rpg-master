@@ -6,6 +6,7 @@ import {tagmarActor} from "./tagmarActor.js";
 import { preloadHandlebarsTemplates } from "./templates.js";
 import { SystemSettings } from "./settings.js";
 import { dadosColoridos } from "./dadosColoridos.js";
+import "./compat/theatre.js";
 
 let ocultos = false;
 
