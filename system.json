@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.7.0-v14.1-rc.47",
+  "version": "2.7.0-v14.1-rc.48",
   "relationships": {
     "requires": [
       {
@@ -44,6 +44,18 @@
         "id": "tagmar-calendario",
         "type": "module",
         "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json"
+      },
+      {
+        "id": "tokenmagic",
+        "type": "module",
+        "manifest": "https://github.com/Feu-Secret/Tokenmagic/releases/download/0.8.4/module.json",
+        "compatibility": {"minimum": "0.8.4", "maximum": "0.8.4"}
+      },
+      {
+        "id": "tagmar-token-fx",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-token-fx/module.json",
+        "compatibility": {"minimum": "1.1.0"}
       }
     ]
   },
@@ -222,5 +234,5 @@
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
   "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json",
-  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.47"
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.48"
 }
