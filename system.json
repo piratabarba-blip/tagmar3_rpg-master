@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.7.0-v14.1-rc.49",
+  "version": "2.7.0-v14.1-rc.50",
   "relationships": {
     "requires": [
       {
@@ -228,6 +228,12 @@
     }
   ],
   "languages": [
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "lang/pt-BR-light-sources.json",
+      "module": "light-sources"
+    }
   ],
   "grid": {
     "distance": 1.0,
@@ -235,5 +241,5 @@
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
   "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json",
-  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.49"
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.50"
 }

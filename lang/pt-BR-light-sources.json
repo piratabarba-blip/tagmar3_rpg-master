@@ -1,0 +1,18 @@
+{
+  "LIGHTSOURCES": {
+    "Chat": {
+      "ExpiredTitle": "A luz se apagou",
+      "Expired": "A fonte de luz “{item}”, carregada por {actor}, se apagou.",
+      "LitTitle": "Luz acesa",
+      "Lit": "{actor} acende a fonte de luz “{item}”.",
+      "LitPattern": "{actor} acende a fonte de luz “{item}” ({pattern}).",
+      "DroppedTitle": "Luz deixada no chão",
+      "Dropped": "{actor} deixa a fonte de luz “{item}” no chão.",
+      "PickedUpTitle": "Luz recolhida",
+      "PickedUp": "{actor} recolhe a fonte de luz “{item}” do chão.",
+      "GroundExpiredTitle": "A luz se apagou",
+      "GroundExpired": "A fonte de luz “{item}”, deixada no chão, se apagou.",
+      "DragHint": "Arraste para a ficha de um personagem para adicionar ao inventário."
+    }
+  }
+}
