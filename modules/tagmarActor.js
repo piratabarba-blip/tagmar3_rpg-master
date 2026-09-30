@@ -1,7 +1,11 @@
+import * as dadosColoridos from "./dadosColoridos.js";
+
 export class tagmarActor extends Actor {
     
-    async prepareData() {
-        this.dadosColoridos = await import("/systems/"+game.system.id+"/modules/dadosColoridos.js");
+    prepareData() {
+        this.dadosColoridos = dadosColoridos;
+        // Core preparation applies ActiveEffects, including token light changes.
+        super.prepareData();
     }
 
     async _aplicarDano(dano, token) {
