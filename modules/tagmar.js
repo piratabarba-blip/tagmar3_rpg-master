@@ -557,7 +557,14 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
       return [known_languages, literate_languages];
     }
   }
-  game.polyglot.api.registerSystem(TagmarLanguageProvider);
+  // Polyglot 2.10.2 exposes an unbound private instance method through its API.
+  // Older releases own the method on the API object; leave their receiver intact.
+  const polyglot = game.polyglot;
+  if (game.modules.get("polyglot")?.version === "2.10.2") {
+    polyglot.api.registerSystem.call(polyglot, TagmarLanguageProvider);
+  } else {
+    polyglot.api.registerSystem(TagmarLanguageProvider);
+  }
 });
 
 Hooks.once("ready", async function () {
