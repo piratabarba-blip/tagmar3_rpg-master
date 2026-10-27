@@ -179,7 +179,7 @@ Estes **dez módulos são declarados como dependências pelo sistema**, não ape
 | **Polyglot** | Idiomas no chat, com provedor de línguas registrado pelo Tagmar. | 2.9.2 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/polyglot/module.json) |
 | **Tagmar Gestão de Munições** | Cadastro e compartilhamento de reservas de munição entre armas. | 1.2.2-v14.1 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-ammu-nation/module.json) |
 | **Tagmar Transações** | Envio de pertences para outro jogador conectado e com personagem atribuído. | 1.2.3-v14.1 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmartrade/module.json) |
-| **Tagmar — Grande Calendário** | Calendário, relógio, festividades e fases das três luas. | 0.7.6 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json) |
+| **Tagmar — Grande Calendário** | Calendário, dia/noite, clima, vento, luas e marés. | **1.1.1**, recomendada | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json) |
 | **Token Magic FX** | Motor original de filtros visuais nos tokens. | **0.8.4**, versão exigida | [Instalar](https://github.com/Feu-Secret/Tokenmagic/releases/download/0.8.4/module.json) |
 | **Tagmar Efeitos Mágicos — XXX** | Integra os filtros às magias, técnicas e itens de combate do XXX. | **1.1.0**, mínimo exigido | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-token-fx/module.json) |
 
@@ -209,6 +209,18 @@ Esse cadastro de munição é separado da quantidade dos pertences usada pelo Li
 O seletor de destinatários não inclui usuários offline, sem personagem atribuído ou Mestres. Teste inicialmente com um item comum de baixo valor e não use esta função como substituto de um backup.
 
 ### Grande Calendário
+
+**Módulo recomendado: Tagmar — Grande Calendário 1.1.1**, verificado no Foundry **14.369**. Ele já integra as dependências obrigatórias deste sistema; esta recomendação destaca os recursos disponíveis e não altera os requisitos de instalação.
+
+- Dia/noite gradual, estações e clima por bioma, latitude e altitude.
+- Velocidade e direção do vento, fases/movimentos das três luas e marés lunares.
+- Clima e marés sempre visíveis no calendário, mesmo sem efeitos meteorológicos no mapa.
+- Região climática preenchida automaticamente pelo **título do mundo**: cenas com os mesmos parâmetros geográficos compartilham a previsão.
+- Em **Configurar cena → Ambiente**, marque **Mapa interno — somente dia e noite** para suspender os efeitos meteorológicos no mapa e manter as informações no calendário.
+
+Na primeira entrada de um mestre após atualizar, o preset habilita dia/noite, clima automático e efeitos visuais nas cenas existentes, preservando parâmetros geográficos/lunares e guardando os ajustes anteriores. Essa aplicação ocorre uma única vez; mundos que já receberam o preset nas prévias 1.1.1-beta.2/3 não são redefinidos. Faça backup do mundo antes da atualização. O relógio não começa a avançar sozinho.
+
+Atualize em **Módulos adicionais** ou use o [manifesto permanente](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json). Mantenha **libWrapper ativo** para a transição de clima sem redesenhar o mapa e recarregue os clientes após atualizar. Consulte o [guia completo de configuração](https://github.com/piratabarba-blip/modulos_foundry/blob/v14/tagmar-calendario/README.md).
 
 - Abra pelo botão do calendário nas ferramentas de Token. Como alternativa, uma macro do tipo Script pode usar:
 
