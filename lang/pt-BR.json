@@ -1,0 +1,11 @@
+{
+  "TYPES": {
+    "Actor": {
+      "NPC": "Não Jogador (PNJ)",
+      "Veiculo": "Veículo / Máquina"
+    },
+    "Item": {
+      "Arma_Guerra": "Arma de Guerra"
+    }
+  }
+}

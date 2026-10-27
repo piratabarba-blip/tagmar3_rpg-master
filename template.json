@@ -1,6 +1,11 @@
 {
   "Actor": {
-    "types": ["Personagem", "NPC", "Inventario"],
+    "types": [
+      "Personagem",
+      "NPC",
+      "Inventario",
+      "Veiculo"
+    ],
     "templates": {
       "base": {
         "descricao": "",
@@ -157,11 +162,15 @@
       }
     },
     "Personagem": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "grupo_aprim": ""
     },
     "NPC": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "moral": 0,
       "karma_npc": {
         "value": 0,
@@ -179,12 +188,51 @@
         "max": 0
       }
     },
-    "Inventario": {
-      
+    "Inventario": {},
+    "Veiculo": {
+      "templates": [
+        "base"
+      ],
+      "categoria": "barco",
+      "arm": 0,
+      "propulsao": "vela",
+      "manobra": {
+        "modo": "manual",
+        "operadores": [],
+        "operador": "",
+        "habilidade": "",
+        "totalManual": 0,
+        "ajuste": 0,
+        "ajusteCircunstancial": 0
+      },
+      "tripulacao": {
+        "minima": 1,
+        "atual": 1
+      },
+      "passageiros": 0,
+      "cargaExtra": 0,
+      "resistenciasAtivas": false,
+      "notas": "",
+      "d_ativa": {
+        "categoria": "L",
+        "valor": 0
+      }
     }
   },
   "Item": {
-    "types": ["Combate", "Magia","Habilidade","Defesa","Transporte","Pertence", "Profissao", "Raca", "Efeito", "Tecnica_Combate"],
+    "types": [
+      "Combate",
+      "Magia",
+      "Habilidade",
+      "Defesa",
+      "Transporte",
+      "Pertence",
+      "Profissao",
+      "Raca",
+      "Efeito",
+      "Tecnica_Combate",
+      "Arma_Guerra"
+    ],
     "templates": {
       "base": {
         "alcance": "",
@@ -197,7 +245,10 @@
       }
     },
     "Combate": {
-      "templates": ["base", "custoNivel"],
+      "templates": [
+        "base",
+        "custoNivel"
+      ],
       "forca_min": 0,
       "bonus": "",
       "bonus_dano": "",
@@ -243,11 +294,16 @@
       },
       "tipo": "",
       "municao": 0
-    },"TecnicasCombate": {
-      "templates": ["custoNivel"]
+    },
+    "TecnicasCombate": {
+      "templates": [
+        "custoNivel"
+      ]
     },
     "Tecnica_Combate": {
-      "templates": ["custoNivel"],
+      "templates": [
+        "custoNivel"
+      ],
       "descricao": "",
       "ajuste": {
         "atributo": "",
@@ -269,7 +325,10 @@
       "bonus": 0
     },
     "Magia": {
-      "templates": ["base", "custoNivel"],
+      "templates": [
+        "base",
+        "custoNivel"
+      ],
       "evocacao": "",
       "duracao": "",
       "efeito": "",
@@ -279,8 +338,10 @@
       }
     },
     "Habilidade": {
-      "templates": ["custoNivel"],
-      "ajuste":{
+      "templates": [
+        "custoNivel"
+      ],
+      "ajuste": {
         "atributo": "",
         "valor": 0
       },
@@ -365,6 +426,33 @@
       "tipo": "",
       "valor": 0,
       "ativo": false
+    },
+    "Arma_Guerra": {
+      "templates": [
+        "base"
+      ],
+      "operacao": {
+        "modo": "manual",
+        "operadores": [],
+        "operador": "",
+        "habilidade": "",
+        "totalManual": 0
+      },
+      "ajuste": 0,
+      "def_l": 0,
+      "def_m": 0,
+      "def_p": 0,
+      "dano25": 0,
+      "operadoresMinimos": 1,
+      "operadoresAtuais": 1,
+      "recarga": 0,
+      "recargaRestante": 0,
+      "controlarMunicao": true,
+      "municao": 0,
+      "tipoMunicao": "",
+      "desativada": false,
+      "peso": 0,
+      "alcance": ""
     }
   }
 }

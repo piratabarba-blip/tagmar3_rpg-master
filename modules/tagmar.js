@@ -1,3 +1,4 @@
+import {registerVehicleSheets} from "./vehicles/sheets.mjs";
 import tagmarItemSheet from "./sheets/tagmarItemSheet.js";
 import tagmarActorSheet from "./sheets/tagmarActorSheet.js";
 import tagmarAltSheet from "./sheets/tagmarAltSheet.js";
@@ -89,15 +90,16 @@ Hooks.once("init", function(){
   }, CONFIG.Combat.sounds);
   CONFIG.Item.documentClass = tagmarItem;
   CONFIG.Actor.documentClass = tagmarActor;
+  CONFIG.Actor.typeLabels.NPC = "TYPES.Actor.NPC";
   CONFIG.time.roundTime = 15;
   // Register System Settings
   SystemSettings();
   // Foundry V13 centraliza o registro de fichas em DocumentSheetConfig.
   // As fichas V1 continuam temporariamente em uso nesta etapa de migração.
   const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig;
-  DocumentSheetConfig.registerSheet(Item, "tagmar", tagmarItemSheet, {makeDefault: true});
-  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarActorSheet, {makeDefault: false});
-  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarAltSheet, {makeDefault: true});
+  DocumentSheetConfig.registerSheet(Item, "tagmar", tagmarItemSheet, {types: game.documentTypes.Item.filter(type => type !== "Arma_Guerra"), makeDefault: true});
+  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarActorSheet, {types: ["Personagem", "NPC", "Inventario"], makeDefault: false});
+  DocumentSheetConfig.registerSheet(Actor, "tagmar", tagmarAltSheet, {types: ["Personagem", "NPC", "Inventario"], makeDefault: true});
   
   Handlebars.registerHelper('ifeq', function (a, b, options) {
     if (a == b) { return options.fn(this); }
@@ -206,6 +208,7 @@ Hooks.once("init", function(){
     return items.filter(i=> i.type=="Habilidade" && i.system.nivel > 0).length;
   });
 
+  registerVehicleSheets();
   preloadHandlebarsTemplates();
 });
 
@@ -672,6 +675,9 @@ Hooks.on("preCreateToken", function (document, data) {
 
 function createBrawrs(token, setting) {
   const actor = token.actor;
+  if (actor?.type === "Veiculo") return {
+    bar1: {id:"bar1", attribute:"absorcao", mincolor:"#9b3023", maxcolor:"#c7a45d", position:"top-outer", visibility:CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER}
+  };
   let resources = {};
   if (setting == "barra_pers") {
     if (actor.type == "Personagem") {
@@ -872,7 +878,7 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
 
       getRanges(token) {
         let baseSpeed = 0;
-        if (token.document.elevation != 0) baseSpeed = token.actor.system.vbe;
+        if (token.actor.type !== "Veiculo" && token.document.elevation != 0) baseSpeed = token.actor.system.vbe;
         else baseSpeed = token.actor.system.vb; 
 
     const ranges = [
@@ -1186,7 +1192,7 @@ document.addEventListener('mousedown', function (event) {
 });
 
 Hooks.on('targetToken', function (user, token, targeted) {
-  if (!(token.actor.type === "Personagem" || token.actor.type === "NPC")) return;
+  if (!["Personagem", "NPC", "Veiculo"].includes(token.actor?.type)) return;
   const setting_target = game.settings.get("tagmar_rpg", "autoTarget");
   if (targeted && setting_target == "yes") setInf_ataque(token, user);
 });

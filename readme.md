@@ -2,7 +2,7 @@
 
 Edição pessoal do **Tagmar 3** para Foundry Virtual Tabletop 14. Reúne fichas, compêndios sincronizados, coleções antigas para consulta e integrações visuais próprias desta edição. Não é o pacote de distribuição oficial.
 
-Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.54**, com identificador **`tagmar_rpg`**.
+Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.55**, com identificador **`tagmar_rpg`**.
 
 **Onde está o código atual?** Na [branch v14](https://github.com/piratabarba-blip/tagmar3_rpg-master/tree/v14). A branch `main`, exibida na página inicial, preserva código histórico; este README também aparece nela para orientar a instalação atual. Para instalar o XXX, use o manifesto da V14 indicado abaixo, não o `system.json` histórico da `main`.
 
@@ -20,6 +20,14 @@ Em **Configurações do jogo → Tagmar**, procure as opções iniciadas por **M
 A escala fica entre 20% e 500% nos dois eixos; proporções já fora dessa faixa que não possam ser preservadas são ignoradas. A roda sobre formulários ou sem G pressionado permanece inalterada. G pode ser remapeado em Configuração de controles caso haja um atalho personalizado concorrente.
 
 Recursos validados com testes automatizados e confirmados em sessão real de Foundry 14.369 pelo mantenedor.
+
+## Veículos e armas de guerra
+
+Crie um ator **Veículo / Máquina** para embarcações, carroças e máquinas de guerra. A ficha usa ABS, ARM, VB, tripulação, pertences e biografia, com o mesmo padrão visual das demais fichas.
+
+Na aba **Combate**, monte itens **Arma de Guerra**, configure a defesa e os ajustes e clique no nome da arma para atacar. Vincule vários personagens às armas e manobras, com busca por nome e habilidade, e escolha quem fará cada teste; os vínculos mostram nível e total atual. O mestre também pode informar um total manual.
+
+Este recurso é uma **adaptação extraoficial**, com valores definidos pela mesa. [Consulte o guia de veículos e armas de guerra](docs/veiculos.md).
 
 ## Índice
 
@@ -59,7 +67,7 @@ https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads
 
 Use esse endereço para acompanhar as atualizações do XXX. Ele é um manifesto JSON, não o endereço da página do GitHub nem um ZIP. A instalação por manifesto pode ser usada independentemente de o sistema já aparecer na busca do catálogo.
 
-Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.54](https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.7.0-v14.1-rc.54/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
+Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.54](https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.7.0-v14.1-rc.55/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
 
 ### 3. Crie e abra um mundo
 

@@ -51,8 +51,8 @@ export const SystemSettings = function() {
         choices: {
           "no": "Não criar barras automaticamente.",
           "barra_pers": "Criar barras para tokens de Personagem.",
-          "barra_npc": "Criar barras para tokens de NPC.",
-          "barra_both": "Criar barras para tokens de Personagem e NPC."
+          "barra_npc": "Criar barras para tokens de PNJ.",
+          "barra_both": "Criar barras para tokens de Personagem e PNJ."
         }
       });
       game.settings.register("tagmar_rpg", "autoTarget", {

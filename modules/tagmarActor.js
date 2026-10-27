@@ -1,3 +1,4 @@
+import {applyVehicleDamage} from "./vehicles/actions.mjs";
 import * as dadosColoridos from "./dadosColoridos.js";
 
 export class tagmarActor extends Actor {
@@ -9,6 +10,7 @@ export class tagmarActor extends Actor {
     }
 
     async _aplicarDano(dano, token) {
+        if (this.type === "Veiculo") return applyVehicleDamage(this, dano, token);
         if (this.type == "Inventario") return;
         let eh = this.system.eh.value;
         let eh_max = this.system.eh.max;
