@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.7.0-v14.1-rc.53",
+  "version": "2.7.0-v14.1-rc.54",
   "relationships": {
     "requires": [
       {
@@ -94,6 +94,17 @@
     "css/foundry-sheet.css"
   ],
   "packs": [
+    {
+      "name": "personagens-xxx",
+      "label": "Tagmar XXX — Personagens Prontos",
+      "system": "tagmar_rpg",
+      "path": "packs/personagens-xxx",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
     {
       "name": "criando-fichas-t3er",
       "label": "Tagmar — Criação de Fichas (Edição Sincronizada)",
@@ -241,5 +252,5 @@
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
   "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json",
-  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.53"
+  "download": "https://codeload.github.com/piratabarba-blip/tagmar3_rpg-master/zip/refs/tags/v2.7.0-v14.1-rc.54"
 }
