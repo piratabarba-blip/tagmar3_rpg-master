@@ -7,6 +7,8 @@ import { preloadHandlebarsTemplates } from "./templates.js";
 import { SystemSettings } from "./settings.js";
 import { dadosColoridos } from "./dadosColoridos.js";
 import "./compat/theatre.js";
+import "./map-tools.mjs";
+import "./compat/barbrawl-visibility.mjs";
 
 let ocultos = false;
 

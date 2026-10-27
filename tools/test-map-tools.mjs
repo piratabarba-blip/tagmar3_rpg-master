@@ -1,0 +1,84 @@
+import assert from 'node:assert/strict';
+import {scalePatch,canScale,scaleTargets,createScaleQueue,validPointer,registerMapTools} from '../modules/map-tools.mjs';
+const namespace=process.argv[2]??'tagmar_rpg';
+const flags={};
+const doc={id:'a',isOwner:true,texture:{scaleX:-1,scaleY:2},getFlag:(_id,key)=>flags[key]};
+let patch=scalePatch(doc,namespace,{steps:1});
+assert.equal(patch['texture.scaleX'],-1.05);assert.equal(patch['texture.scaleY'],2.1);
+assert.deepEqual(Object.keys(patch).sort(),['_id','texture.scaleX','texture.scaleY',`flags.${namespace}.mapToolsScaleBaseline`].sort());
+assert.deepEqual(patch[`flags.${namespace}.mapToolsScaleBaseline`],{x:-1,y:2});
+patch=scalePatch(doc,namespace,{steps:1000});
+assert.equal(patch['texture.scaleY'],5);assert.equal(patch['texture.scaleX'],-2.5);
+patch=scalePatch(doc,namespace,{steps:-1000});
+assert.equal(patch['texture.scaleX'],-.2);assert.equal(patch['texture.scaleY'],.4);
+assert.equal(scalePatch(doc,namespace,{steps:NaN}),null);
+assert.equal(scalePatch(doc,namespace,{reset:true}),null);
+flags.mapToolsScaleBaseline={x:-.75,y:1.5};
+patch=scalePatch(doc,namespace,{reset:true});
+assert.equal(patch['texture.scaleX'],-.75);assert.equal(patch['texture.scaleY'],1.5);
+assert.equal(patch[`flags.${namespace}.-=mapToolsScaleBaseline`],null);
+assert.equal(scalePatch(doc,namespace,{reset:true,steps:1})['texture.scaleX'],-.75*1.05);
+delete flags.mapToolsScaleBaseline;
+
+const definitions=new Map(),keys=new Map(),values=new Map();
+const game={system:{id:namespace},user:{isGM:true,can:()=>true},settings:{
+  register(ns,key,value){assert.equal(ns,namespace);definitions.set(key,value);values.set(key,value.default);},
+  get:(_id,key)=>values.get(key)
+},keybindings:{register:(_ns,key,value)=>keys.set(key,value)}};
+registerMapTools(game);
+assert.equal(keys.get('mapPointer').editable[0].key,'KeyP');
+assert.equal(keys.get('mapScaleHold').editable[0].key,'KeyG');
+assert.equal(keys.get('mapScaleHold').restricted,true);
+assert.equal(definitions.has('mapScaleModifier'),false);
+assert.equal(definitions.get('mapPointerEnabled').scope,'world');
+assert.equal(definitions.get('mapPointerPlayers').default,false);
+assert.equal(canScale(game,namespace,doc),true);
+game.user.isGM=false;assert.equal(canScale(game,namespace,doc),false);
+assert.equal(definitions.has('mapScalePlayers'),false);
+assert.equal(keys.get('mapScaleReset').restricted,true);
+values.set('mapScalePlayers',true);assert.equal(canScale(game,namespace,doc),false,'Legacy player permission must not enable scaling');
+doc.isOwner=false;assert.equal(canScale(game,namespace,doc),false);
+doc.isOwner=true;game.user.can=()=>false;assert.equal(canScale(game,namespace,doc),false);
+game.user.isGM=true;
+const token={document:doc}, tokens={controlled:[token],hover:{id:'other'}};
+const canvas={ready:true,tokens,activeLayer:tokens,scene:{id:'s'},level:{id:'l'},dimensions:{rect:{contains:(x,y)=>x>=0&&x<1000&&y>=0&&y<1000}}};
+assert.deepEqual(scaleTargets(canvas),[token]);
+tokens.controlled=[];assert.deepEqual(scaleTargets(canvas),[tokens.hover]);
+canvas.activeLayer={};assert.deepEqual(scaleTargets(canvas),[]);
+const pointer={v:1,scene:'s',level:'l',active:true,x:20,y:30,icon:'hand'};
+assert.equal(validPointer(pointer,canvas),true);
+for(const overrides of [{x:Infinity},{x:-1},{scene:'other'},{level:'other'},{icon:'<img>'},{v:2},{active:'yes'}])assert.equal(validPointer({...pointer,...overrides},canvas),false);
+
+const writes=[],errors=[];
+const scene={id:'s',tokens:new Map([[doc.id,doc]]),async updateEmbeddedDocuments(type,patches){
+  assert.equal(type,'Token');writes.push(patches);
+  for(const p of patches){const d=this.tokens.get(p._id);d.texture.scaleX=p['texture.scaleX'];d.texture.scaleY=p['texture.scaleY'];
+    if(p[`flags.${namespace}.mapToolsScaleBaseline`])flags.mapToolsScaleBaseline=p[`flags.${namespace}.mapToolsScaleBaseline`];
+    if(`flags.${namespace}.-=mapToolsScaleBaseline` in p)delete flags.mapToolsScaleBaseline;
+  }
+}};
+const queue=createScaleQueue({game,namespace,onError:e=>errors.push(e)});
+game.user.isGM=false;
+queue.enqueue(scene,[doc],{steps:1});queue.enqueue(scene,[doc],{reset:true});
+await queue.flush();assert.equal(writes.length,0,'Players cannot scale or restore even owned tokens');
+game.user.isGM=true;
+queue.enqueue(scene,[doc],{steps:1});game.user.isGM=false;
+await queue.flush();assert.equal(writes.length,0,'Recheck GM status before committing');
+game.user.isGM=true;
+queue.enqueue(scene,[doc],{steps:1});queue.enqueue(scene,[doc],{steps:2});
+await queue.flush();assert.equal(writes.length,1);assert.equal(doc.texture.scaleX,-(1.05**3));
+assert.deepEqual(flags.mapToolsScaleBaseline,{x:-1,y:2});
+queue.enqueue(scene,[doc],{reset:true});queue.enqueue(scene,[doc],{steps:1});await queue.flush();
+assert.equal(doc.texture.scaleX,-1.05,'Wheel after queued reset starts from saved original');
+queue.enqueue(scene,[doc],{steps:5});queue.enqueue(scene,[doc],{reset:true});await queue.flush();
+assert.equal(doc.texture.scaleX,-1);assert.equal(flags.mapToolsScaleBaseline,undefined);
+queue.enqueue(scene,[doc],{steps:1});values.set('mapScaleEnabled',false);await queue.flush();
+assert.equal(writes.length,3,'Recheck permissions when committing queued wheel events');
+values.set('mapScaleEnabled',true);
+const original=scene.updateEmbeddedDocuments;let release;
+scene.updateEmbeddedDocuments=async function(...args){await new Promise(resolve=>release=resolve);return original.apply(this,args);};
+queue.enqueue(scene,[doc],{steps:1});const inFlight=queue.flush();await Promise.resolve();
+queue.enqueue(scene,[doc],{steps:1});scene.updateEmbeddedDocuments=original;release();await inFlight;
+assert.equal(doc.texture.scaleX,-(1.05**2),'In-flight wheel additions use updated scale');
+scene.tokens.delete(doc.id);queue.enqueue(scene,[doc],{steps:1});await queue.flush();assert.equal(errors.length,0);
+console.log('PASS: scaling bounds, mirrors/proportions, reversible baseline, batched/in-flight updates, deleted tokens, permissions, configurable shortcuts and pointer scene/level validation.');
