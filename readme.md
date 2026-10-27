@@ -1,3 +1,5 @@
+> **Prévia de testes 2.7.0-v14.1-rc.56-beta.1:** nova ficha de Tropa e combate em grande escala. [Instalação e roteiro de testes](docs/teste-combate-em-grande-escala.md).
+
 # Tagmar XXX para Foundry VTT 14
 
 Edição pessoal do **Tagmar 3** para Foundry Virtual Tabletop 14. Reúne fichas, compêndios sincronizados, coleções antigas para consulta e integrações visuais próprias desta edição. Não é o pacote de distribuição oficial.
@@ -398,3 +400,7 @@ O apoio não representa venda nem licenciamento comercial do conteúdo do Tagmar
 ## Atualização assistida por inteligência artificial
 
 A atualização, a organização técnica, a documentação e parte das auditorias foram realizadas com auxílio de ferramentas da OpenAI, incluindo ChatGPT e Codex. As decisões, os testes e a validação final permanecem sob responsabilidade dos mantenedores humanos.
+
+## Combate em Grande Escala (extraoficial)
+
+Ficha de **Tropa** com EF, absorção, comando, moral, aparatos e fortificações. Baseada no suplemento de **Fábio Carvalho Magalhães (19/02/2024)**. Inclui um compêndio separado com um modelo e a tropa do exemplo do livro. [Como usar e convenções da adaptação](docs/combate-em-grande-escala.md). Material derivado sob [CC BY-NC-SA 3.0 Brasil](https://creativecommons.org/licenses/by-nc-sa/3.0/br/). Prévia em teste local.

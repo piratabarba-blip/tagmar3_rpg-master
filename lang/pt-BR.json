@@ -2,7 +2,8 @@
   "TYPES": {
     "Actor": {
       "NPC": "Não Jogador (PNJ)",
-      "Veiculo": "Veículo / Máquina"
+      "Veiculo": "Veículo / Máquina",
+      "Tropa": "Tropa (Grande Escala)"
     },
     "Item": {
       "Arma_Guerra": "Arma de Guerra"

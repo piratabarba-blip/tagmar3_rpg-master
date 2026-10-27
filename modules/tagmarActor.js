@@ -1,3 +1,5 @@
+import {applyTroopDamage} from "./mass-combat/actions.mjs";
+import {derive as deriveTroop} from "./mass-combat/rules.mjs";
 import {applyVehicleDamage} from "./vehicles/actions.mjs";
 import * as dadosColoridos from "./dadosColoridos.js";
 
@@ -9,7 +11,18 @@ export class tagmarActor extends Actor {
         super.prepareData();
     }
 
+    prepareDerivedData() {
+        super.prepareDerivedData();
+        if (this.type === "Tropa") {
+            const d = deriveTroop(this.system);
+            this.system.absorcao.max = d.absorption;
+            this.system.d_ativa = {categoria:d.category, valor:d.defense};
+            this.system.iniciativa = d.initiative;
+        }
+    }
+
     async _aplicarDano(dano, token) {
+        if (this.type === "Tropa") return applyTroopDamage(this, dano);
         if (this.type === "Veiculo") return applyVehicleDamage(this, dano, token);
         if (this.type == "Inventario") return;
         let eh = this.system.eh.value;

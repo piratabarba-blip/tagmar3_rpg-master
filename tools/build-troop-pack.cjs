@@ -1,0 +1,21 @@
+// Compêndio novo e independente; não lê bancos dos mundos.
+const fs=require('fs'),path=require('path'),assert=require('assert/strict');
+const {ClassicLevel}=require(process.env.TAGMAR_FOUNDRY_MODULES?path.join(process.env.TAGMAR_FOUNDRY_MODULES,'classic-level'):'C:/Users/PIRATA/AppData/Local/Programs/Foundry Virtual Tabletop/resources/app/node_modules/classic-level');
+const root=path.resolve(__dirname,'..'),dest=path.join(root,'packs/combate-grande-escala');
+const merge=(a,b)=>{const r=structuredClone(a);for(const [k,v]of Object.entries(b))r[k]=v&&typeof v==='object'&&!Array.isArray(v)?merge(r[k]??{},v):v;return r;};
+const schema=JSON.parse(fs.readFileSync(path.join(root,'template.json'))),manifest=JSON.parse(fs.readFileSync(path.join(root,'system.json')));
+const attribution='<p>Baseado em <strong>Tagmar Suplemento — Combate em Grande Escala</strong>, de Fábio Carvalho Magalhães (19/02/2024). Adaptação extraoficial para Tagmar Foundry. Material derivado sob <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/br/">CC BY-NC-SA 3.0 Brasil</a>.</p>';
+const actor=(id,name,system)=>({_id:id,name,type:'Tropa',img:'icons/svg/combat.svg',system:merge(merge(schema.Actor.templates.base,schema.Actor.Tropa),system),items:[],effects:[],folder:null,sort:0,ownership:{default:0},flags:{},prototypeToken:{name,actorLink:true,texture:{src:'icons/svg/combat.svg'},bar1:{attribute:'ef'},bar2:{attribute:'absorcao'},displayName:20,displayBars:20,width:1,height:1}});
+const docs=[actor('tropaModelo00001','Tropa — Modelo para editar',{ef:{max:100,value:100},equipamento:'ruim',absorcao:{value:15},colunas:{L:2,M:1,P:0},comando:{totalManual:6},biografia:attribution+'<p>Modelo inicial: substitua os valores pelos da sua tropa. Em Básico, informe exército, estágio, equipamento, comando e EF. Inicie a batalha para recompor as reservas.</p><p>Preparativos → Combate → Resolução. Registre os danos pelo chat e aplique somente depois de todas as rolagens. Consulte as dicas (?) e a referência em Fortificações.</p>'}),
+ actor('tropaVerrogari01','Tropa Verrogari — Exemplo do suplemento',{estagio:4,exercito:'Verrogar',ef:{max:465,value:465},equipamento:'medio',absorcao:{value:93},colunas:{L:3,M:2,P:0},comando:{totalManual:10},notaveis:6,especialista:{totalManual:10},tipos:{cavalaria:true},aparatos:{nome:'Torre de cerco',quantidade:1,porUnidade:150,atual:150},general:10,tropasComAparatos:1,biografia:attribution+'<p>Exemplo das pp. 15–16: 450 combatentes e cinco golens de argila, equivalentes a mais 15 combatentes. Estágio 4; equipamento médio; comandante com Liderança 10; personalidade notável de estágio 12.</p><p>Resultados: EF 465; ABS 93; defesa M4; liderança efetiva 16; moral 20; ataques 15/14/12; danos 47/94/141/188. Torre: ABS 150; especialista 10; ataques 12/11/9; danos 38/75/113/150.</p><p>O exemplo do livro não soma notáveis ao especialista. Esse bônus está disponível separadamente, inicialmente zero. A iniciativa foi preenchida apenas como referência de teste; informe a liderança do general e o total de tropas com aparatos do seu exército.</p>'})];
+(async()=>{
+ if(fs.existsSync(dest))throw Error('O compêndio já existe; não será sobrescrito.');
+ const db=new ClassicLevel(dest,{valueEncoding:'json'});
+ try{await db.batch(docs.map(value=>({type:'put',key:`!actors!${value._id}`,value})));await db.compactRange('\x00','\xff');}finally{await db.close();}
+ const verify=new ClassicLevel(dest,{valueEncoding:'json',readOnly:true});let count=0;
+ try{for await(const [key,value]of verify.iterator()){assert.equal(value.type,'Tropa');assert.equal(value._id.length,16);assert.deepEqual(value,docs.find(d=>d._id===value._id));count++;}}finally{await verify.close();}
+ assert.equal(count,2);
+ if(!manifest.packs.some(p=>p.name==='combate-grande-escala'))manifest.packs.push({name:'combate-grande-escala',label:'Combate em Grande Escala — Tropas (Extraoficial)',system:manifest.id,path:'packs/combate-grande-escala',type:'Actor',ownership:{PLAYER:'OBSERVER',GAMEMASTER:'OWNER'}});
+ fs.writeFileSync(path.join(root,'system.json'),JSON.stringify(manifest,null,2)+'\n');
+ console.log('PASS compêndio independente: duas tropas, créditos, reabertura e dados conferidos.');
+})().catch(error=>{console.error(error);process.exitCode=1;});

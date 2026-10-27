@@ -4,7 +4,8 @@
       "Personagem",
       "NPC",
       "Inventario",
-      "Veiculo"
+      "Veiculo",
+      "Tropa"
     ],
     "templates": {
       "base": {
@@ -216,6 +217,84 @@
       "d_ativa": {
         "categoria": "L",
         "valor": 0
+      }
+    },
+    "Tropa": {
+      "templates": [
+        "base"
+      ],
+      "exercito": "",
+      "equipamento": "nenhum",
+      "notaveis": 0,
+      "notaveisEspecialista": 0,
+      "ajusteMoral": 0,
+      "semComando": false,
+      "comando": {
+        "modo": "manual",
+        "totalManual": 0,
+        "operadores": [],
+        "operador": "",
+        "habilidade": ""
+      },
+      "especialista": {
+        "modo": "manual",
+        "totalManual": 0,
+        "operadores": [],
+        "operador": "",
+        "habilidade": ""
+      },
+      "colunas": {
+        "L": 0,
+        "M": 0,
+        "P": 0
+      },
+      "general": 0,
+      "vozComando": 0,
+      "tropasComAparatos": 0,
+      "tipos": {
+        "apoio": false,
+        "cavalaria": false,
+        "ataqueEspecial": false,
+        "defesaEspecial": false
+      },
+      "vantagemAtaque": false,
+      "vantagemDefesa": false,
+      "familiar": false,
+      "acao": "",
+      "ocupada": 0,
+      "biografia": "",
+      "aparatos": {
+        "nome": "",
+        "quantidade": 0,
+        "porUnidade": 100,
+        "reforcados": false,
+        "atual": 0
+      },
+      "fortificacao": {
+        "ativa": false,
+        "muros": 0,
+        "armadilhas": 0
+      },
+      "ataque": {
+        "ajusteDano": 0,
+        "resistenciaEspecial": false,
+        "mirarAparatos": false,
+        "alvoEstrutural": "muros"
+      },
+      "entradaDano": {
+        "valor": 0,
+        "tipo": "geral"
+      },
+      "pendentes": [],
+      "resolvidos": [],
+      "perdasRodada": 0,
+      "recuperar": 0,
+      "calculadora": {
+        "ef": 0,
+        "eh": 0,
+        "abs": 0,
+        "category": "L",
+        "quantity": 0
       }
     }
   },

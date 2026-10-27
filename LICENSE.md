@@ -23,3 +23,7 @@ Bibliotecas, módulos, fontes, imagens e outros componentes de terceiros permane
 ## Contribuições e garantia
 
 Ao enviar uma contribuição, o colaborador concorda que ela seja distribuída sob a licença aplicável ao respectivo escopo. O projeto é fornecido sem garantias, na máxima extensão permitida pela legislação aplicável.
+
+## Combate em Grande Escala — suplemento extraoficial
+
+A ficha de Tropa e o compêndio `combate-grande-escala` adaptam regras e exemplos de **Tagmar Suplemento — Combate em Grande Escala**, de **Fábio Carvalho Magalhães**, publicado em 19/02/2024. O material derivado segue a licença declarada na obra, **CC BY-NC-SA 3.0 Brasil**: https://creativecommons.org/licenses/by-nc-sa/3.0/br/ . As ilustrações do suplemento não estão incluídas. Consulte `docs/combate-em-grande-escala.md` para as convenções da adaptação digital.

@@ -1,3 +1,4 @@
+import {registerTroopSheet} from "./mass-combat/sheet.mjs";
 import {registerVehicleSheets} from "./vehicles/sheets.mjs";
 import tagmarItemSheet from "./sheets/tagmarItemSheet.js";
 import tagmarActorSheet from "./sheets/tagmarActorSheet.js";
@@ -209,6 +210,7 @@ Hooks.once("init", function(){
   });
 
   registerVehicleSheets();
+  registerTroopSheet();
   preloadHandlebarsTemplates();
 });
 
@@ -227,7 +229,7 @@ Hooks.on("updateActor", async (actor, changes, _options, userId) => {
   if (!Number.isFinite(ef)) return;
 
   const defeatedStatus = CONFIG.specialStatusEffects?.DEFEATED ?? "dead";
-  const active = ef < 0;
+  const active = actor.type === "Tropa" ? ef <= 0 : ef < 0;
   if (actor.statuses.has(defeatedStatus) === active) return;
   await actor.toggleStatusEffect(defeatedStatus, {active, overlay: false});
 });
@@ -675,6 +677,10 @@ Hooks.on("preCreateToken", function (document, data) {
 
 function createBrawrs(token, setting) {
   const actor = token.actor;
+  if (actor?.type === "Tropa") return {
+    bar1:{id:"bar1",attribute:"ef",position:"top-outer",mincolor:"#9b3023",maxcolor:"#66a94a",visibility:CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER},
+    bar2:{id:"bar2",attribute:"absorcao",position:"top-outer",mincolor:"#9b3023",maxcolor:"#c7a45d",visibility:CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER}
+  };
   if (actor?.type === "Veiculo") return {
     bar1: {id:"bar1", attribute:"absorcao", mincolor:"#9b3023", maxcolor:"#c7a45d", position:"top-outer", visibility:CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER}
   };

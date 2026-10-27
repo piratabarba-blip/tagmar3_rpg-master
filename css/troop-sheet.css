@@ -1,0 +1,15 @@
+/* Segue as molduras e tabelas das fichas de veículos/PNJ. */
+.tagmar-troop .tm-grid{display:flex;flex-wrap:wrap;align-items:end;gap:7px;margin:4px 0}
+.tagmar-troop .tm-grid>.tv-field{flex:1 1 130px;min-width:0}
+.tagmar-troop .tm-grid>.tv-check{flex:1 1 170px}
+.tagmar-troop .tm-checks{display:flex;flex-wrap:wrap;gap:8px 16px;margin:5px 0}
+.tagmar-troop .tv-v-table th:first-child{width:30%}
+.tagmar-troop .tv-v-table tbody tr:nth-child(even){background:rgba(125,105,120,.13)}
+.tagmar-troop .tm-warning{color:#f4c475;font-size:12px;margin:4px 0}
+.tagmar-troop details{font-size:13px;margin:10px 0;line-height:1.5}
+.tagmar-troop details summary{cursor:pointer;font-weight:bold}
+.tagmar-troop .tv-attack-settings{align-items:end}
+.tagmar-troop.actor .tv-attack-settings .tv-field{display:block;width:150px}
+.tagmar-troop .tv-attack-settings input,.tagmar-troop .tv-attack-settings select{width:100%}
+.tagmar-troop .sheet-primary{scrollbar-gutter:stable}
+.tagmar-troop [data-troop-links]{margin:3px 0}
