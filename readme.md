@@ -2,7 +2,7 @@
 > [!IMPORTANT]
 > **Instalou a prévia de Combate em Grande Escala? Confira sua versão.**
 >
-> Na tela inicial do Foundry, abra **Sistemas de Jogo** e confira o número no cartão do sistema. Se aparecer **`2.7.0-v14.1-rc.56-beta.1`** ou outro número com **`beta`**, você está usando uma prévia. A versão definitiva publicada em 28/10/2026 é **`2.7.0-v14.1-rc.57`**.
+> Na tela inicial do Foundry, abra **Sistemas de Jogo** e confira o número no cartão do sistema. Se aparecer **`2.7.0-v14.1-rc.56-beta.1`** ou outro número com **`beta`**, você está usando uma prévia. A versão definitiva publicada em 28/10/2026 é **`2.7.0-v14.1-rc.58`**.
 >
 > Para sair da beta com manifesto fixo, copie o [manifesto permanente](https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json), abra **Instalar Sistema → URL do Manifesto**, cole o endereço e instale. Faça isso uma única vez; as próximas versões poderão ser recebidas pelo botão **Atualizar**.
 >
@@ -13,7 +13,7 @@
 
 Edição pessoal do **Tagmar 3** para Foundry Virtual Tabletop 14. Reúne fichas, compêndios sincronizados, coleções antigas para consulta e integrações visuais próprias desta edição. Não é o pacote de distribuição oficial.
 
-Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.57**, com identificador **`tagmar_rpg`**.
+Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.58**, com identificador **`tagmar_rpg`**.
 
 **Onde está o código atual?** Na [branch v14](https://github.com/piratabarba-blip/tagmar3_rpg-master/tree/v14). A branch `main`, exibida na página inicial, preserva código histórico; este README também aparece nela para orientar a instalação atual. Para instalar o XXX, use o manifesto da V14 indicado abaixo, não o `system.json` histórico da `main`.
 
@@ -38,7 +38,7 @@ Crie um ator **Veículo / Máquina** para embarcações, carroças e máquinas d
 
 Na aba **Combate**, monte itens **Arma de Guerra**, configure a defesa e os ajustes e clique no nome da arma para atacar. Vincule vários personagens às armas e manobras, com busca por nome e habilidade, e escolha quem fará cada teste; os vínculos mostram nível e total atual. O mestre também pode informar um total manual.
 
-Este recurso é uma **adaptação extraoficial**, com valores definidos pela mesa. [Consulte o guia de veículos e armas de guerra](https://github.com/piratabarba-blip/tagmar3_rpg-master/blob/v14/docs/veiculos.md).
+Este recurso é uma **adaptação extraoficial**, com valores definidos pela mesa. [Consulte o guia de veículos e armas de guerra](docs/veiculos.md).
 
 ## Índice
 
@@ -78,7 +78,7 @@ https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads
 
 Use esse endereço para acompanhar as atualizações do XXX. Ele é um manifesto JSON, não o endereço da página do GitHub nem um ZIP. A instalação por manifesto pode ser usada independentemente de o sistema já aparecer na busca do catálogo.
 
-Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.54](https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.7.0-v14.1-rc.55/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
+Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.58](https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.58/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
 
 ### 3. Crie e abra um mundo
 
@@ -131,19 +131,22 @@ Algumas opções são individuais por usuário; outras, como as barras automáti
 
 ## Compêndios incluídos
 
-O pacote contém **13 compêndios: um de personagens prontos exclusivo do XXX, nove sincronizados e três antigos**. As quantidades abaixo foram conferidas nos bancos da rc.50 e contam documentos principais, sem somar pastas, páginas de diários ou itens internos dos atores. Prefira os sincronizados para conteúdo novo.
+O pacote contém **15 compêndios: um de personagens prontos exclusivo do XXX, nove sincronizados, três antigos e dois de Combate em Grande Escala**. As quantidades das coleções de referência foram conferidas nos bancos da rc.50; Personagens Prontos foi atualizado na rc.58. As contagens representam documentos principais, sem somar pastas, páginas de diários ou itens internos dos atores. Prefira os sincronizados para conteúdo novo.
 
 ### Personagens prontos — exclusivo do XXX
 
-**Tagmar XXX — Personagens Prontos** contém **227 PNJs**, organizados em **19 pastas**, com **6.470 itens internos** de habilidades, equipamentos, magias e demais recursos das fichas. Esta coleção é uma criação da mesa para a edição XXX; não é um novo suplemento oficial e não é incluída no sistema Tagmar 3ER Oficial.
+**Tagmar XXX — Personagens Prontos** contém **329 PNJs**, organizados em **37 pastas**, com **15.585 itens internos** de habilidades, equipamentos, magias e demais recursos das fichas. Esta coleção é uma criação da mesa para a edição XXX; não é um novo suplemento oficial e não é incluída no sistema Tagmar 3ER Oficial.
 
 | Pasta principal | Personagens | Organização |
 | --- | ---: | --- |
 | PESSOAS COMUNS | 28 | Homens, mulheres e aldeões lutadores. |
 | PJM - VARIADOS | 175 | Guerreiros, ladinos, rastreadores, elfos sombrios, anões, nobres e guardas de vilarejo. |
 | Magos | 24 | Alquímico, Elemental, Naturalista, Conhecimento, Necromântico e Ilusões. |
+| ENVIADOS | 102 | 17 divisões por divindade/aspecto, com seis Enviados em cada uma. |
 
 **Para usar:** abra **Compêndios → Tagmar XXX — Personagens Prontos**, encontre a ficha pela pasta ou busca e importe para **Atores**. Depois arraste o ator para o mapa e ajuste nome, estágio, equipamento e permissões conforme sua aventura.
+
+Os **102 Enviados** incluem **102 retratos e 94 tokens animados**. As outras oito fichas usam o retrato estático como token. As animações de distribuição foram comprimidas mantendo resolução, quadros e transparência; as fichas conservam os IDs e a escala preparada pela mesa.
 
 Retratos e tokens animados acompanham o sistema; as fichas não dependem dos arquivos particulares do mundo onde foram criadas. Atualizar o sistema disponibiliza o compêndio, mas não substitui os atores que você já importou ou editou. A coleção conserva os valores definidos pela mesa; confira o equilíbrio e as adaptações antes de usar.
 
@@ -412,7 +415,7 @@ A atualização, a organização técnica, a documentação e parte das auditori
 
 ## Combate em Grande Escala (extraoficial)
 
-Ficha de **Tropa** com EF, absorção, comando, moral, aparatos e fortificações. Baseada no suplemento de **Fábio Carvalho Magalhães (19/02/2024)**. Inclui um compêndio separado com um modelo e a tropa do exemplo do livro. [Como usar e convenções da adaptação](https://github.com/piratabarba-blip/tagmar3_rpg-master/blob/v14/docs/combate-em-grande-escala.md). Material derivado sob [CC BY-NC-SA 3.0 Brasil](https://creativecommons.org/licenses/by-nc-sa/3.0/br/). Disponível na distribuição atual.
+Ficha de **Tropa** com EF, absorção, comando, moral, aparatos e fortificações. Baseada no suplemento de **Fábio Carvalho Magalhães (19/02/2024)**. Inclui um compêndio separado com um modelo e a tropa do exemplo do livro. [Como usar e convenções da adaptação](docs/combate-em-grande-escala.md). Material derivado sob [CC BY-NC-SA 3.0 Brasil](https://creativecommons.org/licenses/by-nc-sa/3.0/br/). Disponível na distribuição atual.
 
 O compêndio **Combate em Grande Escala — Livro e Guia (Extraoficial)** inclui instruções da ficha e o PDF original completo. Acesse também pelo botão **Livro / guia** da Tropa. Veículos têm instruções na Biografia e ajudas (?) nos campos, sem substituir as anotações do usuário.
 
@@ -422,4 +425,4 @@ Abra **Batalha em massa** na aba Combate ou no monitor, com tokens de Tropa e se
 
 Após a resolução, o painel mostra as perdas e a recuperação prevista. A ABS dos equipamentos se restaura nos preparativos seguintes conforme a EF atual. Resgatar feridos exige a confirmação do mesmo hexágono, uma rolagem na coluna do estágio e uma rodada de ocupação. Aparatos e muralhas exigem reparos; armadilhas destruídas não se restauram. Terreno, moral, recursos e casos especiais continuam sob avaliação do mestre.
 
-EF e ABS ficam abaixo do nome em todas as abas. A calculadora preserva seu estado aberto ao editar. Consulte o [guia do combate em grande escala](https://github.com/piratabarba-blip/tagmar3_rpg-master/blob/v14/docs/combate-em-grande-escala.md) e o compêndio Livro e Guia.
+EF e ABS ficam abaixo do nome em todas as abas. A calculadora preserva seu estado aberto ao editar. Consulte o [guia do combate em grande escala](docs/combate-em-grande-escala.md) e o compêndio Livro e Guia.
