@@ -21,6 +21,8 @@ Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos comp�
 
 Integradas ao sistema, sem instalar outro módulo:
 
+- **Mover a barra de macros:** arraste pela alça de pontos à esquerda da hotbar. O botão de seta curva restaura a posição original. A posição fica salva neste navegador, separadamente por usuário e mundo, e se ajusta ao tamanho da janela e à escala da interface. A alça também aceita as teclas de seta; Esc cancela um arraste.
+
 - **Escala da imagem em grupo:** selecione os tokens, deixe o mouse sobre o mapa e segure **G + roda**. Sem seleção, ajusta o token sob o mouse. Mantém o espaço ocupado na grade, posição, proporções e espelhamento. Cada passo aumenta ou diminui proporcionalmente a escala; não iguala tokens de tamanhos diferentes.
 - **Restaurar escala:** **G + 0** (zero superior ou numérico) recupera a escala guardada antes do primeiro ajuste. A referência fica no token da cena e permanece após recarregar. Não altera o token de protótipo nem a ficha do ator.
 - **Apontador:** segure **P** com o mouse sobre o mapa para mostrar a manopla dourada aos participantes na mesma cena e andar. Solte para esconder. Não move câmeras nem revela áreas do mapa. O apontador desaparece também ao sair da janela ou trocar de cena; uma mensagem perdida expira em cerca de 1,6 segundo.

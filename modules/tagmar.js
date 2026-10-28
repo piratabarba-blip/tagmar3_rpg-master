@@ -10,6 +10,7 @@ import { SystemSettings } from "./settings.js";
 import { dadosColoridos } from "./dadosColoridos.js";
 import "./compat/theatre.js";
 import "./map-tools.mjs";
+import "./hotbar-position.mjs";
 import "./compat/barbrawl-visibility.mjs";
 
 let ocultos = false;
@@ -600,6 +601,8 @@ Hooks.once("ready", async function () {
     game.settings.set('polyglot', 'allowOOC', 'a');
   }
   Hooks.on("hotbarDrop", (bar, data, slot) => {
+    // Macros prontas e outros documentos usam o arraste nativo do Foundry.
+    if (data.type !== "Item") return;
     createTagmarMacro(data, slot);
     return false;
   });
