@@ -13,3 +13,24 @@
 .tagmar-troop .tv-attack-settings input,.tagmar-troop .tv-attack-settings select{width:100%}
 .tagmar-troop .sheet-primary{scrollbar-gutter:stable}
 .tagmar-troop [data-troop-links]{margin:3px 0}
+
+.tagmar-troop .tv-v-table .tm-row-controls{width:76px;text-align:center}
+.tagmar-troop .tm-row-controls .item-controls{display:flex;justify-content:center;gap:6px}
+.tagmar-troop .tm-apparatus-toolbar{justify-content:flex-start;gap:8px;margin:5px 0}
+
+/* Painel de condução; não altera a ficha ou o monitor dos combates normais. */
+.tagmar-mass-battle .window-content{padding:12px;max-height:75vh;overflow:auto;font-size:14px;line-height:1.4}
+.tagmar-mass-battle .tm-battle-heading{border-bottom:1px solid #a58a55;padding:5px 0;color:var(--color-text-emphatic)}
+.tagmar-mass-battle fieldset{margin:8px 0;padding:8px}
+.tagmar-mass-battle label{display:flex;align-items:center;gap:8px;margin:5px 0}
+.tagmar-mass-battle input[type=number]{max-width:80px}
+.tagmar-mass-battle input[type=checkbox]{flex:none}
+.tagmar-mass-battle input[type=text],.tagmar-mass-battle input[name=note]{min-width:0;flex:1}
+.tagmar-mass-battle button{margin:4px 3px;min-height:30px;width:auto}
+.tagmar-mass-battle table{width:100%;font-size:13px}
+.tagmar-mass-battle td,.tagmar-mass-battle th{padding:5px;text-align:left}
+.tagmar-mass-battle tr:nth-child(even){background:rgba(125,105,120,.15)}
+
+.tagmar-troop .tc-header-resources{display:flex;flex-wrap:wrap;gap:6px 24px;margin:5px 0 0;font-size:14px;line-height:1.4}
+.tagmar-troop .tc-header-resources span{white-space:nowrap}
+.tagmar-troop .tc-header-resources strong{font-size:16px;font-variant-numeric:tabular-nums}

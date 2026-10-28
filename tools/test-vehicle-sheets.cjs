@@ -123,6 +123,11 @@ H.registerHelper('selectOptions',(options,context)=>{
      const header=await page.locator('.sheet-header').boundingBox();
      const brand=await page.locator('.sheet-header > div').first().boundingBox();
      assert.ok(Math.abs(header.width-brand.width)<2,'Header must fill the sheet width');
+          if(kind==='vehicle'&&tab==='basico'){
+      const widths=await page.locator('.tab.active input[type=number]').evaluateAll(els=>els.filter(el=>el.getBoundingClientRect().width).map(el=>el.getBoundingClientRect().width));assert.ok(widths.every(width=>width<=90),'Vehicle numeric fields stay compact');
+      assert.ok(await page.locator('.tab.active .tv-help[title]').count()>10);
+     }
+     if(kind==='vehicle'&&tab==='biografia'){assert.equal(await page.locator('.tab.active .tc-guide').count(),1);assert.equal(await page.locator('.tab.active [data-edit="system.notas"]').count(),1);}
      if(kind==='vehicle'&&tab==='combate') {
       assert.equal(await page.locator('.tab.active .rollable[data-action="attack"]').count(),2);
       assert.equal(await page.locator('.tab.active button[data-action="attack"]').count(),0);

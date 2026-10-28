@@ -1,11 +1,13 @@
 import {TROOP,EQUIPMENT,POOLS,derive,nat,int,creatureCount} from './rules.mjs';
 import {troopData,rollTroop,rollMorale,enqueue,resolvePending,gm,registerTroopChat} from './actions.mjs';
 import {requireOwner,exclusive} from '../vehicles/actions.mjs';
+import {WAR_WEAPON} from '../vehicles/rules.mjs';
 import {inlineOperatorHTML,activateInlineOperators} from '../vehicles/inline-operators.mjs';
 import {syncOperatorForm} from '../vehicles/operators.mjs';
 import {getPortraitData,activatePortraitListeners,editPortrait} from '../sheets/portrait.js';
 import {copyTroopTarget,registerTroopTargeting} from './targeting.mjs';
 import {registerTroopFeedback} from './feedback.mjs';
+import {openBattle,registerBattle} from './battle.mjs';
 
 export class TroopSheet extends foundry.appv1.sheets.ActorSheet {
   static get defaultOptions(){return foundry.utils.mergeObject(super.defaultOptions,{classes:['tagmar','sheet','actor','tagmar-vehicle','tagmar-troop'],width:860,height:860,submitOnChange:true,
@@ -14,9 +16,19 @@ export class TroopSheet extends foundry.appv1.sheets.ActorSheet {
   async getData(options){
     const data=await super.getData(options),actor=this.actor,s=actor.system,d=await troopData(actor);
     const biographyHTML=await foundry.applications.ux.TextEditor.enrichHTML(s.biografia??'',{secrets:actor.isOwner,relativeTo:actor});
-    const rows=[{action:'attack',name:'Ataque da tropa',totals:d.totals,damages:d.damages.slice(0,4)},
-      {action:'apparatus',name:s.aparatos.nome||'Ataque dos aparatos',totals:d.apparatusTotals,damages:d.apparatusDamages.slice(0,4)}];
-    return {...data,actor,system:s,d,rows,...getPortraitData(actor),systemPath:`systems/${game.system.id}`,isGM:game.user.isGM,
+    const hasApparatus=nat(s.aparatos.quantidade)>0;
+    const rows=[{action:'attack',name:'Ataque da tropa',totals:d.totals,damages:d.damages.slice(0,4)}];
+    if(hasApparatus)rows.push({action:'apparatus',isApparatus:true,name:s.aparatos.nome||'Ataque dos aparatos',totals:d.apparatusTotals,damages:d.apparatusDamages.slice(0,4)});
+    for (const row of rows) {
+      const link=actor.getFlag?.(game.system.id,'troopAttackIcons')?.[row.action];
+      let source;
+      if(link?.uuid)try {source=await fromUuid(link.uuid);}catch { /* Keep the saved image if the source is unavailable. */ }
+      const usable=source?.type===WAR_WEAPON && source.visible!==false;
+      row.hasIconLink=Boolean(link);
+      row.img=(usable?source.img:link?.img)||(row.action==='attack'?'icons/environment/people/infantry-army.webp':'icons/weapons/artillery/catapult-simple.webp');
+      row.iconHint=link ? `Imagem: ${usable?source.name:link.name}. Arraste outra Arma de Guerra sobre esta linha para trocar a imagem.` : 'Arraste uma Arma de Guerra sobre esta linha para usar a imagem dela. Os valores continuam sendo os da tropa.';
+    }
+    return {...data,actor,system:s,d,rows,hasApparatus,...getPortraitData(actor),systemPath:`systems/${game.system.id}`,isGM:game.user.isGM,
       biographyHTML,equipmentOptions:Object.fromEntries(Object.entries(EQUIPMENT).map(([k,v])=>[k,v.label])),
       modes:{manual:'Total manual (mestre)',vinculado:'Personagem vinculado'},defenses:{L:'Leve (L)',M:'Média (M)',P:'Pesada (P)'},
       sizes:{50:'Pequeno — 50 ABS',100:'Médio — 100 ABS',150:'Grande — 150 ABS'},pools:POOLS,
@@ -37,8 +49,37 @@ export class TroopSheet extends foundry.appv1.sheets.ActorSheet {
     const theme=game.settings.get(game.system.id,'sheetTemplate');
     this.element.toggleClass('tagmar-dark-sheet',theme==='dark');this.element.toggleClass('tagmar-foundry-sheet',theme==='foundry');
     activatePortraitListeners(this,html);
+    // Document updates replace the form; disclosure state belongs to this sheet instance.
+    for(const detail of html[0]?.querySelectorAll('[data-troop-detail]')??[]){
+      const key=detail.dataset.troopDetail;
+      if(this._troopDetails?.has(key))detail.open=this._troopDetails.get(key);
+      detail.addEventListener('toggle',()=>{if(detail.isConnected){this._troopDetails??=new Map();this._troopDetails.set(key,detail.open);}});
+    }
     for(const key of ['comando','especialista'])activateInlineOperators(this,html,key,(_sheet,event)=>this.saveForAction(event),{host:html[0]?.querySelector(`[data-troop-links="${key}"] [data-operator-editor]`)});
+    html.find('[data-troop-battle]').on('click',event=>{event.preventDefault();openBattle();});
+    html.find('[data-troop-guide]').on('click',async event=>{
+      event.preventDefault();
+      try {
+        const pack=game.packs.get(`${game.system.id}.combate-grande-escala-livro`);
+        const book=await pack?.getDocument('tropaLivroGuia01');
+        if(!book)throw Error('O livro de consulta não está disponível nesta instalação.');
+        book.sheet.render(true);
+      } catch(error){ui.notifications.warn(error.message);}
+    });
+    if(this._focusApparatus){this._focusApparatus=false;this.focusApparatus();}
     if(!this.isEditable)return;
+    html.find('[data-troop-config]').on('click',async event=>{
+      event.preventDefault();event.stopPropagation();
+      if(this._troopBusy)return;this._troopBusy=true;
+      try{
+        requireOwner(this.actor);
+        const {troopConfig,id}=event.currentTarget.dataset;
+        if(troopConfig==='edit'){this.focusApparatus();return;}
+        await this.saveForAction(event);
+        await this.configureAttack(troopConfig,id);
+      }catch(error){console.error('Tagmar | Tropas',error);ui.notifications.warn(error.message);}
+      finally{this._troopBusy=false;}
+    });
     html.find('[data-troop-action]').on('click',async event=>{
       event.preventDefault();const button=event.currentTarget;if(this._troopBusy)return;this._troopBusy=true;
       try {requireOwner(this.actor);await this.saveForAction(event);await this.action(button.dataset.troopAction,button.dataset.id);}
@@ -67,7 +108,10 @@ export class TroopSheet extends foundry.appv1.sheets.ActorSheet {
       return a.update({'system.ef.value':nat(state.ef.max),'system.absorcao.value':d.absorption,'system.aparatos.atual':d.apparatusMax,'system.pendentes':[],'system.perdasRodada':0});
     }});
   }
-  async _onChangeInput(event){const promise=super._onChangeInput(event);this._troopPendingChange=promise;try{return await promise;}finally{if(this._troopPendingChange===promise)this._troopPendingChange=null;}}
+  async _onChangeInput(event){
+    this._troopDetails??=new Map();
+    for(const detail of this.element?.[0]?.querySelectorAll('[data-troop-detail]')??[])this._troopDetails.set(detail.dataset.troopDetail,detail.open);
+    const promise=super._onChangeInput(event);this._troopPendingChange=promise;try{return await promise;}finally{if(this._troopPendingChange===promise)this._troopPendingChange=null;}}
   async _updateObject(event,form){
     requireOwner(this.actor);
     for(const key of ['comando','especialista'])syncOperatorForm(this.actor.system[key],`system.${key}`,form);
@@ -84,7 +128,43 @@ export class TroopSheet extends foundry.appv1.sheets.ActorSheet {
     if('system.ef.value'in form)form['system.ef.value']=Math.min(nat(form['system.ef.value']),nat(form['system.ef.max']??this.actor.system.ef.max));
     return super._updateObject(event,form);
   }
-  async _onDropItem(){ui.notifications.warn('A ficha de tropa usa as estatísticas coletivas do suplemento. Vincule os personagens pelo comando; itens individuais ficam nas fichas deles.');return false;}
+  focusApparatus(){
+    this._tabs?.[0]?.activate('combate');
+    const field=this.element?.[0]?.querySelector('[name="system.aparatos.nome"]');
+    field?.scrollIntoView({block:'center',behavior:'smooth'});field?.focus();field?.select();
+  }
+  async configureAttack(action,id){
+    requireOwner(this.actor);
+    if(action==='reset-icon' && ['attack','apparatus'].includes(id))return this.actor.update({[`flags.${game.system.id}.troopAttackIcons.${id}`]:null});
+    if(action==='add'){
+      if(nat(this.actor.system.aparatos.quantidade)>0){this.focusApparatus();return;}
+      this._focusApparatus=true;
+      return this.actor.update({'system.aparatos':{nome:'Novo aparato',quantidade:1,porUnidade:100,reforcados:false,atual:100},[`flags.${game.system.id}.troopAttackIcons.apparatus`]:null});
+    }
+    if(action==='remove')return Dialog.confirm({title:'Excluir aparatos da tropa?',content:'<p>Remover este conjunto de aparatos, incluindo nome, quantidade, ABS e imagem? Depois você poderá adicionar outro. A EF, o comando e as armas originais não serão alterados.</p>',yes:async()=>{
+      requireOwner(this.actor);
+      return this.actor.update({'system.aparatos':{nome:'',quantidade:0,porUnidade:100,reforcados:false,atual:0},[`flags.${game.system.id}.troopAttackIcons.apparatus`]:null});
+    }});
+  }
+  async _onDropItem(event,data){
+    requireOwner(this.actor);
+    const row=event.target?.closest?.('[data-troop-icon-row]');
+    const action=row?.dataset.troopIconRow ?? (event.target?.closest?.('[data-tab="combate"]')?'apparatus':null);
+    if(!['attack','apparatus'].includes(action)){
+      ui.notifications.warn('Arraste uma Arma de Guerra para a aba Combate para usar seu nome e imagem nos aparatos.');return false;
+    }
+    const item=await Item.implementation.fromDropData(data);
+    if(item?.type!==WAR_WEAPON || item.visible===false){ui.notifications.warn('Escolha uma Arma de Guerra acessível.');return false;}
+    await this.saveForAction(event);
+    const update={[`flags.${game.system.id}.troopAttackIcons.${action}`]:{uuid:item.uuid,img:item.img,name:item.name}};
+    if(action==='apparatus'){
+      update['system.aparatos.nome']=item.name;
+      if(!nat(this.actor.system.aparatos.quantidade))Object.assign(update,{'system.aparatos.quantidade':1,'system.aparatos.porUnidade':100,'system.aparatos.reforcados':false,'system.aparatos.atual':100});
+    }
+    // The reference supplies artwork/name, never individual weapon damage or ammunition.
+    await this.actor.update(update);
+    return false;
+  }
 }
 export function prepareTroop(actor){
   if(actor.type!==TROOP)return;
@@ -94,6 +174,7 @@ export function prepareTroop(actor){
   actor.system.iniciativa=d.initiative;
 }
 export function registerTroopSheet(){
+  registerBattle();
   CONFIG.Actor.typeLabels[TROOP]='TYPES.Actor.Tropa';
   foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor,'tagmar',TroopSheet,{types:[TROOP],makeDefault:true,label:'Tropa — Combate em Grande Escala'});
   Hooks.on('preCreateActor',(actor,data)=>{

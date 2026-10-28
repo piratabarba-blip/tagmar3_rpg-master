@@ -1,10 +1,8 @@
-> **Prévia de testes 2.7.0-v14.1-rc.56-beta.1:** nova ficha de Tropa e combate em grande escala. [Instalação e roteiro de testes](docs/teste-combate-em-grande-escala.md).
-
 # Tagmar XXX para Foundry VTT 14
 
 Edição pessoal do **Tagmar 3** para Foundry Virtual Tabletop 14. Reúne fichas, compêndios sincronizados, coleções antigas para consulta e integrações visuais próprias desta edição. Não é o pacote de distribuição oficial.
 
-Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.55**, com identificador **`tagmar_rpg`**.
+Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.57**, com identificador **`tagmar_rpg`**.
 
 **Onde está o código atual?** Na [branch v14](https://github.com/piratabarba-blip/tagmar3_rpg-master/tree/v14). A branch `main`, exibida na página inicial, preserva código histórico; este README também aparece nela para orientar a instalação atual. Para instalar o XXX, use o manifesto da V14 indicado abaixo, não o `system.json` histórico da `main`.
 
@@ -403,4 +401,14 @@ A atualização, a organização técnica, a documentação e parte das auditori
 
 ## Combate em Grande Escala (extraoficial)
 
-Ficha de **Tropa** com EF, absorção, comando, moral, aparatos e fortificações. Baseada no suplemento de **Fábio Carvalho Magalhães (19/02/2024)**. Inclui um compêndio separado com um modelo e a tropa do exemplo do livro. [Como usar e convenções da adaptação](docs/combate-em-grande-escala.md). Material derivado sob [CC BY-NC-SA 3.0 Brasil](https://creativecommons.org/licenses/by-nc-sa/3.0/br/). Prévia em teste local.
+Ficha de **Tropa** com EF, absorção, comando, moral, aparatos e fortificações. Baseada no suplemento de **Fábio Carvalho Magalhães (19/02/2024)**. Inclui um compêndio separado com um modelo e a tropa do exemplo do livro. [Como usar e convenções da adaptação](docs/combate-em-grande-escala.md). Material derivado sob [CC BY-NC-SA 3.0 Brasil](https://creativecommons.org/licenses/by-nc-sa/3.0/br/). Disponível na distribuição atual.
+
+O compêndio **Combate em Grande Escala — Livro e Guia (Extraoficial)** inclui instruções da ficha e o PDF original completo. Acesse também pelo botão **Livro / guia** da Tropa. Veículos têm instruções na Biografia e ajudas (?) nos campos, sem substituir as anotações do usuário.
+
+### Batalha guiada e recuperação
+
+Abra **Batalha em massa** na aba Combate ou no monitor, com tokens de Tropa e seus exércitos definidos. O painel conduz preparativos, ataques extras e principais, apoio e resolução. Os danos ficam registrados até o encerramento da rodada; botões do chat continuam disponíveis sem duplicar registros.
+
+Após a resolução, o painel mostra as perdas e a recuperação prevista. A ABS dos equipamentos se restaura nos preparativos seguintes conforme a EF atual. Resgatar feridos exige a confirmação do mesmo hexágono, uma rolagem na coluna do estágio e uma rodada de ocupação. Aparatos e muralhas exigem reparos; armadilhas destruídas não se restauram. Terreno, moral, recursos e casos especiais continuam sob avaliação do mestre.
+
+EF e ABS ficam abaixo do nome em todas as abas. A calculadora preserva seu estado aberto ao editar. Consulte o [guia do combate em grande escala](docs/combate-em-grande-escala.md) e o compêndio Livro e Guia.

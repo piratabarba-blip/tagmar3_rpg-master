@@ -5,6 +5,7 @@ import {attackColumn,escape} from '../vehicles/rules.mjs';
 import {dadosColoridos} from '../dadosColoridos.js';
 import {selectedTroopTarget,attackRecipients} from './targeting.mjs';
 import {feedbackLines} from './feedback.mjs';
+import {managedCombat,stateOf,assertGuidedRoll} from './battle-state.mjs';
 
 export function gm(actor) {requireOwner(actor);if(!game.user.isGM)throw Error('A resolução e a preparação das tropas são controladas pelo mestre.');}
 export async function troopData(actor,{strict=false,apparatus=false}={}) {
@@ -20,10 +21,15 @@ export async function troopData(actor,{strict=false,apparatus=false}={}) {
 const colors={verde:['Falha crítica','#91cf50'],branco:['Errou','#ffffff'],amarelo:['25%','#ffff00'],laranja:['50%','#ff9900'],vermelho:['75%','#ee5555'],azul:['100%','#00a1e8'],roxo:['125%','#b3a0ff'],cinza:['Crítico','#bfbfbf']};
 const percentages={amarelo:25,laranja:50,vermelho:75,azul:100,roxo:125};
 
-export async function rollTroop(actor,{apparatus=false,rescue=false}={}) {
+export async function rollTroop(actor,{apparatus=false,rescue=false,battleContext=null,targetOverride=null,recoveryContext=null}={}) {
   requireOwner(actor);
+  const managed=managedCombat(actor);
+  if(managed&&rescue&&!recoveryContext)throw Error('Escolha Resgatar feridos nos preparativos do painel da batalha.');
+  if(recoveryContext){const state=stateOf(managed);if(!rescue||!state?.enabled||state.phase!=='preparation'||state.session!==recoveryContext.session||state.round!==recoveryContext.round)throw Error('A etapa de resgate mudou. Confira o painel.');}
+  if(managed&&!rescue&&!battleContext)throw Error('Use Rolar ataque no painel Batalha em massa para respeitar a etapa e o alvo registrados.');
+  if(battleContext)assertGuidedRoll(game.combats.get(battleContext.combatId),actor,battleContext,targetOverride,apparatus);
   return exclusive(actor,async()=>{
-    const stored=actor.system,target=rescue?null:selectedTroopTarget(actor);
+    const stored=recoveryContext?{...actor.system,perdasRodada:nat(recoveryContext.losses)}:actor.system,target=rescue?null:(targetOverride??selectedTroopTarget(actor));
     // Consulta ao alvo no instante do clique, sem depender de um update assíncrono da ficha.
     const s=target?{...stored,inf_ataque:{...stored.inf_ataque,cat_def:target.category,valor_def:target.defense},ataque:{...stored.ataque,resistenciaEspecial:target.resistance}}:stored;
     const d=await troopData(actor,{strict:!rescue,apparatus});
@@ -45,14 +51,14 @@ export async function rollTroop(actor,{apparatus=false,rescue=false}={}) {
       if(amount>0)variants.push({amount,kind,percent});
     }
     const heading=rescue?'Resgatar feridos':apparatus?(s.aparatos.nome||'Ataque de aparatos'):'Ataque da tropa';
-    const buttons=rescue?'':variants.map((v,i)=>`<div><button type="button" data-troop-packet="${i}" data-troop-apply="true">Aplicar ${v.amount} — ${critical?v.percent+'% · ':''}${escape(POOLS[v.kind])}</button><button type="button" data-troop-packet="${i}">Registrar para a resolução</button></div>`).join('');
+    const buttons=rescue?'':variants.map((v,i)=>`<div>${battleContext?'':`<button type="button" data-troop-packet="${i}" data-troop-apply="true">Aplicar ${v.amount} — ${critical?v.percent+'% · ':''}${escape(POOLS[v.kind])}</button>`}<button type="button" data-troop-packet="${i}">Registrar para a resolução${critical?' — '+v.percent+'%':''}</button></div>`).join('');
     const result=variants.map(v=>`${v.percent}%: ${v.amount}`).join(' · ');
-    const reminder=rescue?'Sugestão de EF a recuperar; o mestre confirma os feridos resgatáveis na ficha. Não altera a EF automaticamente.':
-      `Mestre: ${target?'o dano será enviado ao alvo deste ataque':'selecione os tokens das tropas atingidas'}. Aplique o dano quando chegar a etapa de resolução ou registre para aplicar em conjunto pela ficha.`;
+    const reminder=battleContext?'Batalha guiada: registro automático pelo mestre ativo; escolha o crítico no painel ou no chat. Os danos são aplicados na resolução.':rescue?(recoveryContext?'Resgate da batalha guiada: o painel registra a recuperação de EF e uma rodada de ocupação. Críticos exigem escolha do mestre.':'Sugestão de EF a recuperar; o mestre confirma os feridos resgatáveis na ficha. Não altera a EF automaticamente.'):
+      `Mestre: ${target?(critical?'escolha o resultado crítico abaixo para registrar no alvo':'o dano será registrado automaticamente no alvo pelo mestre ativo'):'selecione os tokens das tropas atingidas e registre abaixo'}. O registro não desconta EF/ABS: aplique na resolução. Os botões continuam disponíveis para conferência ou recuperação, sem duplicar o ataque.`;
     if(game.settings.get(game.system.id,'dadosColoridos'))dadosColoridos(color,roll);
     const targetInfo=target?`<p><strong>Alvo: ${escape(target.name)}</strong> · Defesa ${target.category}${target.defense}${target.resistance?' · Defesa especial':''}</p>`:'';
     await roll.toMessage({speaker:ChatMessage.getSpeaker({actor}),flavor:`<h2>${escape(heading)} — ${escape(actor.name)}</h2>${targetInfo}<p>Coluna ${column.totalColumn}${column.extraDamage?' · AAC20 +'+column.extraDamage+'%':''}</p><h3 style="background:${bg};color:#111;text-align:center">${escape(label)}</h3><p>${result}</p><p>${reminder}</p>${buttons}`,
-      flags:{[game.system.id]:{troopAttack:{variants:rescue?[]:variants,actorUuid:actor.uuid,target}}}});
+      flags:{[game.system.id]:{troopAttack:{variants:rescue?[]:variants,autoRegister:!rescue,actorUuid:actor.uuid,target,...(battleContext?{battle:battleContext}:{})}}}});
     return {column,color,variants};
   });
 }
@@ -73,7 +79,10 @@ export async function enqueue(actor,packet) {
   });
 }
 async function persistDamage(actor,packets) {
-  const {result,update}=damageUpdate(actor.system,packets),ids=new Set(packets.map(p=>p.id));
+  const battle=managedCombat(actor),state=stateOf(battle),key=state?.enabled?`${state.session}:${state.round}`:null;
+  const reset=key&&actor.getFlag(game.system.id,'battleLossReset')!==key;
+  const {result,update}=damageUpdate(reset?{...actor.system,perdasRodada:0}:actor.system,packets),ids=new Set(packets.map(p=>p.id));
+  if(reset)update[`flags.${game.system.id}.battleLossReset`]=key;
   update['system.pendentes']=(actor.system.pendentes??[]).filter(p=>!ids.has(p.id));
   update['system.resolvidos']=[...(actor.system.resolvidos??[]),...ids].slice(-500);
   await actor.update(update,{tagmarTroopDamage:{id:foundry.utils.randomID(),result}});
@@ -81,6 +90,7 @@ async function persistDamage(actor,packets) {
   return result;
 }
 export async function applyAttackPacket(actor,packet) {
+  const battle=managedCombat(actor);if(battle&&stateOf(battle).phase!=='resolution')throw Error('Aguarde a etapa de Resolução da batalha para aplicar os danos.');
   gm(actor);if(actor.type!==TROOP)throw Error('Escolha uma tropa.');
   if(!Object.hasOwn(POOLS,packet.kind)||!Number.isFinite(Number(packet.amount))||Number(packet.amount)<=0)throw Error('Dano inválido.');
   return exclusive(actor,async()=>{
@@ -91,6 +101,7 @@ export async function applyAttackPacket(actor,packet) {
   });
 }
 export async function resolvePending(actor) {
+  const battle=managedCombat(actor);if(battle&&stateOf(battle).phase!=='resolution')throw Error('Aguarde a etapa de Resolução da batalha para aplicar os danos.');
   gm(actor);
   return exclusive(actor,async()=>{
     const packets=actor.system.pendentes??[];if(!packets.length)return;
@@ -104,7 +115,22 @@ export async function applyTroopDamage(actor,damage) {
   await enqueue(actor,{id:foundry.utils.randomID(),amount:damage.valor,kind:damage.isCritico?'critico':'geral',source:'Chat do sistema'});
   ui.notifications.info('Dano registrado. Aplique na aba Combate, durante a etapa de resolução.');
 }
+// Only the active GM writes to an opposing actor; the target is frozen in the chat card.
+export async function registerTargetedAttack(message){
+  if(!game.user.isGM||game.users?.activeGM?.id!==game.user.id)return;
+  const data=message.getFlag(game.system.id,'troopAttack');
+  if(!data?.autoRegister||data.battle||!data.target||data.variants?.length!==1)return;
+  const author=message.author??message.user,source=await fromUuid(data.actorUuid);
+  if(source?.type!==TROOP||!author||(!author.isGM&&!source.testUserPermission(author,'OWNER')))return;
+  const [target]=await attackRecipients(data);
+  if(target.uuid===source.uuid)return;
+  const registered=await enqueue(target,{...data.variants[0],id:message.id,source:message.speaker?.alias||source.name});
+  if(registered===undefined)throw Error('O alvo está ocupado. Use Registrar para a resolução no chat para concluir.');
+  return registered;
+}
 export function registerTroopChat() {
+  Hooks.on('createChatMessage',message=>registerTargetedAttack(message).catch(error=>ui.notifications.warn(`Registro de dano: ${error.message}`)));
+
   Hooks.on('renderChatMessageHTML',(message,html)=>{
     for(const button of html.querySelectorAll('[data-troop-packet]')) {
       button.hidden=!game.user.isGM;
@@ -114,6 +140,11 @@ export function registerTroopChat() {
         if(!packet)return;
         button.disabled=true;
         try {
+          if(data.battle){
+            const {registerBattleChatResult}=await import('./battle.mjs');
+            await registerBattleChatResult(message,index);
+            ui.notifications.info('Ataque conferido no painel da batalha; o dano será aplicado na resolução.');return;
+          }
           const actors=await attackRecipients(data),apply=button.dataset.troopApply==='true';
           let count=0;
           for(const actor of actors)if(await (apply?applyAttackPacket:enqueue)(actor,{...packet,id:message.id,source:message.speaker?.alias||'Ataque de tropa'}))count++;

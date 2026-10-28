@@ -177,3 +177,54 @@
 .tagmar-vehicle .tab[data-tab="combate"] .tv-v-table tr.item:nth-child(4n+3){background:rgba(50,40,52,.62)!important}
 .tagmar-vehicle.tagmar-dark-sheet .tab[data-tab="combate"] .tv-v-table tr.item:nth-child(4n+1){background:rgba(10,15,23,.42)!important}
 .tagmar-vehicle.tagmar-dark-sheet .tab[data-tab="combate"] .tv-v-table tr.item:nth-child(4n+3){background:rgba(35,46,64,.6)!important}
+
+/* Mesma leitura em blocos e linhas alternadas das fichas de personagem. */
+.tagmar-vehicle.actor .tc-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 22px;align-items:start}
+.tagmar-vehicle.actor .tc-columns>div{min-width:0}
+.tagmar-vehicle.actor .tc-group{margin:7px 0 12px}
+.tagmar-vehicle.actor .tc-group>h3{font-family:NewRocker,serif;font-size:21px;line-height:28px;text-align:center;margin:0 0 6px;padding-bottom:3px}
+.tagmar-vehicle.actor .tc-stats{width:100%;table-layout:fixed;border-collapse:collapse;border:0;background:none;margin:0 0 5px;font-size:13px}
+.tagmar-vehicle.actor .tc-stats th,.tagmar-vehicle.actor .tc-stats td{padding:3px 6px;height:30px;border:0;vertical-align:middle;text-align:left;font-weight:normal}
+.tagmar-vehicle.actor .tc-stats th{width:52%;line-height:18px;overflow-wrap:break-word}
+.tagmar-vehicle.actor .tc-stats td{text-align:right}
+.tagmar-vehicle.actor .tc-stats input,.tagmar-vehicle.actor .tc-stats select{margin:0;height:25px;min-width:0;padding:1px 4px;font-size:13px;box-sizing:border-box}
+.tagmar-vehicle.actor .tc-stats input[type=number]{width:78px;max-width:100%;text-align:center}
+.tagmar-vehicle.actor .tc-stats input[type=text],.tagmar-vehicle.actor .tc-stats select{width:100%;max-width:100%}
+.tagmar-vehicle.actor .tc-stats .tc-result{display:inline-block;min-width:78px;text-align:center;font-weight:bold;color:inherit}
+.tagmar-vehicle.actor .tc-stats tr:nth-child(even),.tagmar-vehicle.actor .tc-matrix tbody tr:nth-child(even){background:rgba(100,78,102,.19)}
+.tagmar-vehicle.actor .tc-stats tr:nth-child(odd),.tagmar-vehicle.actor .tc-matrix tbody tr:nth-child(odd){background:rgba(0,0,0,.06)}
+.tagmar-vehicle.actor .tc-stats th,.tagmar-vehicle.actor .tc-stats td,.tagmar-vehicle.actor .tc-matrix tbody th,.tagmar-vehicle.actor .tc-matrix tbody td{background:transparent!important}
+.tagmar-vehicle.actor .tc-stats tr:nth-child(even)>*,.tagmar-vehicle.actor .tc-matrix tbody tr:nth-child(even)>*{background:rgba(100,78,102,.19)!important}
+.tagmar-vehicle.actor .tc-stats tr:nth-child(odd)>*,.tagmar-vehicle.actor .tc-matrix tbody tr:nth-child(odd)>*{background:rgba(0,0,0,.06)!important}
+.tagmar-vehicle.actor .tc-stats th,.tagmar-vehicle.actor .tc-stats td{height:27px;padding:2px 6px}
+.tagmar-vehicle.actor .tc-matrix{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;font-size:13px;background:none}
+.tagmar-vehicle.actor .tc-matrix th,.tagmar-vehicle.actor .tc-matrix td{text-align:center;padding:3px 2px;font-weight:normal;height:29px}
+.tagmar-vehicle.actor .tc-matrix th:first-child{width:39%;text-align:left;padding-left:6px}
+.tagmar-vehicle.actor .tc-matrix input{width:100%;max-width:65px;height:25px;text-align:center;font-size:13px}
+.tagmar-vehicle.actor .tc-matrix output{font-weight:bold}
+.tagmar-vehicle.actor .tc-checks{display:flex;gap:3px 14px;flex-wrap:wrap;margin:5px 0}
+.tagmar-vehicle.actor .tc-checks .tv-check{height:auto;min-height:25px;margin:0;gap:5px;line-height:17px}
+.tagmar-vehicle.actor .tc-checks input[type=checkbox]{width:15px;height:15px;margin:0}
+.tagmar-vehicle.actor .tc-caption{font-size:12px;line-height:1.4;opacity:.85;margin:5px 0}
+.tagmar-vehicle.actor .tc-type-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:5px 0}
+.tagmar-vehicle.actor .tc-type-row>label{display:flex;align-items:center;gap:7px;font-size:13px;min-width:0}
+.tagmar-vehicle.actor .tc-type-row select{width:auto;flex:1;min-width:0;height:26px;font-size:13px}
+.tagmar-vehicle.actor .tc-maneuver-bottom{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+.tagmar-vehicle.actor .tc-maneuver-bottom>div{text-align:center}
+.tagmar-vehicle.actor .tc-guide{margin:8px 0;padding:8px 10px;border:1px solid #665563;border-radius:3px;font-size:13px;line-height:1.5}
+.tagmar-vehicle.actor .tc-guide summary{cursor:pointer;font-weight:bold}
+.tagmar-vehicle.actor .tc-guide li{margin:5px 0}
+.tagmar-vehicle.actor .tc-guide p{margin:6px 0}
+.tagmar-vehicle.actor .tc-guide .tc-stats{margin-top:8px}
+.tagmar-vehicle.actor .tc-notes-title{font-size:21px;text-align:left;line-height:28px;margin:12px 0 6px}
+.tagmar-vehicle.actor .tc-guide-open{justify-self:end;align-self:center;font-size:12px;width:auto;max-width:140px}
+.tagmar-vehicle.actor .tc-links{margin-top:6px}
+.tagmar-vehicle.actor .tc-links .tv-inline-pickers{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.tagmar-vehicle.actor .tc-links .tv-inline-pickers>button{grid-column:2;justify-self:end}
+.tagmar-vehicle.actor .tc-links .tv-linked-person{max-width:100%;min-width:0}
+.tagmar-vehicle.actor .tc-links .tv-linked-person button:first-child{min-width:0;white-space:normal;height:auto;line-height:18px;text-align:left;overflow-wrap:anywhere}
+.tagmar-vehicle.actor .tc-attack-settings{font-size:13px;align-items:center;margin:6px 0 10px}
+.tagmar-vehicle.actor .tc-attack-settings label{display:flex;align-items:center;gap:6px}
+.tagmar-vehicle.actor .tc-attack-settings input{width:62px;text-align:center}
+.tagmar-vehicle.actor .tc-attack-settings select{width:105px}
+@media(max-width:700px){.tagmar-vehicle.actor .tc-columns,.tagmar-vehicle.actor .tc-maneuver-bottom{grid-template-columns:1fr}}

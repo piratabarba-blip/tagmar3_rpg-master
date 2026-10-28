@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.7.0-v14.1-rc.56-beta.1",
+  "version": "2.7.0-v14.1-rc.57",
   "relationships": {
     "requires": [
       {
@@ -255,6 +255,17 @@
         "PLAYER": "OBSERVER",
         "GAMEMASTER": "OWNER"
       }
+    },
+    {
+      "name": "combate-grande-escala-livro",
+      "label": "Combate em Grande Escala — Livro e Guia (Extraoficial)",
+      "system": "tagmar_rpg",
+      "path": "packs/combate-grande-escala-livro",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
     }
   ],
   "languages": [
@@ -275,6 +286,6 @@
     "units": "m"
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
-  "manifest": "https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.56-beta.1/system.json",
-  "download": "https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.56-beta.1/system.zip"
+  "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json",
+  "download": "https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.57/system.zip"
 }

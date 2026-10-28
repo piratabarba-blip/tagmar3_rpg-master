@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import {rollTroop,applyAttackPacket,enqueue,registerTroopChat} from '../modules/mass-combat/actions.mjs';
+import {rollTroop,applyAttackPacket,enqueue,registerTroopChat,registerTargetedAttack} from '../modules/mass-combat/actions.mjs';
 import {selectedTroopTarget,attackRecipients,registerTroopTargeting} from '../modules/mass-combat/targeting.mjs';
 import {registerTroopFeedback,feedbackLines} from '../modules/mass-combat/feedback.mjs';
 const merge=(a,b)=>{const r=structuredClone(a);for(const [k,v]of Object.entries(b))r[k]=v&&typeof v==='object'&&!Array.isArray(v)?merge(r[k]??{},v):v;return r;};
@@ -64,4 +64,26 @@ const button={dataset:{troopPacket:'0',troopApply:'true'},addEventListener:(_eve
 const message={id:'chat-hit',getFlag:()=>({...card,variants:[{amount:7,kind:'critico'}]}),speaker:{alias:'A'}};
 hooks.renderChatMessageHTML[0](message,{querySelectorAll:()=>[button]});await click();assert.equal(defender.system.ef.value,13);assert.equal(attacker.system.ef.value,100);assert.equal(other.system.ef.value,100);
 game.user.isGM=false;await assert.rejects(()=>applyAttackPacket(defender,{id:'unauthorized',amount:1,kind:'geral'}));
+game.user.isGM=true;game.users={activeGM:game.user};
+const fresh=actor('D'),freshToken=token(fresh);
+documents.set(freshToken.document.uuid,{actor:fresh});documents.set(attacker.uuid,attacker);
+attacker.testUserPermission=user=>user.id==='owner';
+const autoData={...card,autoRegister:true,target:{...card.target,tokenUuid:freshToken.document.uuid,actorUuid:fresh.uuid},variants:[{amount:17,kind:'geral'}]};
+const autoMessage={id:'auto-hit',author:{id:'owner',isGM:false},speaker:{alias:'A'},getFlag:()=>autoData};
+await hooks.createChatMessage[0](autoMessage);
+assert.equal(fresh.system.pendentes.length,1);assert.equal(fresh.system.pendentes[0].amount,17);assert.equal(fresh.system.ef.value,100,'Auto registration never applies damage');
+assert.equal(await registerTargetedAttack(autoMessage),false);
+let retryClick;const retryButton={dataset:{troopPacket:'0'},addEventListener:(_event,fn)=>retryClick=fn};
+hooks.renderChatMessageHTML[0](autoMessage,{querySelectorAll:()=>[retryButton]});await retryClick();assert.equal(fresh.system.pendentes.length,1,'Chat fallback shares the automatic packet id');
+await applyAttackPacket(fresh,{...autoData.variants[0],id:autoMessage.id});await registerTargetedAttack(autoMessage);await retryClick();assert.equal(fresh.system.pendentes.length,0);assert.equal(fresh.system.ef.value,83,'Resolved attack cannot be queued or applied twice');
+for(const invalid of [
+ {...autoMessage,id:'stranger',author:{id:'stranger',isGM:false}},
+ {...autoMessage,id:'critical',getFlag:()=>({...autoData,variants:[{amount:10,kind:'critico'},{amount:20,kind:'critico'}]})},
+ {...autoMessage,id:'no-target',getFlag:()=>({...autoData,target:null})},
+ {...autoMessage,id:'guided',getFlag:()=>({...autoData,battle:{combatId:'battle'}})}
+])await registerTargetedAttack(invalid);
+assert.equal(fresh.system.pendentes.length,0);
+game.users.activeGM={id:'other'};await registerTargetedAttack({...autoMessage,id:'inactive'});assert.equal(fresh.system.pendentes.length,0);
+game.users.activeGM=game.user;documents.delete(freshToken.document.uuid);await assert.rejects(()=>registerTargetedAttack({...autoMessage,id:'removed'}),/alvo original/);
+console.log('PASS automatic target registration, owner validation, critical/manual fallback, active GM, deferred damage and duplicate prevention.');
 console.log('PASS current target defense/resistance, snapshot destination, deleted/multiple/self targets, direct and queued damage, deduplication, scrolling text, survival/defeat, combat tracker recovery, target hook and real chat button.');
