@@ -2,9 +2,32 @@
 
 Edição pessoal do **Tagmar 3** para Foundry Virtual Tabletop 14. Reúne fichas, compêndios sincronizados, coleções antigas para consulta e integrações visuais próprias desta edição. Não é o pacote de distribuição oficial.
 
-Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.50**, com identificador **`tagmar_rpg`**.
+Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.57**, com identificador **`tagmar_rpg`**.
 
 **Onde está o código atual?** Na [branch v14](https://github.com/piratabarba-blip/tagmar3_rpg-master/tree/v14). A branch `main`, exibida na página inicial, preserva código histórico; este README também aparece nela para orientar a instalação atual. Para instalar o XXX, use o manifesto da V14 indicado abaixo, não o `system.json` histórico da `main`.
+
+### Ferramentas de mapa
+
+Integradas ao sistema, sem instalar outro módulo:
+
+- **Escala da imagem em grupo:** selecione os tokens, deixe o mouse sobre o mapa e segure **G + roda**. Sem seleção, ajusta o token sob o mouse. Mantém o espaço ocupado na grade, posição, proporções e espelhamento. Cada passo aumenta ou diminui proporcionalmente a escala; não iguala tokens de tamanhos diferentes.
+- **Restaurar escala:** **G + 0** (zero superior ou numérico) recupera a escala guardada antes do primeiro ajuste. A referência fica no token da cena e permanece após recarregar. Não altera o token de protótipo nem a ficha do ator.
+- **Apontador:** segure **P** com o mouse sobre o mapa para mostrar a manopla dourada aos participantes na mesma cena e andar. Solte para esconder. Não move câmeras nem revela áreas do mapa. O apontador desaparece também ao sair da janela ou trocar de cena; uma mensagem perdida expira em cerca de 1,6 segundo.
+- **Barras do Bar Brawl:** em **Configurações do jogo → Tagmar → Mapa — exibição das barras (Bar Brawl)**, escolha configuração individual (padrão), somente ao passar o mouse ou mouse/seleção. A escolha vale para todos os tokens do mundo e para todos os participantes. Preserva barras secretas, permissões de dono/mestre e restrições de barra cheia, vazia ou em combate. Nos dois modos globais, Alt sozinho não revela todas as barras. Voltar à configuração individual restaura o comportamento original sem regravar tokens ou recarregar o mundo. A integração requer Bar Brawl ativo e atua nas barras do mapa 2D; não altera os campos de recursos no HUD nem as fichas.
+
+Em **Configurações do jogo → Tagmar**, procure as opções iniciadas por **Mapa**: ativação de cada recurso, autorização de jogadores para usar o apontador, passo da escala e formato Manopla dourada/Seta. As teclas **G**, **P** e de restauração podem ser remapeadas em **Configuração de controles**. **Ajustar e restaurar a escala com esta ferramenta é exclusivo do mestre**, inclusive em tokens pertencentes a jogadores. Todos veem o apontador; jogadores autorizados a apontar também precisam da permissão nativa de pings.
+
+A escala fica entre 20% e 500% nos dois eixos; proporções já fora dessa faixa que não possam ser preservadas são ignoradas. A roda sobre formulários ou sem G pressionado permanece inalterada. G pode ser remapeado em Configuração de controles caso haja um atalho personalizado concorrente.
+
+Recursos validados com testes automatizados e confirmados em sessão real de Foundry 14.369 pelo mantenedor.
+
+## Veículos e armas de guerra
+
+Crie um ator **Veículo / Máquina** para embarcações, carroças e máquinas de guerra. A ficha usa ABS, ARM, VB, tripulação, pertences e biografia, com o mesmo padrão visual das demais fichas.
+
+Na aba **Combate**, monte itens **Arma de Guerra**, configure a defesa e os ajustes e clique no nome da arma para atacar. Vincule vários personagens às armas e manobras, com busca por nome e habilidade, e escolha quem fará cada teste; os vínculos mostram nível e total atual. O mestre também pode informar um total manual.
+
+Este recurso é uma **adaptação extraoficial**, com valores definidos pela mesa. [Consulte o guia de veículos e armas de guerra](https://github.com/piratabarba-blip/tagmar3_rpg-master/blob/v14/docs/veiculos.md).
 
 ## Índice
 
@@ -24,7 +47,7 @@ Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos comp�
 
 ### 1. Confira os requisitos
 
-- Foundry VTT **14**, verificado pelo pacote na compilação **14.368**. Esta versão do sistema não declara suporte às gerações anteriores nem à V15.
+- Foundry VTT **14**, verificado pelo pacote na compilação **14.369**. Esta versão do sistema não declara suporte às gerações anteriores nem à V15.
 - Acesso de administrador para instalar pacotes e de Mestre para configurar o mundo.
 - Uma instalação licenciada do Foundry. O sistema Tagmar é gratuito; a licença do Foundry é separada.
 - Backup dos mundos e dos arquivos de campanha antes de atualizar qualquer instalação existente.
@@ -44,7 +67,7 @@ https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads
 
 Use esse endereço para acompanhar as atualizações do XXX. Ele é um manifesto JSON, não o endereço da página do GitHub nem um ZIP. A instalação por manifesto pode ser usada independentemente de o sistema já aparecer na busca do catálogo.
 
-Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.50](https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.7.0-v14.1-rc.50/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
+Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.54](https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/v2.7.0-v14.1-rc.55/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
 
 ### 3. Crie e abra um mundo
 
@@ -97,7 +120,21 @@ Algumas opções são individuais por usuário; outras, como as barras automáti
 
 ## Compêndios incluídos
 
-O pacote contém **12 compêndios: nove sincronizados e três antigos**. As quantidades abaixo foram conferidas nos bancos da rc.50 e contam documentos principais, sem somar pastas, páginas de diários ou itens internos dos atores. Prefira os sincronizados para conteúdo novo.
+O pacote contém **13 compêndios: um de personagens prontos exclusivo do XXX, nove sincronizados e três antigos**. As quantidades abaixo foram conferidas nos bancos da rc.50 e contam documentos principais, sem somar pastas, páginas de diários ou itens internos dos atores. Prefira os sincronizados para conteúdo novo.
+
+### Personagens prontos — exclusivo do XXX
+
+**Tagmar XXX — Personagens Prontos** contém **227 PNJs**, organizados em **19 pastas**, com **6.470 itens internos** de habilidades, equipamentos, magias e demais recursos das fichas. Esta coleção é uma criação da mesa para a edição XXX; não é um novo suplemento oficial e não é incluída no sistema Tagmar 3ER Oficial.
+
+| Pasta principal | Personagens | Organização |
+| --- | ---: | --- |
+| PESSOAS COMUNS | 28 | Homens, mulheres e aldeões lutadores. |
+| PJM - VARIADOS | 175 | Guerreiros, ladinos, rastreadores, elfos sombrios, anões, nobres e guardas de vilarejo. |
+| Magos | 24 | Alquímico, Elemental, Naturalista, Conhecimento, Necromântico e Ilusões. |
+
+**Para usar:** abra **Compêndios → Tagmar XXX — Personagens Prontos**, encontre a ficha pela pasta ou busca e importe para **Atores**. Depois arraste o ator para o mapa e ajuste nome, estágio, equipamento e permissões conforme sua aventura.
+
+Retratos e tokens animados acompanham o sistema; as fichas não dependem dos arquivos particulares do mundo onde foram criadas. Atualizar o sistema disponibiliza o compêndio, mas não substitui os atores que você já importou ou editou. A coleção conserva os valores definidos pela mesa; confira o equilíbrio e as adaptações antes de usar.
 
 ### Os nove compêndios sincronizados
 
@@ -361,3 +398,17 @@ O apoio não representa venda nem licenciamento comercial do conteúdo do Tagmar
 ## Atualização assistida por inteligência artificial
 
 A atualização, a organização técnica, a documentação e parte das auditorias foram realizadas com auxílio de ferramentas da OpenAI, incluindo ChatGPT e Codex. As decisões, os testes e a validação final permanecem sob responsabilidade dos mantenedores humanos.
+
+## Combate em Grande Escala (extraoficial)
+
+Ficha de **Tropa** com EF, absorção, comando, moral, aparatos e fortificações. Baseada no suplemento de **Fábio Carvalho Magalhães (19/02/2024)**. Inclui um compêndio separado com um modelo e a tropa do exemplo do livro. [Como usar e convenções da adaptação](https://github.com/piratabarba-blip/tagmar3_rpg-master/blob/v14/docs/combate-em-grande-escala.md). Material derivado sob [CC BY-NC-SA 3.0 Brasil](https://creativecommons.org/licenses/by-nc-sa/3.0/br/). Disponível na distribuição atual.
+
+O compêndio **Combate em Grande Escala — Livro e Guia (Extraoficial)** inclui instruções da ficha e o PDF original completo. Acesse também pelo botão **Livro / guia** da Tropa. Veículos têm instruções na Biografia e ajudas (?) nos campos, sem substituir as anotações do usuário.
+
+### Batalha guiada e recuperação
+
+Abra **Batalha em massa** na aba Combate ou no monitor, com tokens de Tropa e seus exércitos definidos. O painel conduz preparativos, ataques extras e principais, apoio e resolução. Os danos ficam registrados até o encerramento da rodada; botões do chat continuam disponíveis sem duplicar registros.
+
+Após a resolução, o painel mostra as perdas e a recuperação prevista. A ABS dos equipamentos se restaura nos preparativos seguintes conforme a EF atual. Resgatar feridos exige a confirmação do mesmo hexágono, uma rolagem na coluna do estágio e uma rodada de ocupação. Aparatos e muralhas exigem reparos; armadilhas destruídas não se restauram. Terreno, moral, recursos e casos especiais continuam sob avaliação do mestre.
+
+EF e ABS ficam abaixo do nome em todas as abas. A calculadora preserva seu estado aberto ao editar. Consulte o [guia do combate em grande escala](https://github.com/piratabarba-blip/tagmar3_rpg-master/blob/v14/docs/combate-em-grande-escala.md) e o compêndio Livro e Guia.
