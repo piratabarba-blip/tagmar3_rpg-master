@@ -2,7 +2,7 @@
 > [!IMPORTANT]
 > **Instalou a prévia de Combate em Grande Escala? Confira sua versão.**
 >
-> Na tela inicial do Foundry, abra **Sistemas de Jogo** e confira o número no cartão do sistema. Se aparecer **`2.7.0-v14.1-rc.56-beta.1`** ou outro número com **`beta`**, você está usando uma prévia. A versão definitiva publicada em 28/10/2026 é **`2.7.0-v14.1-rc.60`**.
+> Na tela inicial do Foundry, abra **Sistemas de Jogo** e confira o número no cartão do sistema. Se aparecer **`2.7.0-v14.1-rc.56-beta.1`** ou outro número com **`beta`**, você está usando uma prévia. A versão definitiva publicada em 29/10/2026 é **`2.7.0-v14.1-rc.61`**.
 >
 > Para sair da beta com manifesto fixo, copie o [manifesto permanente](https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json), abra **Instalar Sistema → URL do Manifesto**, cole o endereço e instale. Faça isso uma única vez; as próximas versões poderão ser recebidas pelo botão **Atualizar**.
 >
@@ -13,9 +13,17 @@
 
 Edição pessoal do **Tagmar 3** para Foundry Virtual Tabletop 14. Reúne fichas, compêndios sincronizados, coleções antigas para consulta e integrações visuais próprias desta edição. Não é o pacote de distribuição oficial.
 
-Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.60**, com identificador **`tagmar_rpg`**.
+Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.61**, com identificador **`tagmar_rpg`**.
 
 **Onde está o código atual?** Na [branch v14](https://github.com/piratabarba-blip/tagmar3_rpg-master/tree/v14). A branch `main`, exibida na página inicial, preserva código histórico; este README também aparece nela para orientar a instalação atual. Para instalar o XXX, use o manifesto da V14 indicado abaixo, não o `system.json` histórico da `main`.
+
+### Atualização de 29/10/2026
+
+Integração com **Tagmar Efeitos Mágicos 1.2.0**: animações JB2A opcionais, áreas posicionáveis, ataques individuais com críticos, resumo final, filtro de aliados e tempo de magias na aba Efeitos. A iluminação pode acompanhar o visual. Configure cada item pelo botão **FX**; os recursos novos começam desativados por item. [Leia o guia completo](https://github.com/piratabarba-blip/modulos_foundry/blob/v14/tagmar-token-fx/GUIA-XXX.md).
+
+Atualize também **Grande Calendário 1.1.3** e **Gestão de Munições 1.2.3-v14.1**. O relógio automático do calendário pausa durante o combate para evitar descontar o tempo duas vezes; cada rodada continua valendo 15 segundos. A janela de munições aceita Enter nos campos sem erro nem fechamento.
+
+Os compêndios e as mídias distribuídas são os mesmos da versão anterior.
 
 ### Ferramentas de mapa
 
@@ -81,7 +89,7 @@ https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads
 
 Use esse endereço para acompanhar as atualizações do XXX. Ele é um manifesto JSON, não o endereço da página do GitHub nem um ZIP. A instalação por manifesto pode ser usada independentemente de o sistema já aparecer na busca do catálogo.
 
-Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.60](https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.60/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
+Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.60](https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.61/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
 
 ### 3. Crie e abra um mundo
 
@@ -216,11 +224,11 @@ Estes **dez módulos são declarados como dependências pelo sistema**, não ape
 | **Dice So Nice** | Dados 3D e cores dos resultados nas rolagens do sistema. | 6.2.9 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/dice-so-nice/module.json) |
 | **socketlib** | Biblioteca de comunicação utilizada por módulos. | v1.1.4 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/socketlib/module.json) |
 | **Polyglot** | Idiomas no chat, com provedor de línguas registrado pelo Tagmar. | 2.9.2 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/polyglot/module.json) |
-| **Tagmar Gestão de Munições** | Cadastro e compartilhamento de reservas de munição entre armas. | 1.2.2-v14.1 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-ammu-nation/module.json) |
+| **Tagmar Gestão de Munições** | Cadastro e compartilhamento de reservas de munição entre armas. | 1.2.3-v14.1 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-ammu-nation/module.json) |
 | **Tagmar Transações** | Envio de pertences para outro jogador conectado e com personagem atribuído. | 1.2.3-v14.1 | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmartrade/module.json) |
-| **Tagmar — Grande Calendário** | Calendário, dia/noite, clima, vento, luas e marés. | **1.1.1**, recomendada | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json) |
+| **Tagmar — Grande Calendário** | Calendário, dia/noite, clima, vento, luas e marés. | **1.1.3**, mínimo exigido | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json) |
 | **Token Magic FX** | Motor original de filtros visuais nos tokens. | **0.8.4**, versão exigida | [Instalar](https://github.com/Feu-Secret/Tokenmagic/releases/download/0.8.4/module.json) |
-| **Tagmar Efeitos Mágicos — XXX** | Integra os filtros às magias, técnicas e itens de combate do XXX. | **1.1.0**, mínimo exigido | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-token-fx/module.json) |
+| **Tagmar Efeitos Mágicos — XXX** | Integra os filtros às magias, técnicas e itens de combate do XXX. | **1.2.0**, mínimo exigido | [Instalar](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-token-fx/module.json) |
 
 Versões de referência não são uma promessa de compatibilidade com qualquer versão futura. Use os manifestos declarados pelo sistema e confira as notas antes de trocar uma distribuição. A edição indicada do **Bar Brawl** inclui uma correção para atualizações parciais de token, relevante para efeitos de iluminação.
 
@@ -249,7 +257,7 @@ O seletor de destinatários não inclui usuários offline, sem personagem atribu
 
 ### Grande Calendário
 
-**Módulo recomendado: Tagmar — Grande Calendário 1.1.1**, verificado no Foundry **14.369**. Ele já integra as dependências obrigatórias deste sistema; esta recomendação destaca os recursos disponíveis e não altera os requisitos de instalação.
+**Módulo recomendado: Tagmar — Grande Calendário 1.1.3**, verificado no Foundry **14.369**. Ele já integra as dependências obrigatórias deste sistema; esta recomendação destaca os recursos disponíveis e não altera os requisitos de instalação.
 
 - Dia/noite gradual, estações e clima por bioma, latitude e altitude.
 - Velocidade e direção do vento, fases/movimentos das três luas e marés lunares.
@@ -285,9 +293,9 @@ Os dois módulos são dependências do XXX desde a rc.48, mas **os efeitos por i
 
 **Limites importantes:**
 
-- São efeitos visuais, não automações de dano, bônus, duração, cargas, condições ou sucesso. Também não são projéteis viajando entre tokens.
+- Os filtros Token Magic são visuais. A seção de resolução opcional permite ataques, RM/RF, dano por alvo e avisos de duração; JB2A permite projéteis, efeitos na área e luz. As regras de cada magia precisam ser configuradas pelo mestre: não há leitura automática da descrição.
 - O gatilho visual acontece no início do uso do item; cancelar a rolagem depois não remove o filtro.
-- Os efeitos persistem até a remoção manual. Limpe-os **antes** de desativar o módulo ou apagar o item.
+- Filtros Token Magic persistem até a remoção manual. Visuais JB2A podem terminar pelo calendário; o tempo restante aparece na aba Efeitos. Limpe os efeitos **antes** de desativar o módulo ou apagar o item.
 - A limpeza da ficha se limita à cena aberta e aos efeitos identificados por essa integração. Efeitos antigos sem identificação ou de itens já apagados podem exigir tratamento separado.
 - Jogadores só alteram tokens que possuem; o Mestre deve aplicar filtros nos alvos de terceiros. A integração não contorna permissões.
 - Se houver vários tokens vinculados ao mesmo ator, selecione exatamente o token que deseja usar.
