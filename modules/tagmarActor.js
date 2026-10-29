@@ -217,7 +217,7 @@ export class tagmarActor extends Actor {
         }
     }
 
-    async _rollResistencia(forcAtaqueI, tipo) {
+    async _rollResistencia(forcAtaqueI, tipo, {whisper} = {}) {
         const table_resFisMag = game.tagmar.table_resFisMag;
         let valorDefI;
         if (tipo == "Magía") valorDefI = this.system.rm;
@@ -267,11 +267,13 @@ export class tagmarActor extends Actor {
                 this.dadosColoridos.dadosColoridos("vermelho", r);
             }
         }
-        r.toMessage({
+        await r.toMessage({
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: this }),
+            ...(whisper ? {whisper} : {}),
             flavor: `<img src="${this.img}" style="display:block;margin-left:auto;margin-right:auto;border-width:0;"/><h2 class="mediaeval rola" style="text-align:center;">Teste de Resistência </h2><h3 class="mediaeval rola"> Força Ataque: ${forcAtaqueI}</h3><h3 class="mediaeval rola">Resistência ${tipo}: ${valorDefI}</h3>${stringSucesso}`
         });
+        return {success: (Dresult >= valorSucess || Dresult === 20) && Dresult > 1, roll: r, threshold: valorSucess};
     }
 
     async evalAtrib(resultado) {

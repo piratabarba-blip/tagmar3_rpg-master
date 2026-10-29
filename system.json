@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.7.0-v14.1-rc.60",
+  "version": "2.7.0-v14.1-rc.61",
   "relationships": {
     "requires": [
       {
@@ -36,7 +36,10 @@
       {
         "id": "tagmar-ammu-nation",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-ammu-nation/module.json"
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-ammu-nation/module.json",
+        "compatibility": {
+          "minimum": "1.2.3-v14.1"
+        }
       },
       {
         "id": "tagmartrade",
@@ -46,7 +49,10 @@
       {
         "id": "tagmar-calendario",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json"
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-calendario/module.json",
+        "compatibility": {
+          "minimum": "1.1.3"
+        }
       },
       {
         "id": "tokenmagic",
@@ -62,7 +68,7 @@
         "type": "module",
         "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-token-fx/module.json",
         "compatibility": {
-          "minimum": "1.1.0"
+          "minimum": "1.2.0"
         }
       }
     ]
@@ -287,5 +293,5 @@
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
   "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json",
-  "download": "https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.60/system.zip"
+  "download": "https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.61/system.zip"
 }

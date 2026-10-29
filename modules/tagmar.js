@@ -77,6 +77,7 @@ Hooks.once("init", function(){
     tagmarItem,
     tagmarActor,
     rollItemMacro,
+    rolarCritico,
     tabela_resol,
     table_resFisMag
   };
@@ -980,19 +981,30 @@ async function aplicarDanoPeloChat(event) {
   const button = event.target.closest?.('.aplicarDano');
   if (!button) return;
   event.preventDefault();
-  const tokens = canvas.tokens.controlled;
+  const tokens = [...(canvas?.tokens?.controlled ?? [])];
   if (tokens.length === 0) return ui.notifications.warn('Nenhum token selecionado.');
   const dano = Number(button.dataset.dano);
+  if (!Number.isFinite(dano) || dano < 0) return ui.notifications.warn('O valor de dano ou cura desta mensagem é inválido.');
   const cura = button.dataset.cura === 'true';
   const curaTipo = button.dataset.curaTipo || (cura ? 'EH' : null);
   const critico = button.dataset.critico === 'true';
-  try {
-    for (const token of tokens) {
-      await token.actor._aplicarDano({valor: dano, isCura: cura, curaTipo, isCritico: critico}, token);
+  for (const token of tokens) {
+    const nome = foundry.utils.escapeHTML(String(token.name || token.id || 'Token'));
+    try {
+      const actor = token.actor;
+      if (!actor || typeof actor._aplicarDano !== 'function') {
+        ui.notifications.warn(`Token "${nome}" ignorado: sem ator válido. Recoloque na cena o personagem correto pela lista de Atores.`);
+        continue;
+      }
+      if (!game.user.isGM && !actor.isOwner) {
+        ui.notifications.warn(`Token "${nome}" ignorado: você não tem permissão para alterar essa ficha.`);
+        continue;
+      }
+      await actor._aplicarDano({valor: dano, isCura: cura, curaTipo, isCritico: critico}, token);
+    } catch (error) {
+      console.error('Tagmar | Falha ao aplicar dano pelo chat', token.id, error);
+      ui.notifications.error(`Não foi possível aplicar o dano/cura em "${nome}". Consulte o Console. Os outros tokens selecionados continuam sendo processados.`);
     }
-  } catch (error) {
-    console.error('Tagmar | Falha ao aplicar dano pelo chat', error);
-    ui.notifications.error('Não foi possível aplicar o dano. Consulte o Console.');
   }
 }
 
@@ -1001,7 +1013,7 @@ Hooks.on('tagmar_Critico', async function (coluna, tabela_resol, user, actor, ti
   await rolarCritico(coluna, tabela_resol, user, actor, tipo, falha);
 });
 
-async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha) {
+async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, context = {}) {
   let roll = new Roll('1d20');
   await roll.evaluate();
   let result = roll.total;
@@ -1182,10 +1194,12 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha) {
   if (game.settings.get('tagmar_rpg', 'dadosColoridos')) {
     dadosColoridos(resultado, roll);
   }
-  roll.toMessage({
-    user: user,
+  return roll.toMessage({
+    user: user?.id ?? user,
     speaker: ChatMessage.getSpeaker({ actor: actor }),
-    flavor: conteudo
+    flavor: (context.targetHtml ?? '') + conteudo,
+    ...(context.whisper ? {whisper: context.whisper} : {}),
+    ...(context.flags ? {flags: context.flags} : {})
   });
 }
 

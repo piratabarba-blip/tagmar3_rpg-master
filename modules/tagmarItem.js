@@ -653,7 +653,10 @@ export class tagmarItem extends Item {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flavor: `<img src="${this.img}" style="display: block; margin-left: auto; margin-right: auto;" /><h2 class="mediaeval rola" style="text-align:center;">${this.name}: ${valor_tabela} - ${this.system.tipo}</h2>${conteudo}${municao_text}${coluna}${PrintResult}${punicaoText}${dano_text}${button}${buttonC}${itemId}`
         });
-        if (critico && this.type !== 'Arma_Guerra') Hooks.callAll('tagmar_Critico', coluna_rolada, tabela_resol, game.user, this.actor, this.system.tipo, falha);
+        if (critico && this.type !== 'Arma_Guerra') {
+            if (typeof this._tagmarCriticalToChat === 'function') await this._tagmarCriticalToChat(coluna_rolada, tabela_resol, game.user, this.actor, this.system.tipo, falha);
+            else Hooks.callAll('tagmar_Critico', coluna_rolada, tabela_resol, game.user, this.actor, this.system.tipo, falha);
+        }
         else if (!critico) Hooks.callAll('tagmar_combate_roll', {coluna: coluna_rolada, user: game.user, dano: dano_total, actor: this.actor});
     }
 
@@ -848,7 +851,10 @@ export class tagmarItem extends Item {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flavor: `<img src="${this.img}" style="display: block; margin-left: auto; margin-right: auto;" /><h2 class="mediaeval rola" style="text-align:center;">${this.name}: ${valor_tabela} - ${this.system.tipo}</h2>${conteudo}${municao_text}${coluna}${PrintResult}${ajuste_text}${punicaoText}${dano_text}${button}${buttonC}${itemId}`
         });
-        if (critico && this.type !== 'Arma_Guerra') Hooks.callAll('tagmar_Critico', coluna_rolada, tabela_resol, game.user, this.actor, this.system.tipo, falha);
+        if (critico && this.type !== 'Arma_Guerra') {
+            if (typeof this._tagmarCriticalToChat === 'function') await this._tagmarCriticalToChat(coluna_rolada, tabela_resol, game.user, this.actor, this.system.tipo, falha);
+            else Hooks.callAll('tagmar_Critico', coluna_rolada, tabela_resol, game.user, this.actor, this.system.tipo, falha);
+        }
         else if (!critico) Hooks.callAll('tagmar_combate_roll', {coluna: coluna_rolada, user: game.user, dano: dano_novo, actor: this.actor});
     }
 
@@ -912,6 +918,11 @@ export class tagmarItem extends Item {
 
     async rollTagmarItem() {
         if (this.type === "Arma_Guerra") return attackDialog(this);
+        const fx = game.modules.get('tagmar-token-fx');
+        if (fx?.active && typeof fx.api?.handleItemUse === 'function') {
+            try { if (await fx.api.handleItemUse(this)) return; }
+            catch (error) { ui.notifications.error(error.message); console.error('Tagmar | FX da magia', error); return; }
+        }
         Hooks.callAll('tagmar_itemRoll', this, game.user);
         if (this.type === "Habilidade") {
             this.rollHabilidade();
