@@ -1,3 +1,4 @@
+import {penaltyTotal} from './timedPenalties.mjs';
 import {attackDialog} from "./vehicles/actions.mjs";
 export class tagmarItem extends Item {
 
@@ -156,7 +157,7 @@ export class tagmarItem extends Item {
 
     async rollHabilidade() {
         const tabela_resol = game.tagmar.tabela_resol;
-        let bonus_hab = this.actor.system.bonus_habil;
+        let bonus_hab = this.actor.system.bonus_habil - penaltyTotal(this.actor, 'skill');
         let h_total = 0;
         if (this.system.nivel > 0){
             h_total = this.system.total + bonus_hab;
@@ -891,13 +892,13 @@ export class tagmarItem extends Item {
         const cat_def = this.actor.system.inf_ataque.cat_def;
         let valor_tabela = 0;
         if (this.system.nivel > 0) {
-            if (cat_def == "L") valor_tabela = total_l + this.actor.system.inf_ataque.bonus - this.actor.system.inf_ataque.valor_def;
-            else if (cat_def == "M") valor_tabela = total_m + this.actor.system.inf_ataque.bonus - this.actor.system.inf_ataque.valor_def;
-            else if (cat_def == "P") valor_tabela = total_p + this.actor.system.inf_ataque.bonus - this.actor.system.inf_ataque.valor_def;
+            if (cat_def == "L") valor_tabela = total_l + (this.actor.system.inf_ataque.bonus - penaltyTotal(this.actor, 'combat')) - this.actor.system.inf_ataque.valor_def;
+            else if (cat_def == "M") valor_tabela = total_m + (this.actor.system.inf_ataque.bonus - penaltyTotal(this.actor, 'combat')) - this.actor.system.inf_ataque.valor_def;
+            else if (cat_def == "P") valor_tabela = total_p + (this.actor.system.inf_ataque.bonus - penaltyTotal(this.actor, 'combat')) - this.actor.system.inf_ataque.valor_def;
         } else {
             valor_tabela = -7;
         }
-        if (this.system.tipo == "" || this.system.tipo == "MAG") valor_tabela = total_l + this.actor.system.inf_ataque.bonus; // Magia de Ataque
+        if (this.system.tipo == "" || this.system.tipo == "MAG") valor_tabela = total_l + (this.actor.system.inf_ataque.bonus - penaltyTotal(this.actor, 'combat')); // Magia de Ataque
         if (valor_tabela < -7) valor_tabela = -7; // Abaixo da Tabela
         let r = new Roll("1d20");
         await r.evaluate();

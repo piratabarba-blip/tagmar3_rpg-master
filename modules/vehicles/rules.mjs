@@ -1,3 +1,4 @@
+import {penaltyTotal} from '../timedPenalties.mjs';
 import {_preparaEfeitosAtributos} from '../sheets/actorUtils.js';
 // Adaptação extraoficial: ABS é a reserva estrutural; ARM reduz cada impacto.
 export const VEHICLE = 'Veiculo';
@@ -31,7 +32,7 @@ export function skillTotal(actor, skill) {
   const attributes = actor.type === 'Personagem' ? _preparaEfeitosAtributos({document:actor}).efetivos : actor.system.atributos;
   const attribute = attributes?.[skill.system.ajuste?.atributo] ?? 0;
   return {total:level + integer(attribute) + integer(skill.system.penalidade)
-    + integer(skill.system.bonus) + integer(actor.system.bonus_habil), trained:true};
+    + integer(skill.system.bonus) + integer(actor.system.bonus_habil) - penaltyTotal(actor, 'skill'), trained:true};
 }
 
 export function attackColumn(total, adjustment, defense, categoryAdjustment = 0, trained = true) {

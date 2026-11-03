@@ -413,3 +413,8 @@
 .efeito-atributo-neutro {
   opacity: 0.72;
 }
+
+/* Carousel: comandos laterais fixos, preservando display/permissões do módulo. */
+#combat-dock .buttons-container {
+  opacity: 1;
+}

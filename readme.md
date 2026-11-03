@@ -2,7 +2,7 @@
 > [!IMPORTANT]
 > **Instalou a prévia de Combate em Grande Escala? Confira sua versão.**
 >
-> Na tela inicial do Foundry, abra **Sistemas de Jogo** e confira o número no cartão do sistema. Se aparecer **`2.7.0-v14.1-rc.56-beta.1`** ou outro número com **`beta`**, você está usando uma prévia. A versão definitiva publicada em 02/11/2026 é **`2.7.0-v14.1-rc.63`**.
+> Na tela inicial do Foundry, abra **Sistemas de Jogo** e confira o número no cartão do sistema. Se aparecer **`2.7.0-v14.1-rc.56-beta.1`** ou outro número com **`beta`**, você está usando uma prévia. A versão definitiva publicada em 02/11/2026 é **`2.7.0-v14.1-rc.64`**.
 >
 > Para sair da beta com manifesto fixo, copie o [manifesto permanente](https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json), abra **Instalar Sistema → URL do Manifesto**, cole o endereço e instale. Faça isso uma única vez; as próximas versões poderão ser recebidas pelo botão **Atualizar**.
 >
@@ -13,11 +13,22 @@
 
 Edição pessoal do **Tagmar 3** para Foundry Virtual Tabletop 14. Reúne fichas, compêndios sincronizados, coleções antigas para consulta e integrações visuais próprias desta edição. Não é o pacote de distribuição oficial.
 
-Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.63**, com identificador **`tagmar_rpg`**.
+Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.64**, com identificador **`tagmar_rpg`**.
 
 **Onde está o código atual?** Na [branch v14](https://github.com/piratabarba-blip/tagmar3_rpg-master/tree/v14). A branch `main`, exibida na página inicial, preserva código histórico; este README também aparece nela para orientar a instalação atual. Para instalar o XXX, use o manifesto da V14 indicado abaixo, não o `system.json` histórico da `main`.
 
-### Atualização de 02/11/2026
+### Atualização validada de 02/11/2026
+
+Atualização validada no Foundry VTT 14.369.
+
+- Tradução do Carousel Combat Tracker para português quando o módulo estiver ativo; comandos laterais sempre visíveis, respeitando as permissões do módulo.
+- Nomes dos tokens posicionados abaixo das barras visíveis do Bar Brawl. A opção do sistema permite restaurar a posição nativa.
+- Rolagens de combate, habilidades e operadores de veículos reconhecem ajustes temporários de efeitos, preservando os bônus manuais.
+- Integração com Tagmar FX 1.3.0: RM por turno, ajustes temporários, transformação, invocação e melhorias da interface já testadas na mesa. Atualize também o módulo Tagmar FX.
+
+Atualize pelo manifesto permanente e depois atualize os módulos. Os compêndios, imagens e licenças desta versão são idênticos aos da publicação anterior. Arquivos pessoais devem ficar fora das pastas de sistemas e módulos, por exemplo na pasta do mundo.
+
+### Atualização anterior de 02/11/2026 — HUD opcional
 
 O **Token Action HUD Tagmar 0.1.0** passa a ser recomendado como módulo opcional. Quem quiser uma barra de ataques, habilidades, magias e testes do token pode [instalar pelo manifesto](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/token-action-hud-tagmar/module.json). O HUD exige **Token Action HUD Core 2.1.2 (série 2.1)**, que depende de **socketlib**. Ative os três no Gerenciador de Módulos do mundo; desative o Token Action HUD antigo se estiver ativo.
 
@@ -103,7 +114,7 @@ https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads
 
 Use esse endereço para acompanhar as atualizações do XXX. Ele é um manifesto JSON, não o endereço da página do GitHub nem um ZIP. A instalação por manifesto pode ser usada independentemente de o sistema já aparecer na busca do catálogo.
 
-Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.63](https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.63/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
+Para instalar especificamente a versão de referência deste guia, use o [manifesto da rc.63](https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.64/system.json). Para acompanhar atualizações, prefira o endereço permanente da branch **v14** acima; um manifesto preso a uma versão antiga pode não servir como canal contínuo de atualização.
 
 ### 3. Crie e abra um mundo
 

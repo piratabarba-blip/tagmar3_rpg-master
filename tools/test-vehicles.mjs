@@ -36,6 +36,7 @@ game.tagmar.tabela_resol=vm.runInNewContext(bootstrap.match(/const tabela_resol 
 // Only relocate imports; the production combat/skill method bodies are used unchanged.
 let itemSource=fs.readFileSync(new URL('../modules/tagmarItem.js',import.meta.url),'utf8');
 itemSource=itemSource.replace('"./vehicles/actions.mjs"',JSON.stringify(new URL('../modules/vehicles/actions.mjs',import.meta.url).href));
+itemSource=itemSource.replace("'./timedPenalties.mjs'",JSON.stringify(new URL('../modules/timedPenalties.mjs',import.meta.url).href));
 itemSource=itemSource.replaceAll('"/systems/"+game.system.id+"/modules/dadosColoridos.js"',JSON.stringify(new URL('../modules/dadosColoridos.js',import.meta.url).href));
 const {tagmarItem}=await import('data:text/javascript;base64,'+Buffer.from(itemSource).toString('base64'));
 game.tagmar.tagmarItem=tagmarItem;
