@@ -1,3 +1,5 @@
+> **Versão atual: Tagmar XXX 2.7.0-v14.1-rc.64 e Tagmar FX 1.3.0.** Consulte o [guia atualizado na branch v14](https://github.com/piratabarba-blip/tagmar3_rpg-master/blob/v14/readme.md). O texto abaixo preserva a documentação histórica desta branch; para instalar ou atualizar, use o [manifesto permanente da V14](https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json).
+
 <!-- tagmar-beta-migration-notice -->
 > [!IMPORTANT]
 > **Instalou a prévia de Combate em Grande Escala? Confira sua versão.**
