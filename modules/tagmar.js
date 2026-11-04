@@ -1,3 +1,4 @@
+import {criticalCard,registerCriticalConsequences} from './critical-consequences.mjs';
 import {registerTroopSheet} from "./mass-combat/sheet.mjs";
 import {registerVehicleSheets} from "./vehicles/sheets.mjs";
 import tagmarItemSheet from "./sheets/tagmarItemSheet.js";
@@ -13,6 +14,8 @@ import "./map-tools.mjs";
 import "./hotbar-position.mjs";
 import "./sidebar-shortcuts.mjs";
 import "./compat/barbrawl-visibility.mjs";
+
+registerCriticalConsequences();
 
 let ocultos = false;
 
@@ -1030,7 +1033,7 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
       </ul>`;
     } else {
       table = table + `<ul style="list-style-type: disc;" class="rola_desc">`;
-      if (tipo != "") {
+      if (tipo !== "" && tipo !== "MAG") {
         table = table + `<li class="mediaeval"><b>Combate Desarmado:</b> 100%. Nocaute, oponente fica desmaiado por 1 hora e incapacitado por 2 dias.</li>
                         <li class="mediaeval"><b>Garras/Mordida:</b> Força do golpe rasga a carótida.</li>
                         <li class="mediaeval"><b>Corte:</b> O Oponente é decapitado.</li>
@@ -1051,7 +1054,7 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
       </ul>`;
     } else {
       table = table + `<ul style="list-style-type: disc;" class="rola_desc">`;
-      if (tipo != "") {
+      if (tipo !== "" && tipo !== "MAG") {
         table = table + `<li class="mediaeval"><b>Combate Desarmado:</b> 100%. Nocaute, oponente fica desmaiado por meia hora.</li>
                         <li class="mediaeval"><b>Garras/Mordida:</b> 100%. Ataque no olho arranca o globo ocular e paralisa o adversário por duas rodadas.</li>
                         <li class="mediaeval"><b>Corte:</b> 100%. Corte vaza o olho. A dor paralisa o adversário por duas rodadas.</li>
@@ -1072,7 +1075,7 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
       </ul>`;
     } else {
       table = table + `<ul style="list-style-type: disc;" class="rola_desc">`;
-      if (tipo != "") {
+      if (tipo !== "" && tipo !== "MAG") {
         table = table + `<li class="mediaeval"><b>Combate Desarmado:</b> 100%. Oponente tonto não ataca por duas rodadas.</li>
                         <li class="mediaeval"><b>Garras/Mordida:</b> 100%. Ataque arranca uma orelha e paralisa o adversário por uma rodada.</li>
                         <li class="mediaeval"><b>Corte:</b> 100%. Corte grande no músculo inutiliza um braço por uma semana.</li>
@@ -1093,7 +1096,7 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
       </ul>`;
     } else {
       table = table + `<ul style="list-style-type: disc;" class="rola_desc">`;
-      if (tipo != "") {
+      if (tipo !== "" && tipo !== "MAG") {
         table = table + `<li class="mediaeval"><b>Combate Desarmado:</b> 75%. Golpe desarma o oponente e o derruba, a arma cai a 3m dele.</li>
                         <li class="mediaeval"><b>Garras/Mordida:</b> 75%. Ataque rasga o braço causando um ajuste de - 8 por 2 dias.</li>
                         <li class="mediaeval"><b>Corte:</b> 75%. Corte mediano no músculo inutiliza um braço por 2 dias.</li>
@@ -1114,7 +1117,7 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
       </ul>`;
     } else {
       table = table + `<ul style="list-style-type: disc;" class="rola_desc">`;
-      if (tipo != "") {
+      if (tipo !== "" && tipo !== "MAG") {
         table = table + `<li class="mediaeval"><b>Combate Desarmado:</b> 75%. A dor ou falta de ar deixam o oponente grogue. Ajuste de - 5 por 4 rodadas.</li>
                         <li class="mediaeval"><b>Garras/Mordida:</b> 75%. A ferocidade do golpe derruba o adversário impedindo de atacar nas próximas 3 rodadas.</li>
                         <li class="mediaeval"><b>Corte:</b> 75%. Corte na cabeça põe adversário em coma por 1 dia se ele não tiver usando elmo.</li>
@@ -1135,7 +1138,7 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
       </ul>`;
     } else {
       table = table + `<ul style="list-style-type: disc;" class="rola_desc">`;
-      if (tipo != "") {
+      if (tipo !== "" && tipo !== "MAG") {
         table = table + `<li class="mediaeval"><b>Combate Desarmado:</b> 50%. Inchaço e sangramento facial atrapalham a visão. Ajuste de - 3 por 6 rodadas.</li>
                         <li class="mediaeval"><b>Garras/Mordida:</b> 50%. Feroz ataque na mão desarma o inimigo.</li>
                         <li class="mediaeval"><b>Corte:</b> 50%. Com um belo golpe, não só atinge como desarma o inimigo.</li>
@@ -1156,7 +1159,7 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
       </ul>`;
     } else {
       table = table + `<ul style="list-style-type: disc;" class="rola_desc">`;
-      if (tipo != "") {
+      if (tipo !== "" && tipo !== "MAG") {
         table = table + `<li class="mediaeval"><b>Combate Desarmado:</b> 50%. Golpe desarma o oponente, e a arma cai a 2 m dele.</li>
                         <li class="mediaeval"><b>Garras/Mordida:</b> 50%. Rasgo na mão impede o adversário de realizar seu próximo ataque.</li>
                         <li class="mediaeval"><b>Corte:</b> 50%. Corte no ombro, impõe um ajuste de – 4 por 1 dia.</li>
@@ -1177,7 +1180,7 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
       </ul>`;
     } else {
       table = table + `<ul style="list-style-type: disc;" class="rola_desc">`;
-      if (tipo != "") {
+      if (tipo !== "" && tipo !== "MAG") {
         table = table + `<li class="mediaeval"><b>Combate Desarmado:</b> 25%. Golpe no ouvido causa desorientação. Ajuste de -3 por 3 rodadas.</li>
                         <li class="mediaeval"><b>Garras/Mordida:</b> 25%. Ataque desequilibra o inimigo, levando-o a cair e perder uma rodada.</li>
                         <li class="mediaeval"><b>Corte:</b> 25%. Corte leve no músculo do braço dá um ajuste de – 4 na próxima rodada.</li>
@@ -1191,7 +1194,9 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
         </ul>`;
     }
   }
-  conteudo = conteudo + table + "</p>";
+  const critical = criticalCard(table, {color: resultado, failure: falha, actor,
+    targetUuid: context.flags?.['tagmar-token-fx']?.attackToken ?? (game.user.targets?.size === 1 ? [...game.user.targets][0].document?.uuid : null)});
+  conteudo = conteudo + critical.html + "</p>";
   if (game.settings.get('tagmar_rpg', 'dadosColoridos')) {
     dadosColoridos(resultado, roll);
   }
@@ -1200,7 +1205,7 @@ async function rolarCritico(coluna, tabela_resol, user, actor, tipo, falha, cont
     speaker: ChatMessage.getSpeaker({ actor: actor }),
     flavor: (context.targetHtml ?? '') + conteudo,
     ...(context.whisper ? {whisper: context.whisper} : {}),
-    ...(context.flags ? {flags: context.flags} : {})
+    flags: {...(context.flags ?? {}), world: {...(context.flags?.world ?? {}), tagmarCritical: critical.record}}
   });
 }
 

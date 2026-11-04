@@ -11,6 +11,21 @@
 
 # Tagmar XXX para Foundry VTT 14
 
+### Atualização validada de 04/11/2026 — Críticos e consequências
+
+Atualização validada na mesa para Foundry VTT 14.369.
+
+- Consequências de crítico e falha crítica aplicáveis aos tokens selecionados. O mestre escolhe e pode ajustar a consequência conforme o alvo e a situação.
+- Categorias recolhíveis no cartão do chat, com descrição, aplicação e desfazer. Selecionar o token é suficiente; não exige marcá-lo como alvo.
+- Consequências na aba Efeitos, com descrição, penalidade, estados e prazos acompanhados pelo calendário. Curar ou encerrar retira os ajustes correspondentes, preservando os bônus manuais e os outros efeitos.
+- Ajustes sem indicação específica afetam somente combate. Prazos diferentes de uma mesma consequência são controlados separadamente.
+- Percentuais 25%, 50%, 75% e 100% clicáveis nos cartões de dano crítico, usando a aplicação normal de dano nos tokens selecionados. Cartões antigos também recebem a apresentação compacta.
+
+Os dados dos compêndios e as mídias distribuídas são os mesmos da versão anterior. A edição Oficial mantém suas dependências, licenciamento e restrições de conteúdo, sem Tagmar FX ou imagens exclusivas do XXX.
+
+Atualize pelo manifesto permanente. Guarde arquivos pessoais na pasta do mundo ou em outra pasta de dados própria, fora das pastas de sistemas e módulos, e faça backup do mundo antes de atualizar.
+
+
 Edição pessoal do **Tagmar 3** para Foundry Virtual Tabletop 14. Reúne fichas, compêndios sincronizados, coleções antigas para consulta e integrações visuais próprias desta edição. Não é o pacote de distribuição oficial.
 
 Este guia apresenta a instalação, o primeiro personagem, o conteúdo dos compêndios e as integrações da edição pessoal. A referência desta documentação é a versão **2.7.0-v14.1-rc.64**, com identificador **`tagmar_rpg`**.
