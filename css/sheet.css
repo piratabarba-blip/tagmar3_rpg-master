@@ -418,3 +418,45 @@
 #combat-dock .buttons-container {
   opacity: 1;
 }
+
+/* Consequências de críticos: controles locais ao cartão, mantendo o pergaminho nativo. */
+.tagmar-critical-open { display:block; width:auto; margin:6px 0 10px; font-size:12px; }
+.tagmar-critical-editor { border:1px solid currentColor; border-radius:4px; padding:8px; margin:8px 0; }
+.tagmar-critical-editor label { display:flex; flex-direction:column; gap:3px; min-width:0; }
+.tagmar-critical-editor select,.tagmar-critical-editor input { width:100%; min-width:0; box-sizing:border-box; }
+.tagmar-critical-editor fieldset { padding:6px; margin:8px 0; min-width:0; }
+.tagmar-critical-editor legend { font-weight:bold; font-size:12px; }
+.tagmar-critical-grid { display:grid; grid-template-columns:minmax(50px,.7fr) minmax(85px,1.4fr); gap:6px; }
+.tagmar-critical-grid label:nth-child(3) { grid-column:1 / -1; }
+.tagmar-critical-actions { display:flex; gap:6px; flex-wrap:wrap; }
+.tagmar-critical-actions button { flex:1; min-width:100px; }
+.tagmar-critical-result { font-weight:bold; }
+.tagmar-critical-effects table { width:100%; table-layout:fixed; }
+.tagmar-critical-effects th:first-child { width:48%; }
+.tagmar-critical-effects th:last-child { width:82px; }
+.tagmar-critical-effects td { vertical-align:top; overflow-wrap:anywhere; padding:4px; }
+.tagmar-critical-effects tbody tr:nth-child(even) { background:rgba(160,139,157,.09); }
+.tagmar-critical-effects img { vertical-align:middle; object-fit:contain; }
+.tagmar-critical-effects .inactive { opacity:.6; }
+
+.tagmar-critical-effects h3 { color:inherit; }
+.tagmar-critical-effects summary { display:flex; align-items:center; gap:6px; cursor:pointer; }
+.tagmar-critical-effects summary img { flex:0 0 26px; }
+.tagmar-critical-options { margin:7px 0; }
+.tagmar-critical-options > summary { cursor:pointer; font-weight:bold; }
+
+/* Categorias de críticos recolhidas no próprio cartão. */
+.tagmar-critical-list { list-style:none !important; padding-left:0; margin:8px 0; }
+.tagmar-critical-list > .tagmar-critical-row { margin:0; }
+.tagmar-critical-choice { padding:5px 0; border-bottom:1px solid rgba(100,85,70,.25); }
+.tagmar-critical-choice > summary { cursor:pointer; font-weight:bold; line-height:1.5; }
+.tagmar-critical-choice-body { padding:6px 7px 2px 14px; }
+.tagmar-critical-choice-body > p { margin:0 0 6px; }
+
+/* Percentuais do crítico aplicam dano diretamente nos tokens selecionados. */
+.tagmar-critical-damage { margin:8px 0; }
+.tagmar-critical-damage > p { margin:0 0 5px; font-size:12px; line-height:1.35; }
+.tagmar-critical-damage table { width:100%; table-layout:fixed; text-align:center; margin:0; }
+.tagmar-critical-damage th,.tagmar-critical-damage td { padding:4px 3px; text-align:center; }
+.tagmar-critical-damage .tagmar-damage-percent { width:100%; min-width:0; min-height:28px; height:auto; margin:0; padding:3px 2px; border:1px solid rgba(70,60,45,.8); border-radius:3px; font:inherit; font-weight:bold; cursor:pointer; }
+.tagmar-critical-damage .tagmar-damage-percent:hover,.tagmar-critical-damage .tagmar-damage-percent:focus-visible { outline:2px solid #a27b28; outline-offset:1px; }
