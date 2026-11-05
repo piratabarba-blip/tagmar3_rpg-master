@@ -126,13 +126,17 @@ export async function synchronizeConsequences(actors,game=globalThis.game){
  const primary=list(game.users).find(u=>u.active&&u.isGM);
  if(!game.user?.isGM||primary&&primary.id!==game.user.id)return;
  const now=calendarNow(game);if(now===null)return;
- for(const actor of actors)for(const effect of list(actor.effects)){
+ for(const actor of actors){
+  // A transformation may have retired this synthetic Actor since it was tracked.
+  if(actor.isToken&&actor.token?.actor!==actor)continue;
+  for(const effect of list(actor.effects)){
   const record=stateOf(effect);if(!record)continue;
   if(effect.disabled||record.endedReason){if(!effect.flags?.[S]?.[K]?.consequence)await effect.update({[recordPath]:record});continue;}
   const next=effectState(record,now),previousStatuses=[...effect.statuses??[]].sort();
   if(!effect.flags?.[S]?.[K]?.consequence||next.disabled||JSON.stringify(previousStatuses)!==JSON.stringify([...next.statuses].sort())||JSON.stringify(effect.changes)!==JSON.stringify(next.changes)){
    await effect.update({...next,[recordPath]:{...record,endedReason:next.disabled?'expired':record.endedReason}});
   }
+ }
  }
 }
 

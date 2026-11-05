@@ -1,6 +1,8 @@
 import {
   DIVINE_ORDERS, HISTORICAL_FRAMES, INFERNAL_CURSES, INFERNAL_PATRONS, INFERNAL_SOURCE_URL, WILDERNESS_REGIONS
 } from "./treasureLore.js";
+import {specificView,bindSpecificUI,openTreasureProperties} from './treasureSpecificUI.mjs';
+import {newSpecificDraft} from './treasureSpecific.mjs';
 
 const SYSTEM_ID = import.meta.url.match(/\/systems\/([^/]+)\//)?.[1] || "tagmar_rpg";
 const ROOT_FOLDER_NAME = "Tesouros em Tagmar";
@@ -104,9 +106,9 @@ function escapeHtml(value = "") {
 }
 
 function stripHtml(value = "") {
-  const div = document.createElement("div");
-  div.innerHTML = String(value);
-  return div.textContent?.replace(/\s+/g, " ").trim() || "";
+  const template = document.createElement("template");
+  template.innerHTML = String(value);
+  return template.content.textContent?.replace(/\s+/g, " ").trim() || "";
 }
 
 function stripMundaneMaintenance(value = "") {
@@ -423,6 +425,9 @@ export class TesourosTagmarApp extends FormApplication {
     this._formState = null;
     this._objectSelections = {};
     this._sectionState = {};
+    this._specificDraft = newSpecificDraft();
+    this._specificBasket = [];
+    this._specificEditId = null;
     const savedPool = game.settings.get(SYSTEM_ID, "tesourosObjetosSelecionados")?.items || [];
     this._objectPoolSelections = new Set(Array.isArray(savedPool) ? savedPool : []);
   }
@@ -431,6 +436,11 @@ export class TesourosTagmarApp extends FormApplication {
     return game.settings.set(SYSTEM_ID, "tesourosObjetosSelecionados", {
       items: [...this._objectPoolSelections]
     });
+  }
+
+  _getHeaderButtons() {
+    return [{label:'Propriedades',class:'tesouro-properties-toggle',icon:'fas fa-sliders',
+      onclick:()=>openTreasureProperties(this,TREASURE_PROPERTIES,SYSTEM_ID)},...super._getHeaderButtons()];
   }
 
   async _loadCatalog() {
@@ -647,6 +657,7 @@ export class TesourosTagmarApp extends FormApplication {
       hasPreview: this._preview.length > 0,
       hasRoll: this._lastRoll !== null,
       lastRoll: this._lastRoll,
+      specific: specificView(this,catalog),
       properties: TREASURE_PROPERTIES.map((property) => ({
         ...property,
         enabled: propertySettings[property.key] !== false
@@ -823,6 +834,7 @@ export class TesourosTagmarApp extends FormApplication {
       section.addEventListener("toggle", () => { this._sectionState[section.dataset.treasureSection] = section.open; });
     });
     updateTreasureMode();
+    bindSpecificUI(this,html);
   }
 
   async _resetDefaults() {
@@ -861,15 +873,16 @@ export class TesourosTagmarApp extends FormApplication {
       else if (field.type !== "radio" || field.checked) values[field.name] = $(field).val();
     });
     values.itemPool = [...this._objectPoolSelections];
-    return values;
+    // This tab only draws random items. Exact choices and currency belong to the basket.
+    return {...values,generationMode:'quick',includeMoney:false,itemSpecific:'',specificMagic:'',itemPool:[],
+      moneyMoBonus:0,moneyMpBonus:0,moneyMcBonus:0,magicBonus:0,magicCount:0,focus:0,uses:0};
   }
 
   async _generatePreview(html) {
     const options = this._formValues(html);
     const selectedKind = html.find("select[name='itemKind']")[0]?.value || "random";
-    const selectedObject = html.find("select[name='itemSpecific']")[0]?.value || this._objectSelections[selectedKind] || "";
     options.itemKind = selectedKind;
-    options.itemSpecific = ["random", "pool"].includes(selectedKind) ? "" : selectedObject;
+    options.itemSpecific = "";
     this._formState = { ...options };
     return this._generateWithOptions(options, { render: true });
   }
@@ -1583,8 +1596,8 @@ export class TesourosTagmarApp extends FormApplication {
     };
   }
 
-  _previewChatContent({ gm = false, claimedBy = "" } = {}) {
-    const entries = this._preview.map((entry) => {
+  _previewChatContent({ gm = false, claimedBy = "", entries: preview = this._preview } = {}) {
+    const entries = preview.map((entry) => {
       if (entry.kind === "money") {
         return `<li><i class="fas fa-coins"></i> <strong>${escapeHtml(entry.name)}</strong><div>${escapeHtml(entry.powerSummary)}</div></li>`;
       }
@@ -1615,9 +1628,7 @@ export class TesourosTagmarApp extends FormApplication {
     const options = this._formValues(html);
     const selectedKind = html.find("select[name='itemKind']")[0]?.value || "random";
     options.itemKind = selectedKind;
-    options.itemSpecific = ["random", "pool"].includes(selectedKind)
-      ? ""
-      : html.find("select[name='itemSpecific']")[0]?.value || this._objectSelections[selectedKind] || "";
+    options.itemSpecific = "";
     const content = `<section class="tagmar-treasure-chat tagmar-treasure-invitation"><h3><i class="fas fa-dice-d20"></i> Descoberta de tesouro</h3><p>O Mestre preparou um tesouro. Um jogador pode realizar a rolagem que revelará o que foi encontrado.</p><button type="button" data-action="claim-treasure-roll"><i class="fas fa-dice"></i> Rolar o tesouro</button><p class="notes">O primeiro clique válido encerra esta rolagem.</p></section>`;
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker(),
@@ -1633,13 +1644,21 @@ export class TesourosTagmarApp extends FormApplication {
     return Folder.create({ name: stampedFolderName(), type: "Item", folder: root.id, color: "#7a1f1f" });
   }
 
-  async _createTreasure() {
-    if (!this._preview.length) return ui.notifications.warn("Gere uma prévia antes de criar o tesouro.");
+  async _createTreasure(entries = this._preview, {specific = false} = {}) {
+    if (!game.user?.isGM || this._creatingTreasure) return;
+    if (!entries.length) return ui.notifications.warn(specific ? "Adicione um item ou moedas à cesta." : "Gere uma prévia antes de criar o tesouro.");
+    this._creatingTreasure = true;
+    try {
     const folder = await this._ensureTreasureFolder();
-    const itemData = this._preview.map((entry) => {
+    const snapshot = [...entries];
+    const itemData = snapshot.flatMap((entry) => {
       let data;
       const createdName = entry.publicName || entry.name;
-      if (entry.baseDocument) {
+      if (entry.manualData) {
+        data = foundry.utils.deepClone(entry.manualData);
+        data.name = createdName;
+        data.folder = folder.id;
+      } else if (entry.baseDocument) {
         data = entry.baseDocument.toObject();
         delete data._id;
         data.name = createdName;
@@ -1665,6 +1684,7 @@ export class TesourosTagmarApp extends FormApplication {
       data.flags = foundry.utils.mergeObject(data.flags || {}, {
         tagmarTreasure: {
           generated: true,
+          generationMode: entry.manual ? "manual" : "random",
           treasureType: entry.treasureType,
           powerTotal: entry.total,
           bonus: entry.bonus,
@@ -1684,25 +1704,38 @@ export class TesourosTagmarApp extends FormApplication {
           publicName: entry.publicName
         }
       }, { inplace: false });
-      return data;
+      return Array.from({length:entry.manual ? entry.quantity || 1 : 1},()=>foundry.utils.deepClone(data));
     });
     const created = await Item.createDocuments(itemData);
-    const hasPublicRevelation = this._preview.some((entry) => entry.revealHistory || entry.revealCurse);
+    // Creation has succeeded. A later chat failure must not leave a creatable duplicate basket.
+    if (specific) {
+      this._specificBasket = [];
+      this._specificEditId = null;
+    } else {
+      this._preview = [];
+      this._lastRoll = null;
+    }
+    const hasPublicRevelation = snapshot.some((entry) => entry.revealHistory || entry.revealCurse);
+    try {
     if (hasPublicRevelation) {
       await ChatMessage.create({
         speaker: ChatMessage.getSpeaker(),
-        content: this._previewChatContent({ gm: false })
+        content: this._previewChatContent({ gm: false, entries: snapshot })
       });
     }
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker(),
       whisper: gmRecipientIds(),
-      content: this._previewChatContent({ gm: true })
+      content: this._previewChatContent({ gm: true, entries: snapshot })
     });
+    } catch (error) {
+      console.error("Tagmar | Tesouro criado; aviso do chat não enviado",error);
+      ui.notifications.warn("Os itens foram criados, mas não foi possível enviar o resumo ao chat. Confira a pasta Tesouros em Tagmar.");
+    }
     ui.notifications.info(`${created.length} item(ns) criado(s) na pasta “${folder.name}”.`);
-    this._preview = [];
-    this._lastRoll = null;
     this.render(false);
+    return created;
+    } finally {this._creatingTreasure = false;}
   }
 
   async _updateObject() {}

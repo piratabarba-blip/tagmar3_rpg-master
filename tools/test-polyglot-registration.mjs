@@ -14,14 +14,16 @@ class LanguageProvider {
 // Mirror both private-method ownership models; an incorrect receiver must throw.
 class LegacyAPI {
   providers = {};
+  calls = 0;
   registerSystem(Provider) { this.#register("system.test", Provider); }
-  #register(id, Provider) { this.providers[id] = new Provider(id); }
+  #register(id, Provider) { this.calls++; this.providers[id] = new Provider(id); }
 }
 class Polyglot {
   providers = {};
+  calls = 0;
   api = { registerSystem: this.#registerSystem };
   #registerSystem(Provider) { this.#register("system.test", Provider); }
-  #register(id, Provider) { this.providers[id] = new Provider(id); }
+  #register(id, Provider) { this.calls++; this.providers[id] = new Provider(id); }
 }
 assert.throws(() => new Polyglot().api.registerSystem(LanguageProvider),
   /Receiver must be an instance of class Polyglot/);
@@ -34,6 +36,8 @@ function run(version, polyglot, registry) {
   });
   hook(LanguageProvider);
   assert.equal(Object.keys(registry).length, 1, "Register exactly one provider");
+  const owner = typeof polyglot.calls === 'number' ? polyglot : polyglot.api;
+  if (typeof owner.calls === 'number') assert.equal(owner.calls, 1, "Never register twice");
   const provider = registry["system.test"];
   assert.ok(provider instanceof LanguageProvider);
   assert.ok(provider.languages.males, "Keep Tagmar language catalogue");
@@ -47,11 +51,23 @@ const legacy = new LegacyAPI();
 run("2.9.2", {api: legacy}, legacy.providers);
 const broken = new Polyglot();
 run("2.10.2", broken, broken.providers);
+for (const version of ["2.10.3", "2.10.4", "2.10.5", "3.0.0"]) {
+  const unbound = new Polyglot();
+  run(version, unbound, unbound.providers);
+}
 const future = new Polyglot();
 future.api.registerSystem = future.api.registerSystem.bind(future);
 run("2.10.3", future, future.providers);
 const other = new LegacyAPI();
 run("3.0.0", {api: other}, other.providers);
+
+// A provider/API failure unrelated to the receiver must remain visible and not retry.
+for (const failure of [new Error('Provider rejected'), new TypeError('Other type error')]) {
+  let calls = 0;
+  const brokenAPI = {api:{registerSystem(){calls++; throw failure;}}};
+  assert.throws(() => run('2.10.4', brokenAPI, {}), error => error === failure);
+  assert.equal(calls, 1);
+}
 
 // Optional: exercise the actual installed 2.10.2 registration methods.
 if (process.argv[2]) {
@@ -65,7 +81,7 @@ if (process.argv[2]) {
     {game: {system: {id: "test"}}});
   assert.throws(() => actualInstance.api.registerSystem(LanguageProvider),
     /Receiver must be an instance of class Polyglot/);
-  run("2.10.2", actualInstance, actualInstance.providers);
+  run(process.argv[3] || "2.10.4", actualInstance, actualInstance.providers);
 }
-console.log("PASS: legacy, Polyglot 2.10.2, future API, languages and inventory.");
+console.log("PASS: legacy and unbound/bound Polyglot 2.10.2–2.10.5/3.0.0, actual installed API, one registration, unrelated errors, languages and inventory.");
 

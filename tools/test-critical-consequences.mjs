@@ -97,3 +97,8 @@ const result=await applyConsequence({...args,actor:legacyActor});assert(result.d
 assert.equal(consequenceRecord(legacy).parts[0].endsAt,originalDeadline);
 await undoConsequence({message,actor:legacyActor,effectId:legacyId,game});assert.equal(penaltyTotal(legacyActor,'combat'),0);
 console.log('PASS: actual Foundry getFlag validation, valid native world scope, already-applied legacy effect recovered without duplicate or renewed duration, and healing removes its penalty.');
+
+// A linked-form return in 14.370 can leave an older ActorDelta instance in memory.
+const retired={isToken:true,token:{actor:null},get effects(){throw Error('Retired actor must not be synchronized');}};
+await synchronizeConsequences([retired],game);
+console.log('PASS: expired criticals never update a retired synthetic actor after transformation.');

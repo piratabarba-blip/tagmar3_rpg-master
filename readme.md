@@ -11,6 +11,17 @@
 
 # Tagmar XXX para Foundry VTT 14
 
+### Foundry VTT 14.370 — 05/11/2026
+
+Compatibilidade verificada com Foundry VTT 14.370.
+
+- O gerador de tesouros separa itens aleatórios e tesouros específicos. Monte itens com propriedades, magias e quantidades escolhidas e reúna-os numa cesta antes de criar o conjunto.
+- A integração com Polyglot 2.10.4 volta a registrar os idiomas corretamente.
+- A leitura de descrições de tesouros evita requisições de imagens da página de origem.
+- Os controles dos Tiles voltam a ficar alinhados ao lado da peça.
+- A sincronização de consequências ignora fichas temporárias já substituídas por uma transformação.
+
+
 ### Atualização validada de 04/11/2026 — Críticos e consequências
 
 Atualização validada na mesa para Foundry VTT 14.369.

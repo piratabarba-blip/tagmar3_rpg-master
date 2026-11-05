@@ -217,6 +217,31 @@
 
 /* Foundry V13: impede que a classe .col do Bootstrap desloque a coluna
    direita do HUD para baixo do token. */
+/* O HUD de Tiles tambem usa .col; preserve as colunas absolutas do Foundry
+   contra a grade Bootstrap usada pelas fichas. Nao altera o HUD dos tokens. */
+#tile-hud .col {
+    position: absolute;
+    top: 0;
+    width: var(--column-width);
+    max-width: none;
+    padding: 0;
+    margin: 0;
+    flex: 0 0 auto;
+}
+#tile-hud .col.left {
+    left: calc(-1 * var(--column-width) - 8px);
+    right: auto;
+}
+#tile-hud .col.middle {
+    left: 0;
+    right: auto;
+    width: 100%;
+}
+#tile-hud .col.right {
+    right: calc(-1 * var(--column-width) - 8px);
+    left: auto;
+}
+
 #token-hud .col.left {
     position: absolute;
     top: -50px;

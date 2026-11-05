@@ -4,7 +4,7 @@ let properties = {};
 globalThis.game = {settings: {get: (_id, key) => key === 'tesourosPropriedades' ? properties : {}}};
 const warnings = [];
 globalThis.ui = {notifications: {warn: message => warnings.push(message)}};
-globalThis.document = {createElement: () => ({textContent: '', get innerHTML() {return this.textContent.replaceAll('&', '&amp;').replaceAll('<', '&lt;');}})};
+globalThis.document = {createElement: () => ({textContent: '', content: {textContent: ''}, get innerHTML() {return this.textContent.replaceAll('&', '&amp;').replaceAll('<', '&lt;');}})};
 globalThis.Roll = class {
   constructor(formula) {this.formula = formula;}
   async evaluate() {const [, n, die, multiplier] = this.formula.match(/(\d+)d(\d+)(?: \* (\d+))?/); this.total = Number(n) * Number(die) * Number(multiplier || 1); return this;}

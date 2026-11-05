@@ -358,3 +358,61 @@
   .tesouro-magic-row { grid-template-columns: 45px 1fr; }
   .tesouro-category-checks { grid-column: 2; }
 }
+
+/* Montagem exata de tesouros e cesta, independente do sorteio. */
+#tesouros-tagmar .window-header .tesouro-properties-toggle {font-size:0;min-width:28px;text-align:center;color:#e8bd62;}
+#tesouros-tagmar .window-header .tesouro-properties-toggle i {font-size:15px;margin:0;}
+#tesouros-tagmar .tesouro-specific-tab {padding:14px;}
+.tesouro-exact-note {margin:0 0 12px;padding:9px 10px;border-left:3px solid #bd8e32;background:#172330;line-height:1.45;}
+.tesouro-manual-step {min-width:0;margin:0 0 12px;padding:10px 12px;border:1px solid #3b4d63;border-radius:5px;background:#111a24;}
+.tesouro-manual-step legend {font-weight:bold;color:#e8bd62;}
+.tesouro-manual-step>label {display:flex;align-items:center;gap:10px;}
+.tesouro-manual-step>label>select {flex:1;min-width:0;}
+.tesouro-manual-step>input[type=search],.tesouro-manual-step>select {width:100%;box-sizing:border-box;margin-bottom:7px;}
+.tesouro-manual-step>select[size='5'] {height:auto;min-height:120px;}
+.tesouro-specific-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 12px;}
+.tesouro-specific-grid>label,.tesouro-specific-content>label {display:flex;flex-direction:column;align-items:stretch;gap:4px;font-weight:600;min-width:0;}
+.tesouro-specific-grid .tesouro-wide {grid-column:1/-1;}
+.tesouro-specific-grid input,.tesouro-specific-grid select,.tesouro-specific-content input,.tesouro-specific-content select,.tesouro-specific-content textarea {width:100%;box-sizing:border-box;min-width:0;}
+.tesouro-specific-grid input[type=number] {text-align:center;}
+.tesouro-specific-grid input,.tesouro-specific-grid select {min-height:31px;height:31px;}
+.tesouro-help {color:#d7b55b!important;font-size:12px;font-weight:normal;cursor:help;}
+.tesouro-specific-detail {margin-bottom:10px;}
+.tesouro-specific-detail>.tesouro-specific-grid {padding:6px 12px 12px;}
+.tesouro-specific-content {display:flex;flex-direction:column;gap:10px;padding:4px 12px 12px;}
+.tesouro-specific-content>select {min-height:32px;}
+.tesouro-specific-content>.tesouro-check-line {flex-direction:row;align-items:center;font-weight:normal;}
+.tesouro-specific-content input[type=checkbox] {width:18px;flex:none;}
+.tesouro-specific-caption {display:block;margin:0 12px 5px;}
+.tesouro-specific-damage {display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;padding:0 12px 12px;}
+.tesouro-specific-damage label {display:flex;flex-direction:column;text-align:center;gap:4px;font-size:12px;min-width:0;}
+.tesouro-specific-damage input {width:100%;text-align:center;box-sizing:border-box;}
+.tesouro-specific-powers {margin:0;padding:0;list-style:none;}
+.tesouro-specific-powers>li {display:flex;gap:10px;align-items:center;justify-content:space-between;padding:7px 8px;border-bottom:1px solid #435062;}
+.tesouro-specific-powers>li:nth-child(odd),.tesouro-specific-basket li:nth-child(odd) {background:#1b2835;}
+.tesouro-specific-powers small {display:block;font-size:12px;margin-top:3px;}
+.tesouro-specific-powers button {width:30px;flex:0 0 30px;}
+.tesouro-specific-add {display:flex;gap:8px;margin:12px 0 20px;}
+.tesouro-specific-add>.tesouro-primary {flex:1;min-height:37px;}
+.tesouro-specific-basket {margin-top:18px;border-top:2px solid #ac812c;padding-top:10px;}
+.tesouro-specific-basket h3 {display:flex;gap:8px;align-items:center;font-size:19px;}
+.tesouro-specific-basket h3 small {margin-left:auto;font:12px var(--font-primary,sans-serif);}
+.tesouro-specific-basket ol {list-style:none;padding:0;margin:8px 0;}
+.tesouro-specific-basket li {display:flex;align-items:center;gap:10px;padding:9px 7px;border-bottom:1px solid #384755;}
+.tesouro-specific-basket li>div:not(.tesouro-basket-tools) {flex:1;min-width:0;overflow-wrap:anywhere;}
+.tesouro-specific-basket li small {display:block;font-size:12px;margin-top:4px;line-height:1.4;}
+.tesouro-basket-tools {display:flex;gap:5px;flex:none;}
+.tesouro-basket-tools button {width:30px;}
+.tesouro-specific-basket>.tesouro-create {margin:6px 0 8px;min-height:38px;}
+.tesouro-properties-dialog .window-content {background:#10171f;color:#f0dfba;}
+.tesouro-properties-form {height:auto;padding:6px;gap:8px;}
+.tesouro-properties-form .tesouro-property-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.tesouro-properties-form p {line-height:1.5;}
+@container (max-width:480px) {
+ .tesouro-specific-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+ .tesouro-specific-damage {grid-template-columns:repeat(4,minmax(0,1fr));}
+ .tesouro-specific-basket li {gap:6px;}
+}
+
+#tesouros-tagmar .window-title {color:#e8bd62;font-weight:700;}
+.tesouro-specific-grid>label {justify-content:flex-end;}

@@ -1,36 +1,17 @@
 <form class="tesouros-tagmar-form">
   <nav class="tesouro-tabs tabs" data-group="primary">
-    <a class="item" data-tab="propriedades"><i class="fas fa-sliders"></i> Propriedades</a>
-    <a class="item" data-tab="gerar"><i class="fas fa-gem"></i> Gerar tesouro</a>
+    <a class="item" data-tab="gerar"><i class="fas fa-dice"></i> Itens aleatórios</a>
+    <a class="item" data-tab="especificos"><i class="fas fa-pen-ruler"></i> Tesouros específicos</a>
   </nav>
 
   <section class="tesouro-body">
-    <div class="tab" data-group="primary" data-tab="propriedades">
-      <p class="notes tesouro-intro-note">Somente as propriedades marcadas podem participar da geração. Matrizes e usos são definidos automaticamente pelo tipo do objeto.</p>
-      <div class="tesouro-property-grid">
-        {{#each properties}}
-        <label class="tesouro-property-option">
-          <span><input type="checkbox" data-property value="{{key}}" {{#if enabled}}checked{{/if}}> <strong>{{label}}</strong></span>
-          <small>{{compatibility}}</small>
-        </label>
-        {{/each}}
-      </div>
-      <div class="tesouro-callout">
-        <p class="notes">Cada propriedade automática faz seu próprio teste de existência. Propriedades incompatíveis com o objeto são ignoradas.</p>
-        <p class="notes"><strong>Chance por Tipo:</strong> 1: 15% · 2: 22% · 3: 30% · 4: 39% · 5: 49% · 6: 60% · 7: 71% · 8: 81% · 9: 90% · 10: 97%.</p>
-        <p class="notes">A Absorção acompanha o Tipo de 1 a 100: Tipo 1 gera 1–10, Tipo 2 gera 11–20, seguindo até o Tipo 10 com 91–100.</p>
-      </div>
-      <button type="button" class="tesouro-primary" data-action="save-properties"><i class="fas fa-floppy-disk"></i> Salvar propriedades</button>
-    </div>
-
     <div class="tab" data-group="primary" data-tab="gerar">
       <div class="tesouro-generator-grid tesouro-compact-generator">
         <fieldset class="tesouro-classification-options">
-          <legend>Classificação do tesouro</legend>
+          <legend>Sorteio de itens</legend>
           <label>O que gerar
             <select name="treasureMode">
-              <option value="mixed">Tesouro misto</option>
-              <option value="coins">Somente moedas</option>
+              <option value="mixed">Itens variados</option>
               <option value="mundane">Somente itens mundanos</option>
               <option value="magical">Somente itens mágicos</option>
             </select>
@@ -44,12 +25,7 @@
             </select>
           </label>
           <p class="notes" data-mundane-option>A qualidade é descritiva: não concede bônus mágico nem altera valores de combate.</p>
-          <label data-item-option>Modo
-            <select name="generationMode">
-              <option value="quick">Rápido</option>
-              <option value="specific">Personalizado</option>
-            </select>
-          </label>
+          <input type="hidden" name="generationMode" value="quick">
           <label>Tipo do tesouro
             <select name="treasureType">
               <option value="1">Tipo 1 — muito modesto</option>
@@ -72,21 +48,7 @@
             </select>
           </label>
           <div class="tesouro-quick-options">
-            <p class="notes" data-item-option>A quantidade de objetos será sorteada com 1d20; as moedas têm sorteios próprios.</p>
-          </div>
-          <div class="tesouro-specific-options">
-            <label data-item-option>Quantidade de itens <input type="number" name="itemCount" value="1" min="1" title="A quantidade informada será criada exatamente"></label>
-            <label data-powered-option>Bônus mágico <input type="number" name="magicBonus" value="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
-            <div class="tesouro-inline-fields" data-powered-option>
-              <label data-magic-option>Magias por item <input type="number" name="magicCount" value="0" min="0" title="0 usa a regra automática; outro valor gera essa quantidade de magias diferentes"></label>
-              <label>Focus <input type="number" name="focus" value="0" min="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
-              <label data-magic-option>Vezes por dia <input type="number" name="uses" value="0" min="0" title="0 usa a regra automática; outro valor é aplicado exatamente"></label>
-            </div>
-            <div class="tesouro-callout" data-powered-option>
-              <p class="notes"><strong>Regra do modo Personalizado:</strong> 0 usa o sorteio automático; qualquer outro valor informado é aplicado exatamente, independentemente do Tipo.</p>
-              <p class="notes">As magias de um mesmo item nunca se repetem. Focus 0 soma a base Tipo × 10 com 1d(Tipo × 10).</p>
-              <p class="notes"><strong>Magias por item</strong> exige essa quantidade de magias diferentes compatíveis com os filtros; se não houver opções suficientes, a geração será interrompida.</p>
-            </div>
+            <p class="notes" data-item-option>A quantidade de objetos é sorteada com 1d20. Objetos e poderes também são sorteados; moedas e escolhas exatas ficam na aba Específicos.</p>
           </div>
         </fieldset>
 
@@ -97,7 +59,6 @@
           <label>Tipo
             <select name="itemKind">
               <option value="random">Aleatório</option>
-              <option value="pool">Seleção múltipla personalizada</option>
               <option value="weapon">Arma</option>
               <option value="defense">Armadura, elmo ou escudo</option>
               <option value="ring">Joia</option>
@@ -105,13 +66,13 @@
               <option value="potion">Poção, óleo, elixir ou unguento</option>
             </select>
           </label>
-          <label>Objeto específico
+          <label hidden>Objeto específico
             <select name="itemSpecific">
               <option value="">Aleatório dentro do tipo</option>
               {{#each objectChoices}}<option value="{{value}}" data-kind="{{kind}}" data-realms="{{realms}}">{{label}}</option>{{/each}}
             </select>
           </label>
-          <div class="tesouro-object-pool">
+          <div class="tesouro-object-pool" hidden>
             <input type="search" data-object-pool-search placeholder="Pesquisar espada, anel, elmo...">
             <div class="tesouro-object-pool-list">
               {{#each objectPoolChoices}}
@@ -126,24 +87,7 @@
               <button type="button" data-action="clear-object-pool"><i class="fas fa-eraser"></i> Limpar seleção</button>
             </div>
           </div>
-          <p class="notes">Um objeto específico ou uma seleção múltipla sempre será criado; somente suas propriedades e seus poderes continuarão sendo sorteados.</p>
-        </fieldset>
-        </details>
-
-        <details class="tesouro-section tesouro-section-money" data-treasure-section="money">
-          <summary>Tesouro monetário</summary>
-        <fieldset class="tesouro-money-options">
-          <legend>Tesouro monetário</legend>
-          <label class="tesouro-check-line"><input type="checkbox" name="includeMoney" value="true" checked> Incluir MO, MP e MC</label>
-          <p class="notes">As três quantidades serão sorteadas separadamente conforme o Tipo do tesouro.</p>
-          <div class="tesouro-money-additions">
-            <strong>Somar ao tesouro monetário:</strong>
-            <div>
-              <label>MO <input type="number" name="moneyMoBonus" value="0" min="0" step="1"></label>
-              <label>MP <input type="number" name="moneyMpBonus" value="0" min="0" step="1"></label>
-              <label>MC <input type="number" name="moneyMcBonus" value="0" min="0" step="1"></label>
-            </div>
-          </div>
+          <p class="notes">Escolha uma categoria ou deixe Aleatório. Para escolher um objeto exato, use Tesouros específicos.</p>
         </fieldset>
         </details>
 
@@ -183,7 +127,7 @@
               {{#each origins}}<option value="{{name}}" data-realms="{{realms}}" data-traditions="{{traditions}}" data-repertoires="{{repertoires}}">{{name}}</option>{{/each}}
             </select>
           </label>
-          <label data-magic-option>Magia específica
+          <label data-magic-option hidden>Magia específica
             <select name="specificMagic">
               <option value="">Aleatória dentro da escola/origem</option>
               {{#each magics}}<option value="{{key}}" data-realms="{{realms}}" data-origins="{{originValues}}" data-traditions="{{traditionValues}}" data-repertoires="{{repertoireValues}}">{{name}}{{repertoireSuffix}}</option>{{/each}}
@@ -191,7 +135,7 @@
           </label>
           <div class="tesouro-callout" data-magic-option>
             <p class="notes">Magias comuns acompanham o Tipo de 1 a 10. Magias ancestrais usam os limites 11, 13, 15, 17, 19, 20, 23, 25, 27 e 30.</p>
-            <p class="notes">No sorteio automático, “Com magia” permite que a propriedade participe do teste de existência; uma magia específica ou quantidade personalizada maior que 0 garante sua inclusão.</p>
+            <p class="notes">“Com magia” permite que essa propriedade participe do sorteio. Para escolher magias e níveis exatos, use Tesouros específicos.</p>
             <p class="notes">Cetros e cajados recebem uma magia diferente em cada matriz de poder, independentemente do limite comum de duas magias.</p>
           </div>
           <div class="tesouro-edit-note"><i class="fas fa-pen-to-square"></i> O Mestre de Jogo pode modificar o que precisar no item depois que ele estiver pronto.</div>
@@ -277,5 +221,121 @@
       </section>
       {{/if}}
     </div>
+    <div class="tab tesouro-specific-tab" data-group="primary" data-tab="especificos" data-specific-panel>
+      <p class="notes tesouro-exact-note"><i class="fas fa-pen-ruler"></i> Você escolhe cada valor. <strong>Zero significa sem essa propriedade.</strong> Nada é sorteado nesta aba.</p>
+      <fieldset class="tesouro-manual-step">
+        <legend>1. Tipo de tesouro</legend>
+        <label>O que montar
+          <select data-specific-field="kind">{{#each specific.kinds}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+        </label>
+      </fieldset>
+      {{#unless specific.isMoney}}
+      <fieldset class="tesouro-manual-step">
+        <legend>2. Escolher objeto</legend>
+        <input type="search" data-specific-object-search placeholder="Digite para filtrar os objetos..." aria-label="Procurar objeto">
+        <select data-specific-field="object" size="{{#if specific.hasObject}}1{{else}}5{{/if}}" aria-label="Objeto deste tipo">
+          <option value="">Escolha o objeto...</option>
+          {{#each specific.choices}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+        </select>
+      </fieldset>
+      {{/unless}}
+      {{#if specific.hasObject}}
+      <fieldset class="tesouro-manual-step">
+        <legend>{{#if specific.isMoney}}2. Valores exatos{{else}}3. Configurar objeto{{/if}}</legend>
+        <div class="tesouro-specific-grid">
+          <label class="tesouro-wide">Nome <input type="text" data-specific-field="name" value="{{specific.draft.name}}" placeholder="Opcional; mantém o nome do objeto escolhido"></label>
+          {{#if specific.isMoney}}
+          <label>MO <input type="number" min="0" step="1" data-specific-field="mo" value="{{specific.draft.mo}}"></label>
+          <label>MP <input type="number" min="0" step="1" data-specific-field="mp" value="{{specific.draft.mp}}"></label>
+          <label>MC <input type="number" min="0" step="1" data-specific-field="mc" value="{{specific.draft.mc}}"></label>
+          {{else}}
+          <label><span>Quantidade <span class="tesouro-help" title="Cria essa quantidade de cópias idênticas do item. Cada cópia mantém todos os valores escolhidos.">(?)</span></span><input type="number" min="1" max="99" step="1" data-specific-field="quantity" value="{{specific.draft.quantity}}"></label>
+          {{#if specific.hasFocus}}
+          <label>Bônus mágico <input type="number" step="1" data-specific-field="bonus" value="{{specific.draft.bonus}}"></label>
+          <label>Focus <input type="number" min="0" step="1" data-specific-field="focus" value="{{specific.draft.focus}}"></label>
+          <label>RM adicional <input type="number" min="0" step="1" data-specific-field="resistance" value="{{specific.draft.resistance}}"></label>
+          {{/if}}
+          {{#if specific.hasAbsorption}}<label>ABS adicional <input type="number" min="0" step="1" data-specific-field="absorption" value="{{specific.draft.absorption}}"></label>{{/if}}
+          {{#if specific.isStaff}}<label><span>Matrizes <span class="tesouro-help" title="Uma magia por matriz. Escolha a matriz ao adicionar cada poder; as demais ficam vazias.">(?)</span></span><input type="number" min="1" max="4" step="1" data-specific-field="matrices" value="{{specific.draft.matrices}}"></label>{{/if}}
+          {{/if}}
+        </div>
+      </fieldset>
+      {{#unless specific.isMoney}}
+      {{#if specific.isWeapon}}
+      <details class="tesouro-section tesouro-specific-detail">
+        <summary>Dano, colunas e alcance <span class="tesouro-help" title="Valores base copiados da arma escolhida. Você pode alterá-los; o personagem continua calculando seus ajustes normalmente.">(?)</span></summary>
+        <div class="tesouro-specific-grid">
+          <label>Alcance <input type="text" data-specific-field="range" value="{{specific.draft.range}}"></label>
+          <label>L <input type="number" step="1" data-specific-field="defL" value="{{specific.draft.defL}}"></label>
+          <label>M <input type="number" step="1" data-specific-field="defM" value="{{specific.draft.defM}}"></label>
+          <label>P <input type="number" step="1" data-specific-field="defP" value="{{specific.draft.defP}}"></label>
+        </div>
+        <strong class="tesouro-specific-caption">Dano base por resultado</strong>
+        <div class="tesouro-specific-damage">{{#each specific.damage}}<label>{{label}}<input type="number" min="0" step="1" data-specific-field="{{field}}" value="{{value}}"></label>{{/each}}</div>
+      </details>
+      {{/if}}
+      {{#if specific.isDefense}}
+      <details class="tesouro-section tesouro-specific-detail">
+        <summary>Defesa e absorção base <span class="tesouro-help" title="O bônus mágico é somado à defesa base. A ABS adicional é somada à absorção base, sem alterar o objeto original do compêndio.">(?)</span></summary>
+        <div class="tesouro-specific-grid">
+          <label>Categoria <select data-specific-field="defCategory">{{#each specific.defenseCategories}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{value}}</option>{{/each}}</select></label>
+          <label>Defesa base <input type="number" step="1" data-specific-field="defValue" value="{{specific.draft.defValue}}"></label>
+          <label>ABS base <input type="number" min="0" step="1" data-specific-field="baseAbs" value="{{specific.draft.baseAbs}}"></label>
+        </div>
+      </details>
+      {{/if}}
+      <details class="tesouro-section tesouro-specific-detail" open>
+        <summary>Magias e poderes escolhidos <span class="tesouro-help" title="Procure a magia, escolha o nível e o uso e clique em Adicionar magia. Nenhum poder é incluído automaticamente.">(?)</span></summary>
+        <div class="tesouro-specific-content">
+          <input type="search" data-specific-magic-search placeholder="Procurar magia ou escola..." aria-label="Procurar magia">
+          <select data-specific-field="magicKey" aria-label="Magia"><option value="">Escolha uma magia...</option>{{#each specific.magics}}<option value="{{key}}" data-search="{{search}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+          {{#if specific.canAddMagic}}
+          <div class="tesouro-specific-grid">
+            <label>Nível <select data-specific-field="magicLevel">{{#each specific.levels}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{value}}</option>{{/each}}</select></label>
+            <label>Uso <select data-specific-field="magicMode">{{#each specific.modes}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select></label>
+            {{#if specific.daily}}<label>Vezes por dia <input type="number" min="1" step="1" data-specific-field="magicUses" value="{{specific.magicUses}}"></label>{{/if}}
+            {{#if specific.isStaff}}<label>Matriz <select data-specific-field="magicMatrix">{{#each specific.matrices}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{value}}</option>{{/each}}</select></label>{{/if}}
+          </div>
+          <button type="button" data-specific-action="add-power"><i class="fas fa-plus"></i> Adicionar magia</button>
+          {{/if}}
+          {{#if specific.hasPowers}}
+          <ul class="tesouro-specific-powers">{{#each specific.powers}}<li><span><strong>{{name}} {{level}}</strong><small>{{usage}}{{#if matrix}} · Matriz {{matrix}}{{/if}}</small></span><button type="button" data-specific-remove-power="{{index}}" title="Remover {{name}}" aria-label="Remover {{name}}"><i class="fas fa-trash"></i></button></li>{{/each}}</ul>
+          {{else}}<p class="notes">Nenhuma magia adicionada. O objeto pode ser criado sem magias.</p>{{/if}}
+        </div>
+      </details>
+      <details class="tesouro-section tesouro-specific-detail">
+        <summary>Descrição, história e maldição (opcional)</summary>
+        <div class="tesouro-specific-content">
+          <label>Descrição adicional <textarea data-specific-field="notes" rows="3">{{specific.draft.notes}}</textarea></label>
+          <label>Nome verdadeiro <input type="text" data-specific-field="trueName" value="{{specific.draft.trueName}}"></label>
+          <label>História escrita pelo mestre <textarea data-specific-field="history" rows="3">{{specific.draft.history}}</textarea></label>
+          <label class="tesouro-check-line"><input type="checkbox" data-specific-field="revealHistory" {{#if specific.draft.revealHistory}}checked{{/if}}> Revelar história aos jogadores</label>
+          <div class="tesouro-specific-grid">
+            <label>Nome da maldição <input type="text" data-specific-field="curseName" value="{{specific.draft.curseName}}"></label>
+            <label>Prazo / afastamento <input type="text" data-specific-field="curseDuration" value="{{specific.draft.curseDuration}}"></label>
+          </div>
+          <label>Efeito da maldição <textarea data-specific-field="curseText" rows="2">{{specific.draft.curseText}}</textarea></label>
+          <label>Como se libertar <input type="text" data-specific-field="curseRelease" value="{{specific.draft.curseRelease}}"></label>
+          <label class="tesouro-check-line"><input type="checkbox" data-specific-field="revealCurse" {{#if specific.draft.revealCurse}}checked{{/if}}> Revelar maldição aos jogadores</label>
+          <p class="notes">História e maldição só existem se você preencher. Quando ocultas, ficam disponíveis ao mestre no resumo completo.</p>
+        </div>
+      </details>
+      {{/unless}}
+      <div class="tesouro-specific-add">
+        <button type="button" class="tesouro-primary" data-specific-action="add-basket"><i class="fas fa-basket-shopping"></i> {{#if specific.isEditing}}Salvar alterações na cesta{{else}}Adicionar à cesta{{/if}}</button>
+        {{#if specific.isEditing}}<button type="button" data-specific-action="cancel-edit">Cancelar edição</button>{{/if}}
+      </div>
+      {{/if}}
+      <section class="tesouro-specific-basket">
+        <h3><i class="fas fa-basket-shopping"></i> Cesta <small>{{specific.basketCount}} item(ns)</small></h3>
+        {{#if specific.hasBasket}}
+        <ol>{{#each specific.basket}}<li><i class="{{icon}}"></i><div><strong>{{amount}}× {{name}}</strong><small>{{kindLabel}} · {{powerSummary}}</small></div><div class="tesouro-basket-tools"><button type="button" data-specific-edit="{{basketId}}" title="Editar {{name}}" aria-label="Editar {{name}}"><i class="fas fa-pen-to-square"></i></button><button type="button" data-specific-delete="{{basketId}}" title="Remover {{name}} da cesta" aria-label="Remover {{name}} da cesta"><i class="fas fa-trash"></i></button></div></li>{{/each}}</ol>
+        <p class="notes">Revise a cesta. Os itens serão criados em uma nova pasta de Tesouros em Tagmar somente ao confirmar abaixo.</p>
+        <button type="button" class="tesouro-create" data-specific-action="create-basket"><i class="fas fa-folder-plus"></i> Criar esta cesta no Foundry</button>
+        <button type="button" data-specific-action="clear-basket">Esvaziar cesta</button>
+        {{else}}<p class="notes">A cesta está vazia. Monte um objeto ou informe as moedas e clique em Adicionar à cesta.</p>{{/if}}
+      </section>
+    </div>
+
   </section>
 </form>

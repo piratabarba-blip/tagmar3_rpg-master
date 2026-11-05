@@ -570,13 +570,14 @@ Hooks.once("polyglot.init", (LanguageProvider) => {
       return [known_languages, literate_languages];
     }
   }
-  // Polyglot 2.10.2 exposes an unbound private instance method through its API.
-  // Older releases own the method on the API object; leave their receiver intact.
+  // Some Polyglot releases expose a private instance method without binding it.
+  // Keep the normal API receiver, repairing only this specific receiver error.
   const polyglot = game.polyglot;
-  if (game.modules.get("polyglot")?.version === "2.10.2") {
-    polyglot.api.registerSystem.call(polyglot, TagmarLanguageProvider);
-  } else {
+  try {
     polyglot.api.registerSystem(TagmarLanguageProvider);
+  } catch (error) {
+    if (error?.name !== "TypeError" || !/^Receiver must be an instance of class Polyglot$/.test(error.message)) throw error;
+    polyglot.api.registerSystem.call(polyglot, TagmarLanguageProvider);
   }
 });
 
