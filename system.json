@@ -2,7 +2,7 @@
   "id": "tagmar_rpg",
   "title": "Tagmar XXX",
   "description": "Sistema simples para Tagmar 3.0.",
-  "version": "2.7.0-v14.1-rc.67",
+  "version": "2.7.0-v14.1-rc.68",
   "relationships": {
     "requires": [
       {
@@ -80,6 +80,12 @@
         "compatibility": {
           "minimum": "0.1.0"
         }
+      },
+      {
+        "id": "tagmar-viagens",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-viagens/module.json",
+        "reason": "Planeje rotas e acompanhe viagens e expedições na mesa."
       }
     ]
   },
@@ -309,5 +315,5 @@
   },
   "url": "https://github.com/piratabarba-blip/tagmar3_rpg-master",
   "manifest": "https://raw.githubusercontent.com/piratabarba-blip/tagmar3_rpg-master/refs/heads/v14/system.json",
-  "download": "https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.67/system.zip"
+  "download": "https://github.com/piratabarba-blip/tagmar3_rpg-master/releases/download/v2.7.0-v14.1-rc.68/system.zip"
 }
