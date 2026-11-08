@@ -1,4 +1,17 @@
 <!-- tagmar-beta-migration-notice -->
+
+### Versão 2.7.0-v14.1-rc.69
+
+## Atualizações dos módulos e recomendações
+
+Compatibilidade verificada com Foundry VTT 14.370. Atualize o Grande Calendário para 1.1.8 e o Viagens e Expedições para 1.1.0 para usar a base fixa dos painéis e o minimapa de consulta mais leve.
+
+Viagens e Expedições e Token Action HUD Tagmar aparecem como módulos sugeridos na janela de dependências ao instalar ou atualizar o sistema; selecione os que faltarem. O HUD mantém sua dependência do Token Action HUD Core. Módulos opcionais continuam opcionais.
+
+Os compêndios continuam dentro do sistema. Esta versão preserva suas regras e conteúdos, incluindo os pesos já publicados. Dados, rotas e transportes personalizados continuam no mundo da mesa. Faça cópias de suas mídias pessoais dentro do mundo ou em uma pasta própria de Data, fora de systems/ e modules/.
+
+O Tagmar FX 1.4.0, exclusivo do XXX, mantém a invisibilidade com duração já publicada.
+
 > [!IMPORTANT]
 > **Instalou a prévia de Combate em Grande Escala? Confira sua versão.**
 >
