@@ -1,5 +1,15 @@
 <!-- tagmar-beta-migration-notice -->
 
+### Gerador de Personagens, PNJs e Criaturas 0.2.0 — módulo sugerido
+
+Além de personagens e PNJs profissionais, o gerador permite **adaptar criaturas do compêndio** e **criar uma criatura do zero**. Configure estágio, porte, grupo, inteligência, magia, anatomia e afinidade. Escolha armas, armaduras, ataques naturais, habilidades, técnicas, magias e pertences; complete aleatoriamente apenas os blocos desejados e preserve as escolhas com cadeados.
+
+As sugestões de criaturas são **extraoficiais e revisáveis pelo mestre**. Os totais usam a ficha PNJ do sistema instalado. O módulo cria uma cópia nova somente após confirmar; os compêndios e as fichas originais são preservados. No Oficial, utiliza apenas o catálogo e as imagens dessa edição.
+
+Instale ou atualize em **Configuração → Módulos adicionais**, usando o [manifesto permanente](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-personagens/module.json). Ative o módulo em **Gerenciamento de Módulos** e abra o atalho dourado do gerador na barra esquerda. Consulte o [guia completo](https://github.com/piratabarba-blip/modulos_foundry/tree/v14/tagmar-personagens).
+
+Esta atualização é do módulo opcional; não exige reinstalar o sistema ou os compêndios. O XXX e o Oficial já o incluem nas recomendações de instalação. Calendário, Viagens e FX mantêm suas versões públicas anteriores.
+
 ### Gerador de Personagens e PNJs — instalação sugerida
 
 O [Tagmar — Gerador de Personagens e PNJs](https://github.com/piratabarba-blip/modulos_foundry/tree/v14/tagmar-personagens) é um módulo **opcional para o mestre**, compatível com o XXX e o 3ER Oficial. Escolha raça, profissão, estágio e especialização; confira atributos, habilidades, técnicas, magias e kits de pertences em uma prévia. Cadeados preservam as escolhas ao sortear novamente. O botão **Criar ficha no mundo** conclui a criação após sua revisão.
@@ -10,7 +20,7 @@ Na tela de configuração do Foundry, vá a **Módulos → Instalar módulo** e 
 https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-personagens/module.json
 ```
 
-Depois, ative o módulo em **Gerenciamento de Módulos** e abra o atalho dourado de pessoa com + na barra esquerda. Também pode abrir pelas configurações do módulo. Não exige módulos adicionais; usa os compêndios e cálculos do sistema ativo. Nesta primeira versão, gera Personagens e PNJs profissionais; novas criaturas e armas naturais ficam para uma etapa futura.
+Depois, ative o módulo em **Gerenciamento de Módulos** e abra o atalho dourado de pessoa com + na barra esquerda. Também pode abrir pelas configurações do módulo. Não exige módulos adicionais; usa os compêndios e cálculos do sistema ativo. A versão 0.2.0 também adapta criaturas e permite construir uma nova ficha com ataques e proteções naturais.
 
 ### Versão 2.7.0-v14.1-rc.72
 
