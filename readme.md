@@ -1,5 +1,21 @@
 <!-- tagmar-beta-migration-notice -->
 
+### Versão 2.7.0-v14.1-rc.70
+
+## Tesouros: mais opções para o sorteio
+
+- **Adicionar tipo:** combine categorias de objetos para sortear entre elas; cada linha pode ser removida.
+- **Adicionar família:** combine famílias, repertórios e escolas/origens de magia. As linhas formam um único repertório, sem duplicar magias nem aumentar a capacidade dos objetos.
+- **Propriedades do item:** mantenha o sorteio atual ou escolha Bônus mágico, Magias, Focus, Resistência à Magia e Absorção por caixas de seleção. Os valores continuam sorteados de acordo com o Tipo de tesouro. Só as propriedades marcadas são incluídas, respeitando as compatibilidades e o catálogo habilitado.
+- **Mínimo de magias por item:** 0 mantém o sorteio atual; 1 garante pelo menos uma magia; 2 garante duas nos objetos compatíveis. Poções, óleos, elixires e unguentos continuam limitados a uma magia. Filtros sem repertório suficiente geram um aviso.
+- Escolhas de filtros e propriedades permanecem na janela após gerar a prévia. Restaurar padrão limpa essas escolhas.
+- Avisos antigos da seção Magias removidos para simplificar a leitura.
+
+A quantidade de objetos continua sendo sorteada. Magias, níveis, usos e valores dos poderes continuam aleatórios; escolhas exatas e a cesta de moedas e itens permanecem na aba Tesouros específicos.
+
+Compatibilidade verificada mantida em Foundry VTT 14.370. Os compêndios, imagens, dados pessoais e dependências mantêm o conteúdo da versão anterior. No Oficial, as restrições de conteúdo e licenciamento continuam preservadas.
+
+
 ### Versão 2.7.0-v14.1-rc.69
 
 ## Atualizações dos módulos e recomendações

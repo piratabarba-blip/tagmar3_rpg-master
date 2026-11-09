@@ -3,6 +3,7 @@ import {
 } from "./treasureLore.js";
 import {specificView,bindSpecificUI,openTreasureProperties} from './treasureSpecificUI.mjs';
 import {newSpecificDraft} from './treasureSpecific.mjs';
+import {randomKinds, randomMagicFilters, matchesMagicFilter, requestedProperties, supportsProperty, readRandomSelections, bindRandomSelections} from './treasureRandom.mjs';
 
 const SYSTEM_ID = import.meta.url.match(/\/systems\/([^/]+)\//)?.[1] || "tagmar_rpg";
 const ROOT_FOLDER_NAME = "Tesouros em Tagmar";
@@ -826,7 +827,7 @@ export class TesourosTagmarApp extends FormApplication {
       html.find("[name='includeMoney']").closest("label").toggle(!coins);
       html.find(".tesouro-money-additions").toggleClass("is-disabled", !coins && !html.find("[name='includeMoney']").prop("checked"));
       html.find("input[name^='money'][name$='Bonus']").prop("disabled", !coins && !html.find("[name='includeMoney']").prop("checked"));
-      html.find("[data-treasure-mode-note]").text({mixed:"Itens e moedas conforme suas escolhas.",coins:"Apenas MO, MP e MC; nenhum objeto será gerado.",mundane:"Apenas objetos sem poderes, bônus mágicos ou maldições. Preparados mágicos não participam.",magical:"Apenas objetos com propriedade mágica; nenhuma moeda ou item mundano."}[mode]);
+      html.find("[data-treasure-mode-note]").text({mixed:"Objetos e poderes sorteados entre os tipos e famílias escolhidos.",coins:"Apenas MO, MP e MC; nenhum objeto será gerado.",mundane:"Apenas objetos sem poderes, bônus mágicos ou maldições. Preparados mágicos não participam.",magical:"Apenas objetos com propriedade mágica; nenhuma moeda ou item mundano."}[mode]);
     };
     html.find("[name='treasureMode']").on("change", updateTreasureMode);
     html.find("details[data-treasure-section]").each((_index, section) => {
@@ -834,6 +835,7 @@ export class TesourosTagmarApp extends FormApplication {
       section.addEventListener("toggle", () => { this._sectionState[section.dataset.treasureSection] = section.open; });
     });
     updateTreasureMode();
+    bindRandomSelections(this,html);
     bindSpecificUI(this,html);
   }
 
@@ -874,7 +876,7 @@ export class TesourosTagmarApp extends FormApplication {
     });
     values.itemPool = [...this._objectPoolSelections];
     // This tab only draws random items. Exact choices and currency belong to the basket.
-    return {...values,generationMode:'quick',includeMoney:false,itemSpecific:'',specificMagic:'',itemPool:[],
+    return {...values,...readRandomSelections(html[0] ?? html),generationMode:'quick',includeMoney:false,itemSpecific:'',specificMagic:'',itemPool:[],
       moneyMoBonus:0,moneyMpBonus:0,moneyMcBonus:0,magicBonus:0,magicCount:0,focus:0,uses:0};
   }
 
@@ -909,7 +911,28 @@ export class TesourosTagmarApp extends FormApplication {
     }
     if (mode === "magical" && isTruthy(options.includeCurse)) options.curseNature = "magic";
     const catalog = await this._loadCatalog();
-    const propertySettings = mode === "mundane" ? Object.fromEntries(TREASURE_PROPERTIES.map(p => [p.key, false])) : game.settings.get(SYSTEM_ID, "tesourosPropriedades") || {};
+    const chosenProperties = mode === "mundane" ? null : requestedProperties(options);
+    let selectedKinds = options.generationMode === "quick" ? randomKinds(options) : null;
+    const propertySettings = mode === "mundane" ? Object.fromEntries(TREASURE_PROPERTIES.map(p => [p.key, false])) : { ...(game.settings.get(SYSTEM_ID, "tesourosPropriedades") || {}) };
+    if (chosenProperties) {
+      if (!chosenProperties.length) { ui.notifications.warn("Marque pelo menos uma propriedade para o item."); return; }
+      if (chosenProperties.some(key => propertySettings[key] === false)) {
+        ui.notifications.warn("Uma propriedade marcada está desativada no catálogo de Propriedades do topo. Ative-a ou retire-a da seleção."); return;
+      }
+      if (isTruthy(options.includeCurse) && options.curseNature === "only") {
+        ui.notifications.warn("Somente amaldiçoado não recebe propriedades mágicas. Use Sortear propriedades ou altere a natureza da maldição."); return;
+      }
+      for (const property of TREASURE_PROPERTIES) propertySettings[property.key] = chosenProperties.includes(property.key);
+      options.magicMode = chosenProperties.includes("magia") ? "random" : "none";
+      if (selectedKinds) {
+        const compatible = selectedKinds.filter(kind => chosenProperties.every(key => supportsProperty(kind, key)));
+        const hasRandom = (options.randomObjectTypes || [options.itemKind]).includes("random");
+        if (!compatible.length || (!hasRandom && compatible.length !== selectedKinds.length)) {
+          ui.notifications.warn("As propriedades escolhidas não combinam com todos os tipos de objeto. Bônus: armas/proteções; Focus e RM: exceto preparados; Absorção: proteções/joias."); return;
+        }
+        selectedKinds = compatible;
+      }
+    }
     const propertyEnabled = (key) => propertySettings[key] !== false;
     const personalized = options.generationMode === "specific";
     const includeCurse = isTruthy(options.includeCurse);
@@ -919,8 +942,25 @@ export class TesourosTagmarApp extends FormApplication {
     const objectPool = options.itemKind === "pool" ? parseObjectPool(options.itemPool) : [];
     const generateMagics = options.magicMode !== "none"
       && (propertyEnabled("magia") || personalized || (includeCurse && curseNature === "magic"));
-    const forceMagics = Boolean(options.specificMagic) || (personalized && (requestedMagicCount > 0 || requestedUses > 0));
-    if (includeCurse && curseNature === "magic" && options.magicMode === "none") {
+    const minimumValue = options.generationMode === "quick" ? Number(options.randomMagicMinimum ?? 0) : 0;
+    if (!Number.isInteger(minimumValue) || minimumValue < 0 || minimumValue > 2) {
+      ui.notifications.warn("O mínimo de magias por item deve ser 0, 1 ou 2."); return;
+    }
+    if (minimumValue > 0 && options.magicMode !== "none" && !propertyEnabled("magia")) {
+      ui.notifications.warn("Ative Magias no catálogo de Propriedades do topo para garantir uma quantidade mínima."); return;
+    }
+    const minimumMagics = generateMagics ? minimumValue : 0;
+    if (minimumMagics > 0 && includeCurse && curseNature === "only") {
+      ui.notifications.warn("Somente amaldiçoado não pode garantir magias. Altere a natureza da maldição ou use mínimo 0."); return;
+    }
+    if (minimumMagics > 1 && selectedKinds?.includes("potion")) {
+      if (!(options.randomObjectTypes || [options.itemKind]).includes("random")) {
+        ui.notifications.warn("Poções, óleos, elixires e unguentos comportam uma magia. Use mínimo 1 ou remova esse tipo."); return;
+      }
+      selectedKinds = selectedKinds.filter(kind => kind !== "potion");
+    }
+    const forceMagics = minimumMagics > 0 || Boolean(chosenProperties?.includes("magia")) || Boolean(options.specificMagic) || (personalized && (requestedMagicCount > 0 || requestedUses > 0));
+    if (!chosenProperties && includeCurse && curseNature === "magic" && options.magicMode === "none") {
       ui.notifications.warn("O modo “Item mágico amaldiçoado” precisa da opção “Com magia”.");
       return;
     }
@@ -970,6 +1010,24 @@ export class TesourosTagmarApp extends FormApplication {
         return;
       }
     }
+    if (selectedKinds) {
+      if (mode === "mundane") selectedKinds = selectedKinds.filter(kind => kind !== "potion");
+      if (!generateMagics && selectedKinds.includes("potion")) {
+        if (!(options.randomObjectTypes || [options.itemKind]).includes("random")) {
+          ui.notifications.warn("Os tipos adicionados incluem preparados mágicos. Ative Magias ou remova esse tipo."); return;
+        }
+        selectedKinds = selectedKinds.filter(kind => kind !== "potion");
+      }
+      if (!selectedKinds.length) { ui.notifications.warn("Escolha pelo menos um tipo de objeto compatível."); return; }
+      for (const kind of selectedKinds) {
+        if (["weapon", "defense"].includes(kind)) {
+          const entries = kind === "weapon" ? catalog.weapons : catalog.defenses;
+          if (!entries.some(entry => !["reinos", "terras"].includes(options.contentSource) || entry.realm === options.contentSource)) {
+            ui.notifications.warn("Um dos tipos escolhidos não tem objetos na região consultada. Ajuste os tipos ou a região."); return;
+          }
+        }
+      }
+    }
     const treasureType = Math.max(1, Math.min(10, Number(options.treasureType) || 1));
     const existenceChance = propertyExistenceChance(treasureType);
     const quantityRoll = await new Roll("1d20").evaluate();
@@ -981,7 +1039,8 @@ export class TesourosTagmarApp extends FormApplication {
     if (options.itemSpecific || objectPool.length) count = Math.max(1, count);
     const lastRoll = { die: quantityRoll.total, count, type: treasureType };
     const includeHistory = isTruthy(options.includeHistory);
-    let fixedStoryOrigin = options.magicOrigin || "";
+    const magicFilters = randomMagicFilters(options);
+    let fixedStoryOrigin = magicFilters.length === 1 ? magicFilters[0].origin : "";
     if (includeHistory && !fixedStoryOrigin && options.specificMagic) {
       fixedStoryOrigin = catalog.magics.find((magic) => magic.key === options.specificMagic)?.origins?.[0] || "";
     }
@@ -991,13 +1050,8 @@ export class TesourosTagmarApp extends FormApplication {
     if (["reinos", "terras"].includes(options.contentSource)) {
       magicPool = magicPool.filter((magic) => magic.realms.includes(options.contentSource));
     }
-    if (options.magicTradition && options.magicTradition !== "all") {
-      magicPool = magicPool.filter((magic) => magic.traditions.includes(options.magicTradition));
-    }
-    if (options.magicRepertoire && options.magicRepertoire !== "all") {
-      magicPool = magicPool.filter((magic) => magic.repertoires.includes(options.magicRepertoire));
-    }
-    if (fixedStoryOrigin) magicPool = magicPool.filter((magic) => magic.origins.includes(fixedStoryOrigin));
+    magicPool = magicPool.filter(magic => magicFilters.some(row => matchesMagicFilter(magic, row)));
+    if (fixedStoryOrigin) magicPool = magicPool.filter(magic => magic.origins.includes(fixedStoryOrigin));
     // O Tipo limita o efeito da magia, não cria níveis inexistentes.
     magicPool = magicPool.filter((magic) => availableMagicLevels(magic, treasureType).length > 0);
     if (count > 0 && generateMagics && magicPool.length === 0 && !(includeCurse && curseNature === "only")) {
@@ -1030,11 +1084,14 @@ export class TesourosTagmarApp extends FormApplication {
       const absorptionChanceRoll = await new Roll("1d100").evaluate();
       const absorptionValueRoll = await new Roll("1d10").evaluate();
       const pureCurseChance = Math.max(15, 45 - (treasureType * 3));
-      const pureCurse = includeCurse && (curseNature === "only"
+      const pureCurse = includeCurse && !chosenProperties && !minimumMagics && (curseNature === "only"
         || (curseNature === "automatic" && (!generateMagics || options.magicMode === "none"
           || (await new Roll("1d100").evaluate()).total <= pureCurseChance)));
       let itemSpecific = options.itemSpecific;
-      let kind = options.itemKind === "random" ? kindFromRoll(categoryRoll.total) : options.itemKind;
+      const anyKind = (options.randomObjectTypes || [options.itemKind]).includes("random");
+      let kind = selectedKinds ? (anyKind ? kindFromRoll(categoryRoll.total) : randomOf(selectedKinds))
+        : options.itemKind === "random" ? kindFromRoll(categoryRoll.total) : options.itemKind;
+      if (selectedKinds && !selectedKinds.includes(kind)) kind = randomOf(selectedKinds);
       if (options.itemKind === "pool") {
         if (!objectPoolQueue.length) objectPoolQueue = shuffled(objectPool);
         const selectedObject = objectPoolQueue.shift();
@@ -1062,6 +1119,7 @@ export class TesourosTagmarApp extends FormApplication {
         } else {
           magicCount = (await new Roll("1d2").evaluate()).total;
         }
+        magicCount = Math.max(magicCount, minimumMagics);
       }
       let itemStoryOrigin = fixedStoryOrigin;
       let itemMagicPool = [...magicPool];
@@ -1089,12 +1147,13 @@ export class TesourosTagmarApp extends FormApplication {
         return;
       }
       if (selectedMagics.length < magicCount) {
-        const explicitMagicDemand = requestedMagicCount > 0
+        const explicitMagicDemand = minimumMagics > 0 || requestedMagicCount > 0
+          || magicFilters.some(row => row.origin || row.tradition !== "all" || row.repertoire !== "all")
           || Boolean(options.magicOrigin)
           || Boolean(options.specificMagic)
           || (options.magicTradition && options.magicTradition !== "all")
           || (options.magicRepertoire && options.magicRepertoire !== "all");
-        if (explicitMagicDemand) {
+        if (explicitMagicDemand && !(minimumMagics > 0 && selectedMagics.length >= minimumMagics)) {
           ui.notifications.warn(`Foram solicitadas ${magicCount} magias diferentes, mas os filtros atuais oferecem apenas ${selectedMagics.length}. Amplie a região ou a escola/origem.`);
           return;
         }
@@ -1494,6 +1553,13 @@ export class TesourosTagmarApp extends FormApplication {
     if (!pureCurse && propertyEnabled("absorcao") && absorptionCompatible && rolls.absorptionChance <= existenceChance) {
       const absorptionBase = (treasureType - 1) * 10;
       absorption = Math.max(1, Math.min(100, absorptionBase + rolls.absorptionValue));
+    }
+    const chosen = options.treasureMode === "mundane" ? null : requestedProperties(options);
+    if (chosen && !pureCurse) {
+      if (chosen.includes("bonus") && bonusLimit > 0) bonus = Math.max(1, automaticBonus);
+      if (chosen.includes("focus") && kind !== "potion") focus = focusBase + Math.max(1, Math.min(focusBase, rolls.focus));
+      if (chosen.includes("resistencia") && resistanceCompatible) resistance = Math.max(1, Math.min(treasureType, rolls.resistanceValue));
+      if (chosen.includes("absorcao") && absorptionCompatible) absorption = Math.max(1, Math.min(100, (treasureType - 1) * 10 + rolls.absorptionValue));
     }
     if (options.treasureMode === "magical" && !(bonus || focus || resistance || absorption || magics.length)) {
       if (propertyEnabled("resistencia") && resistanceCompatible) resistance = Math.max(1, Math.min(treasureType, rolls.resistanceValue));
