@@ -1,5 +1,29 @@
 <!-- tagmar-beta-migration-notice -->
 
+### Gerador de Personagens e PNJs — instalação sugerida
+
+O [Tagmar — Gerador de Personagens e PNJs](https://github.com/piratabarba-blip/modulos_foundry/tree/v14/tagmar-personagens) é um módulo **opcional para o mestre**, compatível com o XXX e o 3ER Oficial. Escolha raça, profissão, estágio e especialização; confira atributos, habilidades, técnicas, magias e kits de pertences em uma prévia. Cadeados preservam as escolhas ao sortear novamente. O botão **Criar ficha no mundo** conclui a criação após sua revisão.
+
+Na tela de configuração do Foundry, vá a **Módulos → Instalar módulo** e cole o [manifesto de instalação do gerador](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-personagens/module.json):
+
+```text
+https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-personagens/module.json
+```
+
+Depois, ative o módulo em **Gerenciamento de Módulos** e abra o atalho dourado de pessoa com + na barra esquerda. Também pode abrir pelas configurações do módulo. Não exige módulos adicionais; usa os compêndios e cálculos do sistema ativo. Nesta primeira versão, gera Personagens e PNJs profissionais; novas criaturas e armas naturais ficam para uma etapa futura.
+
+### Versão 2.7.0-v14.1-rc.72
+
+## Gerador de personagens e ferramentas Tagmar
+
+- Gerador de Personagens e PNJs como instalação **opcional recomendada**, com link no README e no manifesto.
+- 50 técnicas e 10 pastas de listas de aquisição ATS: Berserker, Feiticeiro, Trapaceiros, Caçadores de Recompensa, Duelistas e Guardas. Acréscimo com origem e custos identificados; registros existentes preservados. Técnicas exclusivas usam resolução manual.
+- Tesouros no padrão escuro/dourado do Viagens: cabeçalho, título, ações lado a lado e alça de redimensionamento dourada.
+- Viagens 1.1.1 recomendado, incluindo o minimapa de consulta dos jogadores e reposicionamento sem avançar o relógio.
+
+Foundry VTT 14.370. Oficial mantém seus próprios ícones e restrições; Tagmar FX continua exclusivo do XXX. Os compêndios permanecem dentro dos sistemas. Nenhum mundo ou arquivo pessoal é distribuído.
+
+
 ### Versão 2.7.0-v14.1-rc.71
 
 ## Bônus temporários nas magias

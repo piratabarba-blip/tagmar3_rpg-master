@@ -407,7 +407,7 @@ export class TesourosTagmarApp extends FormApplication {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "tesouros-tagmar",
-      title: "Tesouros em Tagmar",
+      title: "Tagmar - Tesouros",
       template: `systems/${SYSTEM_ID}/templates/apps/tesouros-tagmar.hbs`,
       width: 720,
       height: 760,

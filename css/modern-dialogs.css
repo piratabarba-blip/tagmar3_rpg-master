@@ -435,3 +435,31 @@
 }
 
 #tesouros-tagmar .tesouro-magic-minimum { width:76px; max-width:100%; text-align:center; justify-self:start; }
+
+/* Padrão das ferramentas Tagmar: moldura do Viagens, título editorial e ações compactas. */
+#tesouros-tagmar { border:1px solid #9c7937; border-radius:10px 10px 5px 5px; background:#10151c; box-shadow:0 6px 24px #000c; overflow:hidden; }
+#tesouros-tagmar .window-header { flex:0 0 34px; min-height:34px; box-sizing:border-box; align-items:center; gap:6px; padding:3px 8px; background:#111820!important; color:#f1d897; border:0; border-bottom:1px solid #9c7937; }
+#tesouros-tagmar .window-header .window-title { color:#f1d897; font:600 14px var(--font-primary,Arial,sans-serif); margin:0; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#tesouros-tagmar .window-title::before { content:"\f3a5"; font-family:var(--font-awesome,"Font Awesome 7 Pro"); font-weight:900; margin-right:6px; }
+#tesouros-tagmar .window-header>a { display:inline-flex; align-items:center; justify-content:center; flex:0 0 28px; width:28px; height:28px; margin:0; padding:0; border:1px solid #9c7937; border-radius:4px; color:#f1d897; background:linear-gradient(#393222,#222019); font-size:0; text-decoration:none; }
+#tesouros-tagmar .window-header>a i { font-size:14px; margin:0; }
+#tesouros-tagmar .window-header>a:hover { border-color:#f2ca61; color:#ffe3a1; }
+#tesouros-tagmar .window-content { background:#10151c; }
+#tesouros-tagmar .tesouros-tagmar-form { background:#10151c; min-height:0; }
+#tesouros-tagmar .tesouro-heading { flex:0 0 auto; margin:14px 16px 12px; padding:0 0 12px; border-bottom:2px solid #b48838; }
+#tesouros-tagmar .tesouro-heading h2 { font:700 23px Georgia,serif; color:#f3e5bd; background:none; border:0; margin:0 0 4px; padding:0; }
+#tesouros-tagmar .tesouro-heading p { margin:0; font:12px/1.4 var(--font-primary,Arial,sans-serif); color:#c2b99f!important; }
+#tesouros-tagmar .tesouro-body { min-height:0; }
+#tesouros-tagmar .tesouro-generation-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:8px 0; }
+#tesouros-tagmar .tesouro-generation-actions>button { grid-column:auto; width:100%; min-width:0; min-height:40px; height:auto; margin:0; padding:6px 8px; white-space:normal; overflow-wrap:break-word; line-height:1.25; }
+@container (max-width:380px) { #tesouros-tagmar .tesouro-generation-actions { grid-template-columns:repeat(2,minmax(0,1fr)); } #tesouros-tagmar .tesouro-generation-actions>.tesouro-reset-defaults { grid-column:1/-1; } }
+
+/* Alça nativa preservada: aparência dourada no padrão das ferramentas Tagmar. */
+#tesouros-tagmar .window-resizable-handle {
+  position:absolute; right:3px; bottom:3px; width:22px; height:22px;
+  display:grid; place-items:center; z-index:10; box-sizing:border-box;
+  border:1px solid #9b7939; border-radius:4px;
+  background:#111820; color:#f1d897; opacity:1; cursor:nwse-resize;
+}
+#tesouros-tagmar .window-resizable-handle i { margin:0; font-size:14px; color:inherit; }
+#tesouros-tagmar .window-resizable-handle:hover { border-color:#f2ca61; color:#ffe3a1; }
