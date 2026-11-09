@@ -1,3 +1,10 @@
+// Saldos concedidos pelo Tagmar FX: o teto normal permanece independente.
+function _saldoRecursoFx(actor, resource) {
+    const entries = actor.getFlag?.("tagmar-token-fx", "temporaryEH");
+    return Array.isArray(entries) ? entries.filter(e => (e.resource ?? "EH") === resource)
+        .reduce((n,e) => n + Math.max(0, Number(e.remaining) || 0), 0) : 0;
+}
+
 export function _preparaCaracRaciais(sheetData, updatePers) {
     if (!sheetData.options.editable) return;
     const actorData = sheetData.document;
@@ -621,10 +628,11 @@ export function _calculaEhTemporaria(actor, fisico, estagio = actor.system.estag
     const bonus = maximo - base;
     // Conserva a parcela abaixo de zero enquanto houver efeito, permitindo desfazer
     // penalidades sem recuperar EH que já estava gasta.
-    const valorSemLimite = Number(eh.value) - Number(eh.deficitFis ?? 0) + bonus - anterior;
+    const saldoFx = _saldoRecursoFx(actor, "EH");
+    const valorSemLimite = Number(eh.value) - saldoFx - Number(eh.deficitFis ?? 0) + bonus - anterior;
     return {
         "system.eh.max": maximo,
-        "system.eh.value": Math.max(0, Math.min(maximo, valorSemLimite)),
+        "system.eh.value": Math.max(0, Math.min(maximo, valorSemLimite)) + saldoFx,
         "system.eh.bonusFis": bonus,
         "system.eh.deficitFis": bonus === 0 ? 0 : Math.max(0, -valorSemLimite)
     };
@@ -704,8 +712,9 @@ export function _attEfEhVB(data, updatePers, atributosEfetivos = null) {
         updatePers["system.ef.max"] = efMax;
         updatePers["system.vb"] = vbTotal
     }
-    if (data.document.system.ef.value > efMax) {
-        updatePers["system.ef.value"] = efMax;
+    const saldoEfFx = _saldoRecursoFx(data.document, "EF");
+    if (data.document.system.ef.value - saldoEfFx > efMax) {
+        updatePers["system.ef.value"] = efMax + saldoEfFx;
     }
 }
 
@@ -1030,6 +1039,11 @@ export function _attDefesaNPC(data, updateNpc) {
     let agilidade = data.document.system.atributos.AGI;
     if (updateNpc.hasOwnProperty('system.atributos.AGI')) agilidade = updateNpc['system.atributos.AGI'];
     var def_atiVal = def_pasVal + agilidade;
+    // Efeitos temporários do FX usam a mesma defesa da ficha, sem gravar na base.
+    for (const item of data.document.items.filter(i => i.type === "Efeito" && i.system.ativo && i.getFlag?.("tagmar-token-fx", "spellBonus"))) {
+        if (item.system.atributo === "DEF") {def_pasVal += Number(item.system.valor);def_atiVal += Number(item.system.valor);}
+        if (item.system.atributo === "ABS") absorcao += Number(item.system.valor);
+    }
     const actorData = data.document.system;
     if (abs_magica > 0) abs_magica = 1;
     if (actorData.d_passiva.valor != def_pasVal || actorData.d_passiva.categoria != def_pasCat || actorData.d_ativa.categoria != def_pasCat || actorData.d_ativa.valor != def_atiVal || actorData.absorcao.max != absorcao || actorData.v_base != abs_magica) {

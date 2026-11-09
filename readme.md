@@ -1,5 +1,20 @@
 <!-- tagmar-beta-migration-notice -->
 
+### Versão 2.7.0-v14.1-rc.71
+
+## Bônus temporários nas magias
+
+- Em FX → Resolução e dano, escolha Dano ou Bônus temporários. As alternativas são exclusivas.
+- Adicionar bônus permite várias linhas de atributos, recursos, defesa, resistências, velocidade e ajustes de combate/habilidades.
+- EH e EF temporárias somam ao valor atual, preservando o máximo normal. O dano consome a reserva primeiro; cura não reabastece a reserva gasta.
+- Ao expirar, resistir ou remover o efeito, somente o excesso acima do máximo normal é retirado. Exemplo: máximo 20, atual 26 → 20; atual 16 → 16. Reservas independentes ainda ativas conservam seu prazo.
+- A mesma magia não acumula bônus a cada turno. Renovar substitui a reserva restante da mesma fonte.
+- Nome, duração restante e saldos ficam na aba Efeitos. Testar continua mostrando somente o visual.
+- Correção do recálculo de bônus em atores do Foundry V14, incluindo personagens por pontos, por sorteio e PNJs.
+
+Atualize primeiro o sistema Tagmar XXX e depois o módulo Tagmar Efeitos Mágicos. Compatibilidade verificada: Foundry VTT 14.370. As configurações continuam sendo escolhidas pela mesa; nenhum compêndio é reconfigurado automaticamente. O módulo permanece exclusivo do XXX.
+
+
 ### Versão 2.7.0-v14.1-rc.70
 
 ## Tesouros: mais opções para o sorteio
