@@ -1,6 +1,8 @@
 <!-- tagmar-beta-migration-notice -->
 
-### Gerador de Personagens, PNJs e Criaturas 0.2.0 — módulo sugerido
+### Gerador de Personagens, PNJs e Criaturas 0.3.0 — módulo sugerido
+
+Na versão 0.3.0: criação pelo Livro de Criaturas 3.02, habilidades agrupadas nas quatro abas, estágio até 50, VB direta, componentes compactos e buscas sem cópias repetidas.
 
 Além de personagens e PNJs profissionais, o gerador permite **adaptar criaturas do compêndio** e **criar uma criatura do zero**. Configure estágio, porte, grupo, inteligência, magia, anatomia e afinidade. Escolha armas, armaduras, ataques naturais, habilidades, técnicas, magias e pertences; complete aleatoriamente apenas os blocos desejados e preserve as escolhas com cadeados.
 
@@ -8,7 +10,7 @@ As sugestões de criaturas são **extraoficiais e revisáveis pelo mestre**. Os 
 
 Instale ou atualize em **Configuração → Módulos adicionais**, usando o [manifesto permanente](https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-personagens/module.json). Ative o módulo em **Gerenciamento de Módulos** e abra o atalho dourado do gerador na barra esquerda. Consulte o [guia completo](https://github.com/piratabarba-blip/modulos_foundry/tree/v14/tagmar-personagens).
 
-Esta atualização é do módulo opcional; não exige reinstalar o sistema ou os compêndios. O XXX e o Oficial já o incluem nas recomendações de instalação. Calendário, Viagens e FX mantêm suas versões públicas anteriores.
+Esta versão do sistema atualiza a recomendação para o Gerador 0.3.0 e mostra um aviso exclusivo do mestre se ele estiver ausente, antigo ou inativo. O aviso tem Lembrar depois e Não lembrar desta versão. O módulo continua opcional; não é instalado automaticamente. As regras, mídias e compêndios do sistema permanecem iguais.
 
 ### Gerador de Personagens e PNJs — instalação sugerida
 
@@ -20,7 +22,7 @@ Na tela de configuração do Foundry, vá a **Módulos → Instalar módulo** e 
 https://raw.githubusercontent.com/piratabarba-blip/modulos_foundry/v14/tagmar-personagens/module.json
 ```
 
-Depois, ative o módulo em **Gerenciamento de Módulos** e abra o atalho dourado de pessoa com + na barra esquerda. Também pode abrir pelas configurações do módulo. Não exige módulos adicionais; usa os compêndios e cálculos do sistema ativo. A versão 0.2.0 também adapta criaturas e permite construir uma nova ficha com ataques e proteções naturais.
+Depois, ative o módulo em **Gerenciamento de Módulos** e abra o atalho dourado de pessoa com + na barra esquerda. Também pode abrir pelas configurações do módulo. Não exige módulos adicionais; usa os compêndios e cálculos do sistema ativo. A versão 0.3.0 também adapta criaturas e permite construir uma nova ficha com ataques e proteções naturais.
 
 ### Versão 2.7.0-v14.1-rc.72
 
