@@ -1,3 +1,16 @@
+## Tagmar XXX — 2.7.0-v14.1-rc.74
+
+- As descrições das fichas de itens agora acompanham a altura da janela, aproveitando o espaço abaixo. Textos longos continuam com rolagem.
+- Ajuste aplicado às fichas equivalentes de magias, habilidades, técnicas, armas, defesas, pertences, raças, profissões e transportes, incluindo o tema de livro.
+- Corrigida a posição dos controles dos desenhos e textos no mapa.
+- Compêndios e mídias preservados, incluindo todos os arquivos de Terras Selvagens.
+
+**Atualizar:** na configuração inicial do Foundry, feche o mundo, abra **Sistemas de jogo** e use **Verificar atualizações / Atualizar** no sistema instalado. Depois abra o mundo e recarregue o navegador dos participantes.
+
+Foundry VTT 14.370. O [Gerador de Personagens, PNJs e Criaturas 0.3.1](https://github.com/piratabarba-blip/modulos_foundry/tree/v14/tagmar-personagens) já está disponível como módulo opcional; atualize-o separadamente em **Módulos adicionais**.
+
+---
+
 <!-- tagmar-beta-migration-notice -->
 
 ### Gerador de Personagens, PNJs e Criaturas 0.3.0 — módulo sugerido

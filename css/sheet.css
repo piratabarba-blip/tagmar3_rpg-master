@@ -217,9 +217,9 @@
 
 /* Foundry V13: impede que a classe .col do Bootstrap desloque a coluna
    direita do HUD para baixo do token. */
-/* O HUD de Tiles tambem usa .col; preserve as colunas absolutas do Foundry
+/* Os HUDs de Tiles e Desenhos (incluindo textos) tambem usam .col; preserve as colunas absolutas do Foundry
    contra a grade Bootstrap usada pelas fichas. Nao altera o HUD dos tokens. */
-#tile-hud .col {
+:is(#tile-hud, #drawing-hud) .col {
     position: absolute;
     top: 0;
     width: var(--column-width);
@@ -228,16 +228,16 @@
     margin: 0;
     flex: 0 0 auto;
 }
-#tile-hud .col.left {
+:is(#tile-hud, #drawing-hud) .col.left {
     left: calc(-1 * var(--column-width) - 8px);
     right: auto;
 }
-#tile-hud .col.middle {
+:is(#tile-hud, #drawing-hud) .col.middle {
     left: 0;
     right: auto;
     width: 100%;
 }
-#tile-hud .col.right {
+:is(#tile-hud, #drawing-hud) .col.right {
     right: calc(-1 * var(--column-width) - 8px);
     left: auto;
 }
@@ -485,3 +485,53 @@
 .tagmar-critical-damage th,.tagmar-critical-damage td { padding:4px 3px; text-align:center; }
 .tagmar-critical-damage .tagmar-damage-percent { width:100%; min-width:0; min-height:28px; height:auto; margin:0; padding:3px 2px; border:1px solid rgba(70,60,45,.8); border-radius:3px; font:inherit; font-weight:bold; cursor:pointer; }
 .tagmar-critical-damage .tagmar-damage-percent:hover,.tagmar-critical-damage .tagmar-damage-percent:focus-visible { outline:2px solid #a27b28; outline-offset:1px; }
+
+/* Descrições das fichas de itens acompanham a altura da janela.
+   Escopo restrito aos itens padrão; fichas de atores e Armas de Guerra mantêm seus layouts. */
+.tagmar.sheet.item .window-content:has(form.form_tagmar:not(.tv-form) .editor),
+.tagmar.sheet.item .window-content > .bg-img-items:has(.editor) {
+    min-height: 0;
+    flex: 1 1 auto;
+}
+.tagmar.sheet.item .window-content > .bg-img-items:has(.editor) {
+    display: flex;
+    flex-direction: column;
+}
+.tagmar.sheet.item form.form_tagmar:not(.tv-form):has(.editor) {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+}
+.tagmar.sheet.item form.form_tagmar:not(.tv-form) .sheet-header:not(:has(.editor)) {
+    flex: 0 0 auto;
+}
+.tagmar.sheet.item form.form_tagmar:not(.tv-form) :is(div, section, header):has(.editor):not(.tab):not(.editor),
+.tagmar.sheet.item form.form_tagmar:not(.tv-form) .tab.active:has(.editor) {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto !important;
+}
+.tagmar.sheet.item form.form_tagmar:not(.tv-form) :is(div, section, header):has(.editor) > :not(:has(.editor)):not(.editor) {
+    flex-shrink: 0;
+}
+.tagmar.sheet.item form.form_tagmar:not(.tv-form) :is(div, section, header):has(> .editor) {
+    min-height: 180px;
+}
+.tagmar.sheet.item form.form_tagmar:not(.tv-form) .editor {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+}
+.tagmar.sheet.item form.form_tagmar:not(.tv-form) .editor-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+}
