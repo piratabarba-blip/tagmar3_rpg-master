@@ -1,4 +1,6 @@
-## Tagmar XXX — 2.7.0-v14.1-rc.76
+## Tagmar XXX — 2.7.0-v14.1-rc.77
+
+- O nível comprado de cada Grupo de Armas fica limitado ao Estágio do personagem, por pontos e por sorteio.
 
 - Compêndio pesquisável de Caracterizações com 203 traços em 19 grupos e a regra de aquisição. Na aba Biografia, use Escolher Caracterizações para registrar traços, variantes e custos nas fichas por pontos e por sorteio.
 
