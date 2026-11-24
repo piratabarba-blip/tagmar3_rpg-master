@@ -228,107 +228,6 @@
                         </table>
                     </div>
                 </div>
-                <div class="row dados">     <!--Quinta Linha-->
-                    <div class="col-md-12">
-                        <table>
-                            <caption class="mediaeval">Pontos para Grupo de Armas: {{data.system.pontos_comb}}</caption>
-                            <tr style="text-align: center;">
-                                <th class="mediaeval">CD</th>
-                                <th class="mediaeval">CI</th>
-                                <th class="mediaeval">CL</th>
-                                <th class="mediaeval">CLD</th>
-                                <th class="mediaeval">EL</th>
-                                <th class="mediaeval">CmE</th>
-                                <th class="mediaeval">CmM</th>
-                                <th class="mediaeval">EM</th>
-                                <th class="mediaeval">PmA</th>
-                                <th class="mediaeval">PmL</th>
-                                <th class="mediaeval">CpE</th>
-                                <th class="mediaeval">CpM</th>
-                                <th class="mediaeval">EP</th>
-                                <th class="mediaeval">PP</th>
-                                <th class="mediaeval">PpA</th>
-                                <th class="mediaeval">PpB</th>
-                            </tr>
-                            {{#if actor.profissao.system.grupo_aprim}}
-                                {{#ifge data.system.estagio 5}}
-                                    <tr>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CD" {{checked actor.cd_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CL" {{checked actor.cl_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CI" {{checked actor.ci_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CLD" {{checked actor.cld_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="EL" {{checked actor.el_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CmE" {{checked actor.cme_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CmM" {{checked actor.cmm_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="EM" {{checked actor.em_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PmA" {{checked actor.pma_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PmL" {{checked actor.pml_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CpE" {{checked actor.cpe_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CpM" {{checked actor.cpm_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="EP" {{checked actor.ep_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PP" {{checked actor.pp_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PpA" {{checked actor.ppa_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PpB" {{checked actor.ppb_aprim}} title="Grupo de Armas Aprimorado"/></td>
-                                    </tr>
-                                {{/ifge}}
-                            {{/if}}
-                            <tr style="text-align: center;">
-                                <td><a class="addGrupoArmas" data-item-id="CD"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="CI"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="CL"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="CLD"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="EL"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="CmE"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="CmM"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="EM"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="PmA"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="PmL"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="CpE"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="CpM"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="EP"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="PP"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="PpA"><i class="fas fa-plus-circle"></i></a></td>
-                                <td><a class="addGrupoArmas" data-item-id="PpB"><i class="fas fa-plus-circle"></i></a></td>
-                            </tr>
-                            <tr style="text-align: center;">
-                                <td><input title="Combate Desarmado" name="system.grupos.CD" type="number" value="{{data.system.grupos.CD}}" readonly/></td>
-                                <td><input title="Combate de Imobilização" name="system.grupos.CI" type="number" value="{{data.system.grupos.CI}}" readonly/></td>
-                                <td><input title="Corte Leve" name="system.grupos.CL" type="number" value="{{data.system.grupos.CL}}" readonly/></td>
-                                <td><input title="Combate Leve à Distância" name="system.grupos.CLD" type="number" value="{{data.system.grupos.CLD}}" readonly/></td>
-                                <td><input title="Esmagamento Leve" name="system.grupos.EL" type="number" value="{{data.system.grupos.EL}}"readonly /></td>
-                                <td><input title="Corte Médio Com Espadas" name="system.grupos.CmE" type="number" value="{{data.system.grupos.CmE}}" readonly/></td>
-                                <td><input title="Corte Médio Com Machados" name="system.grupos.CmM" type="number" value="{{data.system.grupos.CmM}}" readonly/></td>
-                                <td><input title="Esmagamento Médio" name="system.grupos.EM" type="number" value="{{data.system.grupos.EM}}" readonly/></td>
-                                <td><input title="Penetração Média Com Arcos" name="system.grupos.PmA" type="number" value="{{data.system.grupos.PmA}}" readonly/></td>
-                                <td><input title="Penetração Média Com Lanças" name="system.grupos.PmL" type="number" value="{{data.system.grupos.PmL}}" readonly/></td>
-                                <td><input title="Corte Pesado Com Espadas" name="system.grupos.CpE" type="number" value="{{data.system.grupos.CpE}}" readonly/></td>
-                                <td><input title="Corte Pesado Com Machados" name="system.grupos.CpM" type="number" value="{{data.system.grupos.CpM}}" readonly/></td>
-                                <td><input title="Esmagamento Pesado" name="system.grupos.EP" type="number" value="{{data.system.grupos.EP}}" readonly/></td>
-                                <td><input title="Penetração Pesada" name="system.grupos.PP" type="number" value="{{data.system.grupos.PP}}" readonly/></td>
-                                <td><input title="Pentração Pesado Com Arcos" name="system.grupos.PpA" type="number" value="{{data.system.grupos.PpA}}" readonly/></td>
-                                <td><input title="Pentração Pesado Com Bestas" name="system.grupos.PpB" type="number" value="{{data.system.grupos.PpB}}" readonly/></td>
-                            </tr>
-                            <tr style="text-align: center;">
-                                <td><a class="subGrupoArmas" data-item-id="CD"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="CI"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="CL"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="CLD"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="EL"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="CmE"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="CmM"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="EM"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="PmA"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="PmL"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="CpE"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="CpM"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="EP"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="PP"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="PpA"><i class="fas fa-minus-circle"></i></a></td>
-                                <td><a class="subGrupoArmas" data-item-id="PpB"><i class="fas fa-minus-circle"></i></a></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
                 <div class="row dados"> <!--Aqui fica confuso-->
                     <div class="col-md-10">
                         <div class="row">
@@ -720,6 +619,107 @@
                     </div>
                     <div class="col-md-10 col-10">
                         <input class="searchCombate mediaeval" type="text" placeholder="Digite para realçar o item."/>
+                    </div>
+                </div>
+                <div class="row dados tagmar-weapon-groups">
+                    <div class="col-md-12">
+                        <table>
+                            <caption class="mediaeval">Pontos para Grupo de Armas: {{data.system.pontos_comb}}</caption>
+                            <tr style="text-align: center;">
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="CD">CD</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="CI">CI</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="CL">CL</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="CLD">CLD</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="EL">EL</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="CmE">CmE</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="CmM">CmM</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="EM">EM</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="PmA">PmA</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="PmL">PmL</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="CpE">CpE</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="CpM">CpM</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="EP">EP</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="PP">PP</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="PpA">PpA</button></th>
+                                <th class="mediaeval"><button type="button" class="tagmar-weapon-group-help" data-weapon-group="PpB">PpB</button></th>
+                            </tr>
+                            {{#if actor.profissao.system.grupo_aprim}}
+                                {{#ifge data.system.estagio 5}}
+                                    <tr>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CD" {{checked actor.cd_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CL" {{checked actor.cl_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CI" {{checked actor.ci_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CLD" {{checked actor.cld_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="EL" {{checked actor.el_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CmE" {{checked actor.cme_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CmM" {{checked actor.cmm_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="EM" {{checked actor.em_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PmA" {{checked actor.pma_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PmL" {{checked actor.pml_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CpE" {{checked actor.cpe_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="CpM" {{checked actor.cpm_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="EP" {{checked actor.ep_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PP" {{checked actor.pp_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PpA" {{checked actor.ppa_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                        <td style="text-align: center;"><input type="checkbox" name="grupo_aprim" value="PpB" {{checked actor.ppb_aprim}} title="Grupo de Armas Aprimorado"/></td>
+                                    </tr>
+                                {{/ifge}}
+                            {{/if}}
+                            <tr style="text-align: center;">
+                                <td><a class="addGrupoArmas" data-item-id="CD"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="CI"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="CL"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="CLD"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="EL"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="CmE"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="CmM"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="EM"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="PmA"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="PmL"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="CpE"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="CpM"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="EP"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="PP"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="PpA"><i class="fas fa-plus-circle"></i></a></td>
+                                <td><a class="addGrupoArmas" data-item-id="PpB"><i class="fas fa-plus-circle"></i></a></td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td><input title="Combate Desarmado" name="system.grupos.CD" type="number" value="{{data.system.grupos.CD}}" readonly/></td>
+                                <td><input title="Combate de Imobilização" name="system.grupos.CI" type="number" value="{{data.system.grupos.CI}}" readonly/></td>
+                                <td><input title="Corte Leve" name="system.grupos.CL" type="number" value="{{data.system.grupos.CL}}" readonly/></td>
+                                <td><input title="Combate Leve à Distância" name="system.grupos.CLD" type="number" value="{{data.system.grupos.CLD}}" readonly/></td>
+                                <td><input title="Esmagamento Leve" name="system.grupos.EL" type="number" value="{{data.system.grupos.EL}}"readonly /></td>
+                                <td><input title="Corte Médio Com Espadas" name="system.grupos.CmE" type="number" value="{{data.system.grupos.CmE}}" readonly/></td>
+                                <td><input title="Corte Médio Com Machados" name="system.grupos.CmM" type="number" value="{{data.system.grupos.CmM}}" readonly/></td>
+                                <td><input title="Esmagamento Médio" name="system.grupos.EM" type="number" value="{{data.system.grupos.EM}}" readonly/></td>
+                                <td><input title="Penetração Média Com Arcos" name="system.grupos.PmA" type="number" value="{{data.system.grupos.PmA}}" readonly/></td>
+                                <td><input title="Penetração Média Com Lanças" name="system.grupos.PmL" type="number" value="{{data.system.grupos.PmL}}" readonly/></td>
+                                <td><input title="Corte Pesado Com Espadas" name="system.grupos.CpE" type="number" value="{{data.system.grupos.CpE}}" readonly/></td>
+                                <td><input title="Corte Pesado Com Machados" name="system.grupos.CpM" type="number" value="{{data.system.grupos.CpM}}" readonly/></td>
+                                <td><input title="Esmagamento Pesado" name="system.grupos.EP" type="number" value="{{data.system.grupos.EP}}" readonly/></td>
+                                <td><input title="Penetração Pesada" name="system.grupos.PP" type="number" value="{{data.system.grupos.PP}}" readonly/></td>
+                                <td><input title="Pentração Pesado Com Arcos" name="system.grupos.PpA" type="number" value="{{data.system.grupos.PpA}}" readonly/></td>
+                                <td><input title="Pentração Pesado Com Bestas" name="system.grupos.PpB" type="number" value="{{data.system.grupos.PpB}}" readonly/></td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td><a class="subGrupoArmas" data-item-id="CD"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="CI"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="CL"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="CLD"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="EL"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="CmE"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="CmM"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="EM"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="PmA"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="PmL"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="CpE"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="CpM"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="EP"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="PP"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="PpA"><i class="fas fa-minus-circle"></i></a></td>
+                                <td><a class="subGrupoArmas" data-item-id="PpB"><i class="fas fa-minus-circle"></i></a></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div class="row dados"> <!--Tabela Armas-->

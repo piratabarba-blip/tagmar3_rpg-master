@@ -535,3 +535,22 @@
     overflow-y: auto;
     overflow-wrap: anywhere;
 }
+
+.tagmar .tagmar-weapon-groups { overflow-x: auto; }
+.tagmar .tagmar-weapon-groups input[name^="system.grupos."] { text-align: center; }
+.tagmar .tagmar-weapon-group-help {
+    display: inline-block;
+    width: auto;
+    min-height: 0;
+    padding: 2px 4px;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: 1.25;
+    cursor: help;
+}
+.tagmar-weapon-group-tooltip { text-align: left; }
+.tagmar-weapon-group-tooltip ul { margin: 4px 0 0; padding-inline-start: 1.4em; list-style: disc; }
+.tagmar-weapon-group-tooltip p { margin: 4px 0 0; }
