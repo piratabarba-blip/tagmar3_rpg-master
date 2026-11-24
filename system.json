@@ -139,6 +139,17 @@
   ],
   "packs": [
     {
+      "name": "caracterizacoes",
+      "label": "Tagmar — Caracterizações",
+      "system": "tagmar_rpg",
+      "path": "packs/caracterizacoes",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "GAMEMASTER": "OWNER"
+      }
+    },
+    {
       "name": "personagens-xxx",
       "label": "Tagmar XXX — Personagens Prontos",
       "system": "tagmar_rpg",

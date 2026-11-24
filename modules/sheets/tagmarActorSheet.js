@@ -1,4 +1,5 @@
 import {activateWeaponGroupHelp} from "./weapon-group-help.js";
+import {activateCharacterizations} from "./characterizations.js";
 import {getPortraitData, activatePortraitListeners, editPortrait} from "./portrait.js";
 
 export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
@@ -168,6 +169,7 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
         super.activateListeners(html);
         activatePortraitListeners(this, html);
         void activateWeaponGroupHelp(html[0]);
+        activateCharacterizations(html[0], this.document);
         this.element.toggleClass("tagmar-dark-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "dark");
         this.element.toggleClass("tagmar-foundry-sheet", game.settings.get("tagmar_rpg", "sheetTemplate") === "foundry");
         if (this.document.type != "Inventario") {

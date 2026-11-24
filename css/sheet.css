@@ -554,3 +554,41 @@
 .tagmar-weapon-group-tooltip { text-align: left; }
 .tagmar-weapon-group-tooltip ul { margin: 4px 0 0; padding-inline-start: 1.4em; list-style: disc; }
 .tagmar-weapon-group-tooltip p { margin: 4px 0 0; }
+
+.tagmar .tagmar-open-characterizations {
+    display: block;
+    width: auto;
+    margin: 4px auto 10px;
+    padding: 4px 10px;
+}
+.tagmar-characterizations {
+    max-height: 62vh;
+    overflow: auto;
+    padding: 4px;
+}
+.tagmar-characterizations .characterization-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+    gap: 8px;
+    margin-block: 12px;
+}
+.tagmar-characterizations label { display: grid; gap: 4px; }
+.tagmar-characterizations select, .tagmar-characterizations input { width: 100%; }
+.tagmar-characterizations section { margin-block: 10px; }
+.tagmar-characterizations details, .tagmar-characterizations .characterization-choice {
+    padding: 8px;
+    margin-block: 6px;
+    border: 1px solid var(--color-border, #8b7959);
+    border-radius: 5px;
+}
+.tagmar-characterizations summary { cursor: pointer; }
+.tagmar-characterizations summary small { margin-inline-start: 6px; }
+.tagmar-characterizations .characterization-choice {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 5px 8px;
+}
+.tagmar-characterizations .characterization-choice strong { grid-column: 1 / -1; }
+.tagmar-characterizations .characterization-excerpt { overflow-wrap: anywhere; }
+.tagmar-characterizations details > button { margin-top: 8px; }
