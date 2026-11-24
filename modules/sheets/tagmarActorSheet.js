@@ -1,4 +1,4 @@
-import {activateWeaponGroupHelp} from "./weapon-group-help.js";
+import {activateWeaponGroupHelp, increaseWeaponGroup} from "./weapon-group-help.js";
 import {activateCharacterizations} from "./characterizations.js";
 import {getPortraitData, activatePortraitListeners, editPortrait} from "./portrait.js";
 
@@ -1078,91 +1078,7 @@ export default class tagmarActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     _addGrupoArmas(event) {
-        const grupo = $(event.currentTarget).data("itemId");
-        const actorData = this.document;
-        if (actorData.system.pontos_comb >= 0) {
-            if (grupo == "CD") {
-                let pontos = actorData.system.grupos.CD + 1;
-                this.document.update({
-                    "system.grupos.CD": pontos
-                });
-            } else if (grupo == "CI") {
-                let pontos = actorData.system.grupos.CI + 1;
-                this.document.update({
-                    "system.grupos.CI": pontos
-                });
-            } else if (grupo == "CL") {
-                let pontos = actorData.system.grupos.CL + 1;
-                this.document.update({
-                    "system.grupos.CL": pontos
-                });
-            } else if (grupo == "CLD") {
-                let pontos = actorData.system.grupos.CLD + 1;
-                this.document.update({
-                    "system.grupos.CLD": pontos
-                });
-            } else if (grupo == "EL") {
-                let pontos = actorData.system.grupos.EL + 1;
-                this.document.update({
-                    "system.grupos.EL": pontos
-                });
-            } else if (grupo == "CmE") {
-                let pontos = actorData.system.grupos.CmE + 1;
-                this.document.update({
-                    "system.grupos.CmE": pontos
-                });
-            } else if (grupo == "CmM") {
-                let pontos = actorData.system.grupos.CmM + 1;
-                this.document.update({
-                    "system.grupos.CmM": pontos
-                });
-            } else if (grupo == "EM") {
-                let pontos = actorData.system.grupos.EM + 1;
-                this.document.update({
-                    "system.grupos.EM": pontos
-                });
-            } else if (grupo == "PmA") {
-                let pontos = actorData.system.grupos.PmA + 1;
-                this.document.update({
-                    "system.grupos.PmA": pontos
-                });
-            } else if (grupo == "PmL") {
-                let pontos = actorData.system.grupos.PmL + 1;
-                this.document.update({
-                    "system.grupos.PmL": pontos
-                });
-            } else if (grupo == "CpE") {
-                let pontos = actorData.system.grupos.CpE + 1;
-                this.document.update({
-                    "system.grupos.CpE": pontos
-                });
-            } else if (grupo == "CpM") {
-                let pontos = actorData.system.grupos.CpM + 1;
-                this.document.update({
-                    "system.grupos.CpM": pontos
-                });
-            } else if (grupo == "EP") {
-                let pontos = actorData.system.grupos.EP + 1;
-                this.document.update({
-                    "system.grupos.EP": pontos
-                });
-            } else if (grupo == "PP") {
-                let pontos = actorData.system.grupos.PP + 1;
-                this.document.update({
-                    "system.grupos.PP": pontos
-                });
-            } else if (grupo == "PpA") {
-                let pontos = actorData.system.grupos.PpA + 1;
-                this.document.update({
-                    "system.grupos.PpA": pontos
-                });
-            } else if (grupo == "PpB") {
-                let pontos = actorData.system.grupos.PpB + 1;
-                this.document.update({
-                    "system.grupos.PpB": pontos
-                });
-            }
-        }
+        return increaseWeaponGroup(this.document, event.currentTarget.dataset.itemId);
     }
     _subGrupoArmas(event){
         const grupo = $(event.currentTarget).data("itemId");

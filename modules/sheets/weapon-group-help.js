@@ -57,3 +57,14 @@ export async function activateWeaponGroupHelp(root) {
         if (button === document.activeElement) open();
     }
 }
+
+export function increaseWeaponGroup(actor, code) {
+    if (!Object.hasOwn(weaponGroupNames, code)) return;
+    const {grupos, estagio, pontos_comb} = actor.system;
+    const next = Number(grupos[code]) + 1;
+    if (actor.type === "Personagem" && next > Number(estagio)) {
+        ui.notifications.warn(`O nível do grupo ${code} não pode passar do Estágio ${estagio}.`);
+        return;
+    }
+    if (pontos_comb >= 0) return actor.update({[`system.grupos.${code}`]:next});
+}
